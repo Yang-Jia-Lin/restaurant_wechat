@@ -1,0 +1,51 @@
+<!--pages/home/home.wxml-->
+<!-- 1.轮播图 -->
+<swiper indicator-dots indicator-color="#8B8878" indicator-active-color="#CDC8B1" autoplay circular interval="6000" style="height: 450rpx;margin-bottom: 30rpx;">
+    <swiper-item wx:for="{{topBanner}}" wx:key="list">
+        <image src="{{item.url}}" mode="scaleToFill" style="width:100%;height:100%;" />
+    </swiper-item>
+</swiper>
+
+<!-- 2.选择门店 -->
+<view class="store_root">
+    <view>{{storeInfo.store_name}}</view>
+    <view bindtap="changeStores">全部门店 ></view>
+</view>
+
+<!-- 3.主选择按钮 -->
+<view class="category_root">
+    <view bindtap='eatIn' class="category_item">
+        <image class="category_item_image" src="/image/home1.png" />
+        <text>{{isNeedSaoMa?'扫码':'到店'}}</text>
+        <text class="small_item">锻炼身体自己取</text>
+    </view>
+    <view bindtap='eatOut' class="category_item">
+        <image class="category_item_image" src="/image/home2.png" />
+        <text>外卖</text>
+        <text class="small_item">宿舍躺尸不想动</text>
+    </view>
+</view>
+
+<!-- 4.如果用户没有注册，显示注册按钮  -->
+<view wx:if="{{!isUserRegister}}" class="container">
+    <view class="profile">
+        <image class="avatar" src="{{userInfo.avatar_url}}" />
+        <text class="username">您好！欢迎光临唐合丰拌面馆~</text>
+    </view>
+    <view class="profile2">
+        <text class="greeting">小主，快来领取唐合丰会员卡\n 消费得积点，注册立享8折优惠哦！</text>
+        <view class="btn" bindtap="goToRegister">免费注册</view>
+    </view>
+</view>
+
+<!-- 5.如果用户注册，显示用户账户信息 -->
+<view wx:if="{{isUserRegister}}" class="container">
+    <view class="profile">
+        <image class="avatar" src="{{userInfo.avatar_url}}" />
+        <text class="username">您好！欢迎光临唐合丰拌面馆~</text>
+    </view>
+    <view class="profile2">
+        <text class="greeting">余额</text>
+        <text class="greeting">积点</text>
+    </view>
+</view>

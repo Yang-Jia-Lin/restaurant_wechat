@@ -1,0 +1,58 @@
+.container {
+	background-color: #fff;
+}
+
+.store-list {
+	width: 95%;
+	display: flex;
+	flex-direction: column;
+	margin: 20rpx 0;
+}
+
+.store-item {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	padding: 30rpx;
+	border-bottom: 1px solid rgb(216, 216, 216);
+}
+
+.store-image {
+	width: 13%;
+	height: 80rpx;
+	margin-right: 20rpx;
+	border-radius: 20%;
+	border: #666 1px solid;
+	/* Circular images */
+}
+
+.store-info {
+	width: 70%;
+	flex-grow: 1;
+	font-size: 18px;
+	color: silver;
+}
+
+.store-name {
+	font-size: 32rpx;
+	color: rgb(0, 0, 0);
+	font-weight: bold;
+}
+
+.store-address {
+	font-size: 24rpx;
+	color: #666;
+	margin-top: 10rpx;
+}
+
+.store-select {
+	width: 8%;
+	color: #d38200;
+	font-size: 24rpx;
+	text-align: center;
+	padding: 10rpx 10rpx;
+	border: 2px solid #d38200;
+	border-radius: 20rpx;
+	margin-left: auto;
+}

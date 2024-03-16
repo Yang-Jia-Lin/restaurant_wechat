@@ -1,0 +1,77 @@
+{
+    "description": "项目私有配置文件。此文件中的内容将覆盖 project.config.json 中的相同字段。项目的改动优先同步到此文件中。详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html",
+    "projectname": "1.0%E7%89%88%E6%9C%AC",
+    "setting": {
+        "compileHotReLoad": false,
+        "urlCheck": true
+    },
+    "condition": {
+        "miniprogram": {
+            "list": [
+                {
+                    "name": "门店选择",
+                    "pathName": "pages/Home/store/store",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "注册",
+                    "pathName": "pages/My/register/register",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "点餐",
+                    "pathName": "pages/Food/food/food",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "支付",
+                    "pathName": "pages/Food/pay/pay",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "我的页面",
+                    "pathName": "pages/My/myPage/myPage",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "我的订单",
+                    "pathName": "pages/My/myOrder/myOrder",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "管理员订单",
+                    "pathName": "pages/Admin/adminOrder/adminOrder",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "地址",
+                    "pathName": "pages/Food/address/address",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "添加地址",
+                    "pathName": "pages/Home/addressForm/addressForm",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                }
+            ]
+        }
+    }
+}

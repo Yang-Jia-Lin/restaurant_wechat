@@ -1,0 +1,34 @@
+<!-- 标题 -->
+<view class="title">
+	收货地址
+</view>
+
+<!-- 已有地址 -->
+<view class="block_root" wx:for="{{addressList}}" wx:key="key">
+	<view>
+		<view>
+			<text class="big" wx:if="{{item.default}}">默认</text>
+			<text class="small">{{item.address_title}}</text>
+		</view>
+		<view class="left-middle">
+			{{item.address_detail}}
+		</view>
+		<view class="left-bottom">
+			<view class="name">
+				{{item.name}} {{item.sex?'('+item.sex+')':''}}
+			</view>
+			<view class="phone">{{item.phone}}</view>
+		</view>
+	</view>
+	<view class="block-right" bindtap="changeAddress" data-item="{{item}}">
+		编辑
+	</view>
+</view>
+<view class="none-address" wx:if="{{!haveAddress}}">
+	请先添加外卖收货地址！
+</view>
+
+<!-- 添加地址 -->
+<view class="add-address" bindtap="addAddress">
+	+ 添加地址
+</view>

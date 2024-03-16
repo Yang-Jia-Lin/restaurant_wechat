@@ -1,0 +1,25 @@
+<!-- 管理员登录页 -->
+
+<!-- 1.没有登录的状态 -->
+<view wx:if="{{!isAdmin}}" class="container">
+    <view class='item_root'>
+        <view>账号：</view>
+        <input class="input" bindinput="getName" value="{{username}}" maxlength='10' />
+    </view>
+    <view class='item_root'>
+        <view>密码：</view>
+        <input class="input" bindinput="getPassWord" value="{{password}}" type="password" />
+    </view>
+    <!-- 提交按钮 -->
+    <button class='btn_fabu' bindtap='formSubmit' type='primary'>立即登录</button>
+</view>
+
+<!-- 2.登录成功的状态 -->
+<view wx:if="{{isAdmin}}">
+    <view class="tab">
+        <text class="tabNum" bindtap="goHouchu">订单管理</text>
+        <text class="tabNum" bindtap="goChange">堂食菜品管理</text>
+        <text class="tabNum" bindtap="goOutAdmin">外卖菜品管理</text>
+        <text class="tabNum" bindtap="goSetting">功能设置</text>
+    </view>
+</view>

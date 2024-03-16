@@ -1,0 +1,172 @@
+<!-- 外卖或自提选择区域 -->
+<view class="top_info_root">
+    <view class="store_root">
+        <view class="store_name_root" bindtap="changeStores">
+            <view>{{storeInfo.store_name}}</view>
+            <view bindtap="changeStores">切换门店 ></view>
+        </view>
+        <view class="store_info">
+            <text>门店{{storeInfo.business_status}}</text>
+            <text>外卖{{storeInfo.takeout_status}}</text>
+        </view>
+    </view>
+    <view class="serviceType_option">
+        <radio-group bindchange="onServiceTypeChange">
+            <label class="radio-label">
+                <radio value="到店" checked="{{serviceType=='到店'?true:false}}" /> 到店
+            </label>
+            <label class="radio-label">
+                <radio value="外卖" checked="{{serviceType=='外卖'?true:false}}" /> 外卖
+            </label>
+        </radio-group>
+    </view>
+</view>
+
+<!-- 菜单区域  -->
+<view class="main">
+    <!-- 左侧菜单 -->
+    <scroll-view scroll-y="true" scroll-with-animation="true" bindscroll="rightScrollFn" class="left">
+        <view wx:for="{{menuArr}}" data-myid="{{item.id}}" wx:key="index" class="scroll-view-item left-tab {{leftActiveNum==item.id ? 'active' : ''}}" bindtap="leftClickFn">{{item.title}}
+        </view>
+    </scroll-view>
+
+    <!-- 右侧菜单 -->
+    <scroll-view scroll-y="true" scroll-with-animation="true" bindscroll="rightScrollFn" class="right" scroll-into-view="top{{Tab}}">
+        <view wx:for="{{menuArr}}" wx:key="index" id="top{{item.id}}" class="scroll-view-item rightblock">
+            <view class="title">{{item.title}}</view>
+            <block wx:for="{{item.list}}" wx:key="index">
+                <view class="dish_root">
+                    <image class="dish_img" src="{{item.icon}}" />
+                    <view class="dish_detail">
+                        <view class="dish_title" data-index="{{index}}">{{item.dish_name}}</view>
+                        <view class="dish_sale">销量：{{item.sales}} </view>
+                        <view class="dish_price_root">
+                            <view class="dish_price" data-index="{{index}}">{{item.price}}</view>
+                            <view class="dish_stepper" wx:if="{{item.category.category_name!='小菜'}}" bindtap="goDetailToggle" data-item="{{item}}">
+                                <text>选规格</text>
+                            </view>
+                            <view class="dish_stepper2" wx:else="">
+                                <view bindtap="minusCount" data-item="{{item}}">
+                                    <image class="dish_stepper_jiajian" src="/image/jian.png" />
+                                </view>
+                                <view class="value">
+                                    {{item.quantity}}
+                                </view>
+                                <view bindtap="addCount" data-item="{{item}}">
+                                    <image class="dish_stepper_jiajian" src="/image/jia.png" />
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </block>
+        </view>
+    </scroll-view>
+</view>
+
+
+<!--页面底部区域  -->
+<view class="bottom_box_root">
+    <view class="shopCart" bindtap="cascadeToggle">
+        <image class="shopCart_img" src="/image/shopCart.png"></image>
+    </view>
+    <view class="all_money" bindtap="cascadeToggle">总计:{{totalPrice}}元，{{totalNum}}件</view>
+    <view class="choose_ok" bindtap="gotoOrder">选好了</view>
+</view>
+
+
+<!-- 购物车弹窗  -->
+<view hidden="{{maskFlag}}" class="modal_mask" bindtap="cascadeToggle"></view>
+<view animation="{{animationData}}" class="cart_root">
+    <view class="cart_title_root">
+        <view class="cart_close" bindtap="cascadeToggle">返回</view>
+        <view class="cart_name">购物车</view>
+        <view class="cart_deleteAll" bindtap="cleanList">清空购物车</view>
+    </view>
+    <scroll-view scroll-y style="height:330px;margin-top:85rpx;">
+        <block wx:for="{{cartList}}" wx:key="index">
+            <view class="cart_cells_root" wx:if="{{item.quantity > 0}}">
+                <view class="cart_cells_detail">
+                    <view class="cells_name" data-index="{{index}}">{{item.dish_name}} {{item.eat_type=='打包'?'(打包)':''}}</view>
+                    <view class="cells_price" data-index="{{index}}">￥{{item.price}}</view>
+                </view>
+
+                <!-- 必选项 -->
+                <view class="cells_options">
+                    <view class="option" wx:for="{{item.mandatory_values}}" wx:key="index">{{item}}</view>
+                </view>
+                <!-- 多选项 -->
+                <view class="cells_options">
+                    <view class="option" wx:for="{{item.optional_options}}" wx:key="index">{{item}}</view>
+                </view>
+
+
+                <view class="cart_cells_detail2">
+                    <view data-item="{{item}}" bindtap="minusCount">
+                        <image class="dish_stepper_jiajian" src="/image/jian.png" />
+                    </view>
+                    <view class="cells_value">
+                        {{item.quantity}}</view>
+                    <view bindtap="addCount" data-item="{{item}}">
+                        <image class="dish_stepper_jiajian" src="/image/jia.png" />
+                    </view>
+                </view>
+
+                <icon class="cart_cells_delete" type="clear" size="24" data-index="{{index}}" data-dish="{{item}}" bindtap="deleteOne" />
+            </view>
+        </block>
+    </scroll-view>
+</view>
+
+<!-- 选规格弹窗 -->
+<view hidden="{{maskFlag2}}" class="modal-mask2" bindtap="goDetailToggle" />
+<view animation="{{animationData2}}" class="detail_root">
+    <!-- 1.详情页标题 -->
+    <view class="detail_title_root">
+        <view class="detail_close" bindtap="goDetailToggle">返回</view>
+        <view class="detail_name">{{currentDish.dish_name}}</view>
+    </view>
+    <!-- 2.详细介绍 -->
+    <view class="detail_intro_root">
+        <image src="{{currentDish.icon}}" mode="" class="detail_pic" />
+        <view class="detail_intro">{{currentDish.flavor_description}}</view>
+    </view>
+    <!-- 3.口味选择 -->
+    <view class="detail_choose_root">
+        <!-- 就餐方式 -->
+        <view class="option_title" wx:if="{{serviceType=='到店'}}">
+            就餐方式
+        </view>
+        <view class="mandatory_choose" wx:if="{{serviceType=='到店'}}">
+            <view class="optional_options">
+                <view class="{{currentEatType == '堂食' ? 'option_selected' : 'option_not_selected'}}" bindtap="onEatTypeChange" data-option="堂食">新鲜现吃</view>
+                <view class="{{currentEatType === '打包' ? 'option_selected' : 'option_not_selected'}}" bindtap="onEatTypeChange" data-option="打包">打包带走</view>
+            </view>
+        </view>
+        <!-- 必选项 -->
+        <view class="option_title">必选</view>
+        <view class="mandatory_choose" wx:for="{{currentDish.mandatory_options}}" wx:for-item="optionItem" wx:key="index">
+            <view class="option_name">{{optionItem.name}}</view>
+            <view class="mandatory_options">
+                <view wx:for="{{optionItem.options}}" wx:for-item="optionValue" class="{{currentMandatory[optionItem.name] === optionValue ? 'option_selected' : 'option_not_selected'}}" bindtap="onMandatoryOptionChange" data-name="{{optionItem.name}}" data-option="{{optionValue}}" wx:key="index">
+                    {{optionValue}}
+                </view>
+            </view>
+        </view>
+
+        <!-- 可选项 -->
+        <view class="option_title">多选</view>
+        <view class="optional_choose">
+            <checkbox-group class="optional_options" bindchange="onOptionalOptionChange">
+                <label wx:for="{{currentDish.optional_options}}" class="option_not_selected" wx:key="index">
+                    <checkbox value="{{item}}" checked="true" />{{item}}
+                </label>
+            </checkbox-group>
+        </view>
+
+        <!-- 加入购物车 -->
+        <view class="addToCart" bindtap="addToCart">
+            加入购物车
+        </view>
+    </view>
+</view>

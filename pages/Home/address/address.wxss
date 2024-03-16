@@ -1,0 +1,86 @@
+page {
+    background: #f6f6f6;
+    display: flex;
+    flex-direction: column;
+	justify-content: flex-start;
+}
+
+.title{
+	width: 100%;
+	height: 80rpx;
+	background-color: white;
+	text-align: center;
+	line-height: 80rpx;
+	font-size: 21px;
+	font-weight: bold;
+}
+
+.block_root{
+	margin: 30rpx 30rpx 0 30rpx;
+	border-radius: 20rpx;
+	background-color: white;
+	padding: 20rpx;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+.block-right{
+	margin: 10rpx;
+	width: 100rpx;
+	height: 85rpx;
+	text-align: center;
+	line-height: 85rpx;
+
+	background-color: rgb(185, 185, 185);
+	color: rgb(255, 255, 255);
+	font-size: 20px;
+}
+.left-middle{
+	padding: 0 0 10rpx 30rpx;
+	font-size: 20px;
+}
+.left-bottom{
+	padding: 0 30rpx;
+	font-size: 16px;
+	color: darkgray;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+
+.big{
+	color: darkred;
+	font-size: 24px;
+	padding-right: 10rpx;
+}
+.small{
+	font-size: 18px;
+	color: rgb(136, 127, 120);
+}
+
+
+
+.add-address {
+    width: 35%; /* 或者你想要的固定宽度 */
+    margin: 0 auto;
+    padding: 10rpx;
+    color: darkred;
+    border: darkred 2px solid;
+    background-color: white;
+	font-size: 22px;
+	text-align: center;
+    position: fixed;
+    bottom: 100rpx;
+    left: 0;
+    right: 0;
+}
+
+.none-address{
+	font-size: large;
+	color: rgb(185, 92, 38);
+	text-align: center;
+	margin-top: 250rpx;
+}

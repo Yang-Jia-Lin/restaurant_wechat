@@ -1,0 +1,86 @@
+<!--导入时间格式化工具filter.wxs-->
+<wxs src="../../../utils/filter.wxs" module="filters" />
+
+<!-- 导航条 -->
+<view class="navbar">
+    <lable wx:for="{{navbar}}" data-idx="{{index}}" class="item {{currentTab==index ? 'active' : ''}}" wx:key="unique" bindtap="navbarTap">
+        <text>{{item}}</text>
+        <text wx:if="{{index==0}}" class="number">{{number1!=0?number1:''}}</text>
+        <text wx:if="{{index==1}}" class="number">{{number2!=0?number2:''}}</text>
+        <text wx:if="{{index==2}}" class="number">{{number3!=0?number3:''}}</text>
+    </lable>
+</view>
+
+
+<!-- 订单详情 -->
+<view class='order_list_root' wx:for="{{list}}" wx:key="key">
+    <!-- 标题区 -->
+    <view class='title_root'>
+        <view class="pickup_number" wx:if="{{item.pickup_number!=0}}">
+            {{item.pickup_number}} 号
+        </view>
+        <view class="pickup_number" wx:else="">等待中</view>
+        <view class="time" wx:if="{{item.order_type == '外卖'}}">
+            外卖 {{item.delivery_type=='立即'?'立即送出':filters.formatDeliveryTime(item.delivery_time)+'送达'}}
+        </view>
+        <view class="time" wx:elif="{{item.delivery_type == '预约'}}">
+            预约 {{filters.formatDeliveryTime(item.delivery_time)}}取餐
+        </view>
+    </view>
+    <!-- 菜品明细 -->
+    <view class='dishes_root' wx:for="{{item.orderDetails}}" wx:for-item="arr_item" wx:key="key">
+        <view class="dish_title_root">
+            <view class="dish_name">
+                <view class="names">{{arr_item.dish_name}}</view>
+                <view class="dish_type">{{arr_item.eat_type=='打包'?'（打包）':''}}</view>
+            </view>
+            <view class="{{arr_item.quantity>1?'big':'dish_quantity'}}">
+                x{{arr_item.quantity}}
+            </view>
+        </view>
+        <view class="dish_detail_root" wx:if="{{arr_item.mandatory_options!=null}}">
+            <view class="detail1">
+                <text wx:if="{{arr_item.mandatory_options['份量']=='加量'}}">加量</text>
+                <text>{{arr_item.mandatory_options['主食']}}</text>
+            </view>
+            <view class="detail2">
+                <text>{{arr_item.mandatory_options['辣度']}}</text>
+                <text>{{arr_item.mandatory_options['麻度']}}</text>
+            </view>
+            <view class="detail3">
+                <text wx:for="{{arr_item.optional_options}}" wx:key="key">{{item}} </text>
+            </view>
+        </view>
+    </view>
+
+    <!-- 订单信息 -->
+    <view class="order_note" wx:if="{{item.note!=''}}">备注：{{item.note}}
+    </view>
+    <view class="order_note" wx:if="{{item.address}}">地址：{{item.address}}
+    </view>
+    <view class="button_root">
+        <view wx:if="{{item.order_status == '制作中'}}" class='button2' data-order='{{item}}' bindtap='printClick'>
+            打印小票
+        </view>
+        <view wx:if="{{item.order_status == '制作中'}}" class='button1' data-order='{{item}}' bindtap='madeClick'>
+            完成制作
+        </view>
+        <view wx:if="{{item.order_status == '等待中'}}" class='button1' data-id='{{item.order_id}}' bindtap='makeClick'>
+            提前排号
+        </view>
+        <view wx:if="{{item.order_status == '配送中'}}" class='button1' data-id='{{item.order_id}}' bindtap='takeOutClick'>
+            配送完成
+        </view>
+        <view wx:if="{{item.order_status == '配送中'}}" class='button1' data-phone='{{item.phone}}' bindtap='phoneClick'>
+            拨打电话
+        </view>
+    </view>
+    <view class='order_time'>
+        下单时间：{{item.order_time?filters.formatDate(item.order_time):''}}
+    </view>
+</view>
+
+<!-- 没有订单 -->
+<view wx:if="{{list.length==0}}" style="margin-top:16rpx;text-align: center;">
+    <label class='none_tab'>数据为空哦~~</label>
+</view>

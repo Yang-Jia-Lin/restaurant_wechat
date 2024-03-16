@@ -1,0 +1,12 @@
+<view class="container">
+	<view class="store-list">
+		<view class="store-item" wx:for="{{stores}}" wx:key="id" bindtap="selectStore"  data-store="{{item}}">
+			<image class="store-image" src="{{item.store_image}}" />
+			<view class="store-info">
+				<text class="store-name">{{item.store_name}}\n</text>
+				<text class="store-address">{{item.address}}</text>
+			</view>
+			<view class="store-select">选择</view>
+		</view>
+	</view>
+</view>

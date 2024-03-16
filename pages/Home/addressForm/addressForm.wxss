@@ -1,0 +1,59 @@
+/* 在这里可以定义样式 */
+.form {
+	padding: 30rpx;
+	font-size: 18px;
+}
+.form-item {
+	height: 70rpx;
+    margin-bottom: 30rpx;
+	display: flex;
+	flex-direction: row;
+    align-items: center;
+}
+.label {
+	width: 30%;
+	padding: 0 10rpx;
+    color: rgb(0, 0, 0);
+}
+/* 右侧 */
+.input-underline input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #666;
+    padding: 10rpx;
+}
+.picker-dropdown {
+    position: relative;
+    width: 70%;
+}
+.picker-dropdown .picker-display {
+    width: 90%;
+    border-bottom: 1px solid #666;
+    padding: 10rpx;
+    color: #666;
+}
+.picker-dropdown .dropdown-arrow {
+    position: absolute;
+    right: 10rpx;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+}
+
+
+/* 提交表单 */
+.submit-btn {
+	width: 40%;
+    height: 90rpx;
+    line-height: 90rpx;
+	text-align: center;
+	margin: 0 auto;
+	background-color: #9e7400;
+	box-shadow: 0 0 20rpx burlywood;
+    color: #fff;
+    font-size: 36rpx;
+}
+
+.submit-btn:active {
+    background-color: #7a5a00;
+}

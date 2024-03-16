@@ -1,0 +1,43 @@
+<view class="form">
+    <view class="form-item">
+        <text class="label">地址区域</text>
+        <view class="input">{{'山西省晋中市太原师范学院'}}</view>
+    </view>
+    <view class="form-item">
+        <text class="label">详细地址</text>
+        <view class="picker-dropdown">
+            <picker mode="selector" name="sex" range="{{addressOptions}}" bindchange="bindAddressChange">
+                <view class="picker-display">{{address}}</view>
+            </picker>
+            <text class="dropdown-arrow">▼</text>
+        </view>
+    </view>
+    <view class="form-item">
+        <text class="label">电话号码</text>
+        <view class="input-underline">
+            <input name="phone" bindinput="bindPhoneInput" placeholder="请输入电话号码" value="{{phone}}" />
+        </view>
+    </view>
+    <view class="form-item">
+        <text class="label">取餐昵称</text>
+        <view class="input-underline">
+            <input name="phone" bindinput="bindNameInput" placeholder="请输入" value="{{name}}" />
+        </view>
+    </view>
+    <view class="form-item">
+        <text class="label">性别</text>
+        <view class="picker-dropdown">
+            <picker mode="selector" name="sex" range="{{sexOptions}}" bindchange="bindSexChange">
+                <view class="picker-display">{{sex}}</view>
+            </picker>
+            <text class="dropdown-arrow">▼</text>
+        </view>
+    </view>
+    <view class="form-item">
+        <text class="label">设为默认地址</text>
+        <switch name="default" />
+    </view>
+    <view bindtap="addAddressClick" class="submit-btn">
+        添加地址
+    </view>
+</view>

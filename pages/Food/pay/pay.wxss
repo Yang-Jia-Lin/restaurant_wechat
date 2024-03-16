@@ -1,0 +1,203 @@
+page {
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* 顶部订单信息选择 */
+.root1{
+    margin: 25rpx;
+    padding: 20rpx;
+    background-color: #f6f6f6;
+    border-radius: 40px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.block{
+    margin: 20rpx
+}
+.block_title{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.block_title2{
+    display: flex;
+    flex-direction: column;
+}
+.block_name{
+    font-size: large;
+    color: brown;
+}
+.block_choose{
+    font-size: medium;
+}
+.block_content{
+    font-size: small;
+    color: rgb(146, 146, 146);
+}
+.block_select{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 10rpx;
+}
+.select{
+    width: 42%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10rpx;
+    font-size: 18px;
+    text-align: center;
+    border-radius: 35rpx;
+    background-color: rgba(224, 198, 151, 0.514);
+    box-shadow: 0 2px 4px rgba(97, 72, 4, 0.507);
+}
+.not-select{
+    width: 42%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10rpx;
+    font-size: 18px;
+    text-align: center;
+    border-radius: 35rpx;
+    background-color: rgb(253, 249, 246);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.cannot-select{
+    width: 42%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10rpx;
+    font-size: 18px;
+    text-align: center;
+    border-radius: 35rpx;
+    background-color: rgb(224, 224, 224);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.315);
+    color: rgb(139, 139, 139);
+}
+.block_content2{
+    font-size: small;
+    color: darkgray;
+    width: 90%;
+    text-align: center;
+    margin: 0 auto;
+}
+.picker{
+    color: rgb(161, 161, 161);
+    font-size: 14px;
+}
+  
+
+
+/* 订单明细 */
+.title {
+    padding: 20rpx 30rpx 0 30rpx;
+    font-size: 20px;
+}
+.root2{
+    margin: 20rpx 45rpx;
+    padding: 30rpx;
+    background-color: #f6f6f6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.dish_title{
+    font-size: large;
+    color: darkred;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.dish_detail{
+    font-size: small;
+    color: grey;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+
+
+/* 结算信息 */
+.root3{
+    margin: 0 45rpx;
+    padding: 30rpx;
+    background-color: #f6f6f6;
+    border-radius: 40rpx;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.coupons_block{
+    margin: 10rpx;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.coupons_title{
+    font-size: 18px;
+}
+.coupons_detail{
+    font-size: 16px;
+    color: indianred;
+}
+.coupons_detail_none{
+    font-size: 15px;
+    color: grey;
+}
+.total_block{
+    width: 100%;
+    margin-top: 10rpx;
+    padding-top: 10rpx;
+    border-top: solid 1px black;
+    display: flex;
+    flex-direction: row;
+    justify-content:flex-end;
+    align-items: flex-end;
+}
+.total_price{
+    color: red;
+    font-size: 24px;
+    padding-left: 10rpx;
+}
+
+
+
+
+/* 支付方式 */
+.title2 {
+    padding: 40rpx 30rpx 20rpx 30rpx;
+    font-size: 20px;
+}
+.none{
+    margin: 100rpx;
+}
+
+
+
+
+
+/*提交订单按钮 */
+.footer_box {
+    width: 100%;
+    height: 100rpx;
+    position: fixed;
+    left: 0;
+    bottom: 30rpx;
+    z-index: 100;
+}
+
+/*总计金额、件数  */
+.all_money {
+    height: 100rpx;
+    width: 300rpx;
+    margin: 0 auto;
+    line-height: 75rpx;
+    text-align: center;
+    color: #fff;
+    font-size: 36rpx;
+    background-color: #d6c160;
+    border-radius: 20rpx;
+}

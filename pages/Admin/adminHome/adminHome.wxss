@@ -1,0 +1,64 @@
+page {
+    background: #EBE0CC;
+}
+
+.container {
+    font-size: 25px;
+    width: 80%;
+    margin: 10%;
+    padding: 50rpx 0;
+    background: white;
+    border-radius: 50rpx;
+}
+
+.item_root {
+    background: #ffffff;
+    margin: 20rpx 70rpx;
+    height: 75rpx;
+    line-height: 75rpx;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.input {
+    font-size: 20px;
+    width: 60%;
+    height: 75rpx;
+    line-height: 75rpx;
+    padding-left: 10rpx;
+    border: 2px solid #c7b89d;
+    border-radius: 25rpx;
+}
+
+/*按钮 */
+.btn_fabu {
+    width: 60%;
+    height: 80rpx;
+    margin-top: 80rpx;
+    align-items: center;
+    border-radius: 95rpx;
+    font-size: 25px;
+}
+
+.tab {
+    display: flex;
+    flex-direction: column;
+    /* 左右居中 */
+    justify-content: center;
+    margin-top: 80rpx;
+}
+
+.tabNum {
+    width: 400rpx;
+    height:100rpx;
+    line-height: 100rpx;
+    margin: 30rpx auto;
+    background: rgba(126, 67, 0, 0.561);
+    color: white;
+    padding: 40rpx;
+    font-size: 26px;
+    border-radius: 40rpx;
+    text-align: center;
+    box-shadow: 0 0 15rpx #bbb2b2;
+}

@@ -1,0 +1,119 @@
+/* pages/home/home.wxss */
+page {
+    background-color: #f3ede3;
+}
+
+/* 门店选择 */
+.store_root{
+    width: 80%;
+    font-size: 32rpx;
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20rpx;
+    margin: 25rpx auto;
+}
+
+/* 主选择区域 */
+.category_root {
+    height: 320rpx;
+    width: 90%;
+    font-size: 40rpx;
+    background-color: rgb(252, 252, 225);
+    border-radius: 30rpx;
+    box-shadow: 0 0 20rpx rgba(0, 0, 0, 0.15);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin: 5rpx auto;
+}
+
+.category_item {
+    width: 280rpx;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.small_item {
+    font-size: 23rpx;
+    margin-top: 20rpx;
+    color: rgb(158, 106, 37);
+}
+
+.category_item_image {
+    width: 50px;
+    height: 50px;
+    padding: 15rpx 90rpx;
+}
+
+.category_item2 {
+    height: 150rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-size: 14px;
+}
+
+
+/* 注册相关 */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items:flex-start;
+    padding: 15rpx;
+    margin: 60rpx 40rpx;
+    border-radius: 30rpx;
+    box-shadow: 0 0 20rpx rgba(0, 0, 0, 0.15);
+    background-color: #ffffff;
+}
+
+.profile {
+    display: flex;
+    align-items:center;
+    margin-bottom: 10px;
+}
+
+.profile2 {
+    width: 98%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items:center;
+    background-color: #f3ede3;
+    border-radius: 5px;
+    padding: 10rpx;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+    color: black;
+}
+
+.username {
+    font-weight: bold;
+}
+
+.greeting {
+    padding: 20rpx;
+    width: 75%;
+}
+
+.btn {
+    background-color: rgb(199, 102, 11);
+    color: white;
+    text-align: center;
+    width: 25%;
+    padding: 10px;
+    margin: 20rpx;
+    border: none;
+    border-radius: 5px;
+}
