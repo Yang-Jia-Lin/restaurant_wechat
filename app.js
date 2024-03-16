@@ -14,7 +14,8 @@ App({
 		longitude: 112.00,
 		
 		// 订单信息
-	  	serviceType: '到店',
+		serviceType: '到店',
+		addressInfo: null,
 
 	  	baseUrl: "https://forestlamb.online/restaurant/"
 	}

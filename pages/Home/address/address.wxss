@@ -26,16 +26,8 @@ page {
 	justify-content: space-between;
 	align-items: center;
 }
-.block-right{
-	margin: 10rpx;
-	width: 100rpx;
-	height: 85rpx;
-	text-align: center;
-	line-height: 85rpx;
-
-	background-color: rgb(185, 185, 185);
-	color: rgb(255, 255, 255);
-	font-size: 20px;
+.block-left{
+	width: 75%;
 }
 .left-middle{
 	padding: 0 0 10rpx 30rpx;
@@ -49,7 +41,33 @@ page {
 	flex-direction: row;
 	justify-content: space-between;
 }
+.block-right{
+	width: 20%;
+}
+.block-delete{
+	margin: 20rpx auto;
+	padding: 10rpx;
+	width: 75%;
+	height: 45rpx;
+	text-align: center;
+	line-height: 45rpx;
 
+	background-color: rgb(184, 184, 184);
+	color: rgb(255, 255, 255);
+	font-size: 18px;
+}
+.block-select{
+	margin: 20rpx auto;
+	padding: 10rpx;
+	width: 75%;
+	height: 45rpx;
+	text-align: center;
+	line-height: 45rpx;
+
+	background-color: rgb(177, 135, 0);
+	color: rgb(255, 255, 255);
+	font-size: 18px;
+}
 
 .big{
 	color: darkred;
@@ -60,7 +78,20 @@ page {
 	font-size: 18px;
 	color: rgb(136, 127, 120);
 }
+.select{
+	margin: 30rpx 30rpx 0 30rpx;
+	border-radius: 20rpx;
+	background-color: white;
+	padding: 20rpx;
 
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+
+	border: 2px solid rgba(197, 178, 115, 0.87);
+	box-shadow: 0 0 2px darkgray;
+}
 
 
 .add-address {

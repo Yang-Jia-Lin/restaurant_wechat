@@ -4,8 +4,8 @@
 </view>
 
 <!-- 已有地址 -->
-<view class="block_root" wx:for="{{addressList}}" wx:key="key">
-	<view>
+<view wx:for="{{addressList}}" wx:key="key" wx:for-index="index" class="{{index==0?'select':'block_root'}}" bindtap="gotoFood" data-item="{{item}}">
+	<view class="block-left">
 		<view>
 			<text class="big" wx:if="{{item.default}}">默认</text>
 			<text class="small">{{item.address_title}}</text>
@@ -15,14 +15,17 @@
 		</view>
 		<view class="left-bottom">
 			<view class="name">
-				{{item.name}} {{item.sex?'('+item.sex+')':''}}
+				{{item.name||'微信用户'}} 
+				{{item.sex ?  item.sex=='不便透露'?'' : '('+item.sex + ')' : ''}}
 			</view>
 			<view class="phone">{{item.phone}}</view>
 		</view>
 	</view>
-	<view class="block-right" bindtap="changeAddress" data-item="{{item}}">
-		编辑
+	<view class="block-right">
+		<view class="block-delete" catchtap="delete" data-index="{{index}}">删除</view>
+		<view class="block-select" bindtap="gotoFood" data-item="{{item}}">选择</view>
 	</view>
+
 </view>
 <view class="none-address" wx:if="{{!haveAddress}}">
 	请先添加外卖收货地址！

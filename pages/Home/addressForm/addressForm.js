@@ -4,62 +4,109 @@ let baseUrl = app.globalData.baseUrl
 // 在JS文件中
 Page({
     data: {
-        phone: '', // 用户输入的电话号码
-        name: '', // 用户输入的昵称
+        phone: app.globalData.userInfo.phone_number || '',
+        name: app.globalData.userInfo.nickname || '',
         sex: '请选择性别',
         address: '请选择楼栋',
+        default: false,
         sexOptions: ['男', '女', '不便透露'],
-        addressOptions: ['1栋', '2栋', '3栋'],
-
-        // 其他数据
+        addressOptions: [],
     },
 
-    // 页面加载时的逻辑
     onLoad() {
-        // ...
+        this.getAddress();
     },
 
-    // 绑定电话号码输入
-    bindPhoneInput: function(e) {
+    getAddress() {
+        wx.request({
+            url: baseUrl + 'address/',
+            success: (res) => {
+                if (res.statusCode === 200) {
+                    const add = res.data.map(item => item.address_value)
+                    this.setData({
+                        addressOptions: add
+                    });
+                } else {
+                    console.log('获取数据失败:', res.errMsg);
+                }
+            },
+            fail: (err) => {
+                console.error('请求服务器失败:', err);
+            }
+        });
+    },
+
+    // 输入
+    bindPhoneInput: function (e) {
         this.setData({
             phone: e.detail.value
         });
     },
-
-    // 绑定昵称输入
-    bindNameInput: function(e) {
+    bindNameInput: function (e) {
         this.setData({
             name: e.detail.value
         });
     },
 
-    // 绑定性别更改
-    bindSexChange: function(e) {
+    // 选择
+    bindSexChange: function (e) {
         this.setData({
             sex: this.data.sexOptions[e.detail.value]
         });
     },
-    bindAddressChange: function(e) {
+    bindAddressChange: function (e) {
         this.setData({
             address: this.data.addressOptions[e.detail.value]
         });
     },
+    switchChange: function (e) {
+        this.setData({
+            default: e.detail.value
+        });
+    },
 
-    // 添加地址的点击事件
-    addAddressClick: function(e) {
-        // 现在，phone 和 name 是从数据绑定中获取的
-        const formData = {
+    // 确认添加地址
+    addAddressClick() {
+        let formData = {
             phone: this.data.phone,
             name: this.data.name,
-            // 其他表单数据
+            sex: this.data.sex == '请选择性别' ? '' : this.data.sex,
+            address_title: '山西省晋中市太原师范学院',
+            address_detail: this.data.address,
+            default: this.data.default,
         };
-
-        // 添加新地址到地址列表
-        const updatedAddressList = [...this.data.addressList, formData];
-
-        // 更新地址列表
-        wx.setStorageSync('addressList', updatedAddressList);
+        let addressList = wx.getStorageSync('addressList') || []
+        let updatedAddressList = []
+        // 验证数据合法性
+        if (formData.address_detail == '请选择楼栋') {
+            wx.showModal({
+                title: '提示',
+                content: '请选择配送楼栋',
+                showCancel: false, // 隐藏取消按钮
+                confirmText: '重新检查',
+            });
+            return;
+        }
+        if (!formData.phone || formData.phone.length !== 11) {
+            wx.showModal({
+                title: '提示',
+                content: '请输入有效的11位电话号码',
+                showCancel: false, // 隐藏取消按钮
+                confirmText: '立即选择',
+            });
+            return;
+        }
+        // 修改其他地址为非默认地址
+        if(formData.default){
+            addressList.forEach(address => {
+                address.default = false;
+            });
+            updatedAddressList = [formData , ...addressList];
+        } else {
+            updatedAddressList = [...addressList, formData];
+        }
         
-        // 其他逻辑
+        wx.setStorageSync('addressList', updatedAddressList);
+        wx.navigateBack();
     }
 })

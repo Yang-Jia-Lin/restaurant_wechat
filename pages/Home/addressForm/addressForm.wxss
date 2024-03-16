@@ -1,7 +1,10 @@
 /* 在这里可以定义样式 */
 .form {
-	padding: 30rpx;
-	font-size: 18px;
+    padding: 30rpx;
+    margin: 20rpx;
+    font-size: 18px;
+    background-color: white;
+    border-radius: 20rpx;
 }
 .form-item {
 	height: 70rpx;
@@ -47,11 +50,11 @@
     height: 90rpx;
     line-height: 90rpx;
 	text-align: center;
-	margin: 0 auto;
-	background-color: #9e7400;
-	box-shadow: 0 0 20rpx burlywood;
+	margin: 50rpx auto;
+	background-color: #af881a;
     color: #fff;
-    font-size: 36rpx;
+    font-size: 40rpx;
+    font-weight: bold;
 }
 
 .submit-btn:active {
