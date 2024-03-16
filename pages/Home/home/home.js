@@ -182,9 +182,15 @@ Page({
     },
     eatOut() {
         app.globalData.serviceType = '外卖';
-        wx.navigateTo({
-            url: '/pages/Home/address/address'
-        })
+        if(!app.globalData.addressInfo){
+            wx.navigateTo({
+                url: '/pages/Home/address/address'
+            })
+        } else {
+            wx.switchTab({
+                url: '/pages/Food/food/food'
+            })
+        }
     },
     goToRegister() {
         wx.navigateTo({

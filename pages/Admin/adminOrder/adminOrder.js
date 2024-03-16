@@ -226,6 +226,7 @@ Page({
     },
     // 配送时点击号码拨打电话
     makeCall(e) {
+        console.log(e)
         wx.makePhoneCall({
             phoneNumber: e.currentTarget.dataset.phone
         })

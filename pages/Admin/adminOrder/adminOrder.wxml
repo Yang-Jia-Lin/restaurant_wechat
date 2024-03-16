@@ -71,7 +71,7 @@
         <view wx:if="{{item.order_status == '配送中'}}" class='button1' data-id='{{item.order_id}}' bindtap='takeOutClick'>
             配送完成
         </view>
-        <view wx:if="{{item.order_status == '配送中'}}" class='button1' data-phone='{{item.phone}}' bindtap='phoneClick'>
+        <view wx:if="{{item.order_status == '配送中'}}" class='button1' data-phone='{{item.phone}}' bindtap='makeCall'>
             拨打电话
         </view>
     </view>

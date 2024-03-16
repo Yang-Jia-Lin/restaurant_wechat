@@ -27,11 +27,12 @@ page {
 	align-items: center;
 }
 .block-left{
-	width: 75%;
+	width: 80%;
 }
 .left-middle{
-	padding: 0 0 10rpx 30rpx;
-	font-size: 20px;
+	padding: 10rpx 0 10rpx 30rpx;
+	font-size: 22px;
+	font-weight: bold;
 }
 .left-bottom{
 	padding: 0 30rpx;
@@ -70,9 +71,12 @@ page {
 }
 
 .big{
-	color: darkred;
-	font-size: 24px;
-	padding-right: 10rpx;
+	background-color: rgb(192, 100, 46);
+	border-radius: 20rpx;
+	color: white;
+	font-size: 20px;
+	margin-right: 10rpx;
+	padding: 12rpx;
 }
 .small{
 	font-size: 18px;

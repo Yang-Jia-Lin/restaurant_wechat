@@ -1,7 +1,7 @@
 <view class="form">
     <view class="form-item">
         <text class="label">地址区域</text>
-        <view class="input">{{'山西省晋中市太原师范学院'}}</view>
+        <view class="input">{{'太原师范学院'}}</view>
     </view>
     <view class="form-item">
         <text class="label">昵称</text>

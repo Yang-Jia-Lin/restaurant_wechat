@@ -4,13 +4,14 @@
     <view class="block">
         <view class="block_title">
             <text class="block_name">{{serviceType}}</text>
-            <text class="block_choose">{{storeInfo.store_name}}</text>
+            <text class="block_choose" wx:if="{{serviceType=='到店'}}">{{storeInfo.store_name}}</text>
+            <text class="block_choose" wx:else="">{{addressInfo.address_title}} {{addressInfo.address_detail}}</text>
         </view>
         <view class="block_content" wx:if="{{serviceType=='到店'}}">
             距您{{distance}}km 请确认下单门店是否正确
         </view>
         <view class="block_content" wx:else="">
-            abab
+            {{addressInfo.name}} {{addressInfo.phone}}
         </view>
     </view>
 

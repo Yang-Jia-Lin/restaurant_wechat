@@ -15,7 +15,6 @@ Page({
             this.getRecentOrder(order_id);
         }
     },
-
     getRecentOrder(order_id){
         wx.request({
             url: baseUrl + 'orders/user/details/' + order_id,
@@ -33,6 +32,23 @@ Page({
                 console.error(err)
             }
         })
+    },
+    onRefresh() {
+        //导航条加载动画
+        wx.showNavigationBarLoading()
+        //loading 提示框
+        wx.showLoading({
+            title: 'Loading...',
+        })
+        setTimeout(function () {
+            wx.hideLoading();
+            wx.hideNavigationBarLoading();
+            wx.stopPullDownRefresh();
+        }, 1000)
+        this.onShow();
+    },
+    onPullDownRefresh() {
+        this.onRefresh();
     },
 
     // 页面跳转

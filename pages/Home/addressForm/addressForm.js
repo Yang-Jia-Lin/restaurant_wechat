@@ -4,8 +4,8 @@ let baseUrl = app.globalData.baseUrl
 // 在JS文件中
 Page({
     data: {
-        phone: app.globalData.userInfo.phone_number || '',
-        name: app.globalData.userInfo.nickname || '',
+        phone: '',
+        name: '',
         sex: '请选择性别',
         address: '请选择楼栋',
         default: false,
@@ -34,6 +34,16 @@ Page({
                 console.error('请求服务器失败:', err);
             }
         });
+        if(app.globalData.userInfo.phone!=null){
+            this.setData({
+                phone: app.globalData.userInfo.phone
+            })
+        }
+        if(app.globalData.userInfo.nickname){
+            this.setData({
+                phone: app.globalData.userInfo.nickname
+            })
+        }
     },
 
     // 输入
@@ -71,7 +81,7 @@ Page({
             phone: this.data.phone,
             name: this.data.name,
             sex: this.data.sex == '请选择性别' ? '' : this.data.sex,
-            address_title: '山西省晋中市太原师范学院',
+            address_title: '太原师范学院',
             address_detail: this.data.address,
             default: this.data.default,
         };
@@ -105,7 +115,7 @@ Page({
         } else {
             updatedAddressList = [...addressList, formData];
         }
-        
+        app.globalData.addressInfo = formData
         wx.setStorageSync('addressList', updatedAddressList);
         wx.navigateBack();
     }

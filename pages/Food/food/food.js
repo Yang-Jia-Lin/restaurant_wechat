@@ -8,6 +8,7 @@ Page({
             store_name: "附近门店"
         },
         serviceType: app.globalData.serviceType,
+        addressInfo: app.globalData.addressInfo,
         dishList: [],
         cartList: wx.getStorageSync('cart') || [],
         totalPrice: 0,
@@ -48,6 +49,8 @@ Page({
         this.getCartList()
         this.setData({
             storeInfo: app.globalData.storeInfo,
+            serviceType: app.globalData.serviceType,
+            addressInfo: app.globalData.addressInfo
         })
     },
 
@@ -98,11 +101,13 @@ Page({
         });
         app.globalData.serviceType = e.detail.value
         console.log('单选按钮发生变化，当前选中:', app.globalData.serviceType);
-        if(e.detail.value == "外卖"){
+        if (e.detail.value == "外卖") {
             // 选择地址
-            wx.navigateTo({
-                url: '/pages/Home/address/address'
-            })
+            if (!app.globalData.addressInfo) {
+                wx.navigateTo({
+                    url: '/pages/Home/address/address'
+                })
+            }
             // 修改eatType
             this.setData({
                 currentEatType: '打包'
@@ -425,13 +430,30 @@ Page({
         if (!arr || arr.length == 0) {
             wx.showModal({
                 title: '提示',
-                content: '请选择菜品'
+                content: '请选择菜品',
+                showCancel: false, // 隐藏取消按钮
             })
             return;
         }
-        wx.navigateTo({
-            url: '/pages/Food/pay/pay'
-        })
+        if (this.data.serviceType == '外卖' && !this.data.addressInfo) {
+            wx.showModal({
+                title: '提示',
+                content: '请选择配送地址',
+                success(res) {
+                    if (res.confirm) {
+                        wx.navigateTo({
+                            url: '/pages/Home/address/address',
+                        })
+                    } else if (res.cancel) {
+                        return;
+                    }
+                }
+            });
+        } else {
+            wx.navigateTo({
+                url: '/pages/Food/pay/pay'
+            })
+        }
     },
 
 

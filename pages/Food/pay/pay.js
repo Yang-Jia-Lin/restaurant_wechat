@@ -69,11 +69,12 @@ Page({
         serviceType: app.globalData.serviceType,
         distance: 3000,
 
-        // 订单必选信息
+        // 订单信息
         cartList: [],
         paymentMethod: '微信支付',
         totalPrice: 0.0,
         totalNum: 0,
+        note: "",
 
         // 配送时间相关
         deliveryNowClock: false, //当前不能立即送餐or取餐
@@ -83,12 +84,6 @@ Page({
         deliveryTime: '',
         
 
-        // 可选信息
-        note: "",
-        address: "",
-        call_name: "",
-        phone: "",
-
         // 优惠信息
         couponsNum: 0,
         currentCouponsId: null,
@@ -97,6 +92,8 @@ Page({
     onShow() {
         this.setData({
             serviceType: app.globalData.serviceType,
+            storeInfo: app.globalData.storeInfo,
+            addressInfo: app.globalData.addressInfo,
             deliveryNowClock: false,
             deliveryReserveClock: false
         })
@@ -345,7 +342,7 @@ Page({
     // 步骤1：创建订单并获取支付码
     createPayment(deliveryTime) {
         // 订单数据
-        const orderData = {
+        let orderData = {
             user_id: app.globalData.userInfo.user_id,
             openid: app.globalData.userInfo.openid,
             store_id: app.globalData.storeInfo.store_id,
@@ -359,10 +356,15 @@ Page({
             payment_method: this.data.paymentMethod,
             description: '唐合丰面馆订单',
             note: this.data.note,
-            address: this.data.address,
-            call_name: this.data.call_name,
-            phone: this.data.phone,
+            address: "",
+            call_name: "",
+            phone: app.globalData.userInfo.phone_number,
         };
+        if(this.data.serviceType == '外卖'){
+            orderData.address = this.data.addressInfo.address_detail
+            orderData.call_name = this.data.addressInfo.name
+            orderData.phone = this.data.addressInfo.phone
+        }
         const orderDetails = this.data.cartList
 
         // 发起订单
