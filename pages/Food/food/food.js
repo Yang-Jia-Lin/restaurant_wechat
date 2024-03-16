@@ -25,6 +25,7 @@ Page({
         currentOptional: [], // 一组多选
         currentEatType: '堂食',
         currentSmallDish: [], // 多个小菜
+        small_dish_note: "",
 
         // 分类滚动
         menuArr: [],

@@ -415,16 +415,16 @@ page {
 /* 标题 */
 .detail_title_root {
     width: 100%;
-    height: 80rpx;
+    height: 100rpx;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
 .detail_close {
-    height: 50rpx;
+    height: 60rpx;
     width: 15%;
-    line-height: 50rpx;
+    line-height: 60rpx;
     text-align: center;
     margin: 20rpx 0 10rpx 20rpx;
     font-size: 32rpx;
@@ -435,9 +435,10 @@ page {
 
 .detail_name {
     width: 60%;
-    height: 80rpx;
-    line-height: 80rpx;
-    font-size: 20px;
+    height: 100rpx;
+    line-height: 100rpx;
+    font-size: 23px;
+    font-weight: bold;
     text-align: center;
     position: fixed;
     left: 20%;
@@ -453,15 +454,15 @@ page {
 }
 
 .detail_pic {
-    height: 300rpx;
-    width: 300rpx;
+    height: 250rpx;
+    width: 250rpx;
     border-radius: 25rpx;
-    margin: 15rpx 30rpx;
+    margin: 15rpx 0 0 60rpx;
 }
 
 .detail_intro {
-    width: 330rpx;
-    margin: 15rpx;
+    width: 360rpx;
+    margin: 35rpx auto;
     font-size: 18px;
     color: rgb(114, 81, 37);
 }
@@ -475,27 +476,29 @@ page {
 
 .option_title {
     font-size: 14px;
-    color: rgb(0, 0, 0);
+    color: rgb(131, 79, 0);
+    font-weight: bold;
+    margin-top: 25rpx;
+    margin-bottom: 5rpx;
 }
 
 /* 必选 */
 .mandatory_choose {
-    height: 67rpx;
-    line-height: 67rpx;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     font-size: 20px;
-    margin-bottom: 25rpx;
+    margin-bottom: 15rpx;
     background-color: #fff8ec;
-    padding: 10rpx 30rpx;
+    padding: 12rpx 30rpx;
     border-radius: 30rpx;
 }
-
 .option_name {
-    font-size: 16px;
-    width: 10%;
+    font-size: 18px;
+    width: 15%;
+    margin: auto 0;
     margin-right: 8%;
+    text-align: center;
 }
 
 .mandatory_options {
@@ -547,6 +550,36 @@ page {
     background-color: rgb(116, 79, 0);
     border-radius: 20rpx;
 }
+
+/* 小菜 */
+.small_dish_name{
+    font-size: 18px;
+    width: 60%;
+    margin: auto 0;
+    margin-right: 8%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.small_dish_stepper {
+    width: 40%;
+    height: 50rpx;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.small_dish_value{
+    height: 40rpx;
+    line-height: 40rpx;
+    margin: auto 15rpx;
+}
+.small_dish_jiajian {
+    margin: 10% 0;
+    height: 80%;
+    width: 40rpx;
+}
+
 
 /* 加入购物车 */
 .addToCart {
