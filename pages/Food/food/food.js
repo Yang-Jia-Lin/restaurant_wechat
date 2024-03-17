@@ -167,8 +167,8 @@ Page({
         dishList.forEach(category => {
             category.list.forEach(dish => {
                 dish.quantity = 0;
-                let cartItem = cartList.find(cart => cart.dish_id === dish.dish_id);
-                if (cartItem && cartItem.note === "") {
+                let cartItem = cartList.find(cart => cart.dish_id === dish.dish_id && cart.note ==="");
+                if (cartItem) {
                     dish.quantity = cartItem.quantity;
                 }
             })
@@ -316,7 +316,7 @@ Page({
     },
     addToCart() {
         this.addMainDish()
-        //this.addSmallDish()
+        this.addSmallDish()
         this.goDetailDismiss()
         wx.showToast({
             title: '加购成功！',
@@ -434,11 +434,66 @@ Page({
 
     // 6.主界面操作
     // 6.1 菜品数量增加
-    minusMenuCount(){
+    minusMenuCount(e){
+        let dishItem = e.currentTarget.dataset.item
+        let cartList = wx.getStorageSync('cart') || [];
 
+        // 更新购物车中菜品数量
+        if (cartList.length > 0) {
+            for (let j in cartList) {
+                if (cartList[j].dish_id === dishItem.dish_id && cartList[j].note ==="") {
+                    cartList[j].quantity = cartList[j].quantity-1>0?cartList[j].quantity-1:0;
+                    break;
+                }
+            }
+        }
+
+        // 保存数据
+        wx.setStorageSync('cart', cartList)
+        this.setData({
+            cartList: cartList,
+        })
+        this.getCartList()
+        this.updateDishQuantities()
     },
-    addMenuCount(){
+    addMenuCount(e){
+        let dishItem = e.currentTarget.dataset.item
+        let item = {};
+        item.dish_id = dishItem.dish_id;
+        item.dish_name = dishItem.dish_name;
+        item.price = dishItem.price;
+        item.quantity = dishItem.quantity;
+        item.eat_type = '到店';
+        item.note = "";
 
+        let cartList = wx.getStorageSync('cart') || [];
+        let f = false;
+
+        // 更新购物车中菜品数量
+        if (cartList.length > 0) {
+            for (let j in cartList) {
+                if (cartList[j].dish_id === item.dish_id && cartList[j].note ==="") {
+                    cartList[j].quantity += 1;
+                    f = true;
+                    break;
+                }
+            }
+            if (!f) {
+                item.quantity = 1;
+                cartList.push(item);
+            }
+        } else {
+            item.quantity = 1;
+            cartList.push(item);
+        }
+
+        // 保存数据
+        wx.setStorageSync('cart', cartList)
+        this.setData({
+            cartList: cartList,
+        })
+        this.getCartList()
+        this.updateDishQuantities()
     },
 
     // 6.2 界面滚动

@@ -46,13 +46,13 @@
                                 <text>选规格</text>
                             </view>
                             <view class="dish_stepper2" wx:else="">
-                                <view bindtap="minusCount" data-item="{{item}}">
+                                <view bindtap="minusMenuCount" data-item="{{item}}">
                                     <image class="dish_stepper_jiajian" src="/image/jian.png" />
                                 </view>
-                                <view class="value">
+                                <view>
                                     {{item.quantity}}
                                 </view>
-                                <view bindtap="addCount" data-item="{{item}}">
+                                <view bindtap="addMenuCount" data-item="{{item}}">
                                     <image class="dish_stepper_jiajian" src="/image/jia.png" />
                                 </view>
                             </view>
@@ -84,7 +84,7 @@
         <view class="cart_deleteAll" bindtap="cleanList">清空购物车</view>
     </view>
     <scroll-view scroll-y style="height:330px;margin-top:85rpx;">
-        <block wx:for="{{cartList}}" wx:key="index">
+        <block wx:for="{{cartList}}" wx:key="index" wx:for-index="index">
             <view class="cart_cells_root" wx:if="{{item.quantity > 0}}">
                 <view class="cart_cells_detail">
                     <view class="cells_name" data-index="{{index}}">{{item.dish_name}} {{item.eat_type=='打包'?'(打包)':''}}</view>
@@ -99,20 +99,24 @@
                 <view class="cells_options">
                     <view class="option" wx:for="{{item.optional_options}}" wx:key="index">{{item}}</view>
                 </view>
+                <!-- 备注 -->
+                <view class="cells_options" wx:if="{{item.note !== ''}}">
+                    <view class="option">{{item.note}}</view>
+                </view>
 
 
                 <view class="cart_cells_detail2">
-                    <view data-item="{{item}}" bindtap="minusCount">
+                    <view bindtap="minusCount" data-index="{{index}}">
                         <image class="dish_stepper_jiajian" src="/image/jian.png" />
                     </view>
                     <view class="cells_value">
                         {{item.quantity}}</view>
-                    <view bindtap="addCount" data-item="{{item}}">
+                    <view bindtap="addCount" data-index="{{index}}">
                         <image class="dish_stepper_jiajian" src="/image/jia.png" />
                     </view>
                 </view>
 
-                <icon class="cart_cells_delete" type="clear" size="24" data-index="{{index}}" data-dish="{{item}}" bindtap="deleteOne" />
+                <icon class="cart_cells_delete" type="clear" size="24" data-index="{{index}}" bindtap="deleteOne" />
             </view>
         </block>
     </scroll-view>
@@ -166,19 +170,19 @@
 
         <!-- 小菜 -->
         <view class="option_title">加点小菜</view>
-        <view class="mandatory_choose" wx:for="{{menuArr[menuArr.length - 1].list}}" wx:for-item="smallItem" wx:key="index">
+        <view class="mandatory_choose" wx:for="{{small_dish_list}}" wx:for-item="smallItem" wx:key="index">
             <view class="small_dish_name">
                 <text>{{smallItem.dish_name}}</text>
                 <text class="small_dish_price">￥{{smallItem.price}}</text>
             </view>
             <view class="small_dish_stepper">
-                <view bindtap="minusCount" data-item="{{smallItem}}">
+                <view bindtap="small_dish_minus" data-item="{{smallItem}}">
                     <image class="small_dish_jiajian" src="/image/jian.png" />
                 </view>
                 <view class="small_dish_value">
                     {{smallItem.quantity}}
                 </view>
-                <view bindtap="addCount" data-item="{{smallItem}}">
+                <view bindtap="small_dish_add" data-item="{{smallItem}}">
                     <image class="small_dish_jiajian" src="/image/jia.png" />
                 </view>
             </view>
