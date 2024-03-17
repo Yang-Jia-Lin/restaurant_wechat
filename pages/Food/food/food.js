@@ -18,7 +18,7 @@ Page({
         // 当前选择
         currentDish: {}, // 一个主菜
         currentMandatory: wx.getStorageSync('mandatory') || {
-            主食: "面",
+            种类: "面",
             辣度: "微辣",
             麻度: "微麻",
             份量: "标准"
@@ -384,7 +384,7 @@ Page({
                 item.dish_name = dish.dish_name;
                 item.price = dish.price;
                 item.quantity = dish.quantity;
-                item.eat_type = '';
+                item.eat_type = '堂食';
                 item.note = '放在' + this.data.currentDish.dish_name + '中'
                 item.quantity = 1;
                 smallCart.push(item);
@@ -463,7 +463,7 @@ Page({
         item.dish_name = dishItem.dish_name;
         item.price = dishItem.price;
         item.quantity = dishItem.quantity;
-        item.eat_type = '到店';
+        item.eat_type = '堂食';
         item.note = "";
 
         let cartList = wx.getStorageSync('cart') || [];

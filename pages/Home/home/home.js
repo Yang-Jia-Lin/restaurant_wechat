@@ -56,6 +56,7 @@ Page({
 	  	} else {
 			this.fetchUserInfo().then(userInfo => {
                 console.log('获取到用户信息：', userInfo);
+                wx.setStorageSync('userInfo', userInfo)
                 this.setData({
                     userInfo: userInfo
                 })

@@ -169,7 +169,7 @@
         </view>
 
         <!-- 小菜 -->
-        <view class="option_title">加点小菜</view>
+        <view class="option_title">给朕加料</view>
         <view class="mandatory_choose" wx:for="{{small_dish_list}}" wx:for-item="smallItem" wx:key="index">
             <view class="small_dish_name">
                 <text>{{smallItem.dish_name}}</text>

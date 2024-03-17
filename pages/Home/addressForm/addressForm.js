@@ -4,7 +4,7 @@ let baseUrl = app.globalData.baseUrl
 // 在JS文件中
 Page({
     data: {
-        phone: '',
+        phone: app.globalData.userInfo.phone_number,
         name: '',
         sex: '请选择性别',
         address: '请选择楼栋',
