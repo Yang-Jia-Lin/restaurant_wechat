@@ -4,11 +4,12 @@ let baseUrl = app.globalData.baseUrl
 
 Page({
     data: {
-        storeInfo: app.globalData.storeInfo || {
-            store_name: "附近门店"
-        },
-        serviceType: app.globalData.serviceType,
+        storeInfo: app.globalData.storeInfo,
         addressInfo: app.globalData.addressInfo,
+        serviceType: app.globalData.serviceType,
+
+        // 全局数据
+        menuArr: [],
         dishList: [],
         cartList: wx.getStorageSync('cart') || [],
         totalPrice: 0,
@@ -24,14 +25,12 @@ Page({
         }, // 一组必选
         currentOptional: [], // 一组多选
         currentEatType: '堂食',
-        currentSmallDish: [], // 多个小菜
-        small_dish_note: "",
+        small_dish_list: [], // 小菜
 
         // 分类滚动
-        menuArr: [],
         leftActiveNum: 0,
         Tab: 0,
-        heightArr: [], //用来存储右侧每个条目的高度
+        heightArr: [], // 存储右侧每个条目的高度
 
         // 购物车动画
         animationData: {},
@@ -63,7 +62,7 @@ Page({
         }
     },
 
-    // 1.门店信息相关
+    // 1.信息获取与更新
     getStores() {
         let that = this;
         wx.request({
@@ -89,34 +88,6 @@ Page({
             }
         });
     },
-    changeStores() {
-        wx.navigateTo({
-            url: '/pages/Home/store/store',
-        })
-    },
-
-    // 2.切换serviceType
-    onServiceTypeChange(e) {
-        this.setData({
-            serviceType: e.detail.value
-        });
-        app.globalData.serviceType = e.detail.value
-        console.log('单选按钮发生变化，当前选中:', app.globalData.serviceType);
-        if (e.detail.value == "外卖") {
-            // 选择地址
-            if (!app.globalData.addressInfo) {
-                wx.navigateTo({
-                    url: '/pages/Home/address/address'
-                })
-            }
-            // 修改eatType
-            this.setData({
-                currentEatType: '打包'
-            })
-        }
-    },
-
-    // 3.更新购物车
     getCartList() {
         var cartList = wx.getStorageSync('cart') || [];
         var totalP = 0;
@@ -132,8 +103,6 @@ Page({
         });
         console.log('当前购物车', cartList)
     },
-
-    // 4.获取菜品数据
     getFoodList() {
         wx.request({
             url: baseUrl + 'dishes/store-dishes/',
@@ -147,28 +116,20 @@ Page({
                 if (res.data.success) {
                     let dishes = res.data.storeDishes.map(item => item.dish);
                     let existingDishIds = new Set(dishes.map(dish => dish.dish_id));
-
                     this.cleanUpCart(existingDishIds); // 清理购物车
-                    let menuArr = this.processData(dishes); // 过滤分类
-                    this.updateDishQuantities(dishes); // 更新已选数量
+                    this.processData(dishes); // 清理菜单
+                    this.updateDishQuantities(dishes); // 清理菜品数据
                     this.getHeightArr(); // 更新高度数组
-
-                    this.setData({
-                        dishList: dishes,
-                        menuArr: menuArr,
-                    });
-
-                    console.log("菜品数据：", dishes, "过滤：", menuArr);
                 } else {
-                    console.log("菜品数据请求失败", res);
+                    console.error("菜品数据请求失败", res);
                 }
             },
             fail: error => {
-                console.log("菜品数据请求失败", error);
+                console.error("菜品数据请求失败", error);
             }
         });
     },
-    cleanUpCart(existingDishIds) { // 清理购物车中不存在的菜品
+    cleanUpCart(existingDishIds) { // 清理购物车中不存在的菜品删除
         let cartList = wx.getStorageSync('cart') || [];
         cartList = cartList.filter(item => existingDishIds.has(item.dish_id));
         wx.setStorageSync('cart', cartList);
@@ -194,147 +155,121 @@ Page({
             item.id = index;
         });
 
-        return endData;
-    },
-    updateDishQuantities(dataList) { // 更新主界面的已选购菜品数量
-        let cartList = wx.getStorageSync('cart') || [];
-        dataList.forEach(food => {
-            food.quantity = 0; // 初始化为0
-            let cartItem = cartList.find(cart => cart.dish_id === food.dish_id);
-            if (cartItem) {
-                food.quantity = cartItem.quantity;
-            }
+        this.setData({
+            menuArr: endData,
+            small_dish_list: endData[endData.length - 1].list
         });
+        console.log("菜品数据：", dataList, "过滤：", endData);
     },
-
-
-    // 5.购物车操作
-    minusCount(e) {
-        let item = e.currentTarget.dataset.item;
+    updateDishQuantities() { // 更新主界面菜品数量
         let cartList = wx.getStorageSync('cart') || [];
-        let menuArr = this.data.menuArr
-        // menuArr菜品 v每个分类 v2每个菜品
-        menuArr.forEach(v => {
-            v.list.forEach(v2 => {
-                if (v2.dish_id == item.dish_id) {
-                    // 修改菜品列表中该菜品的数量
-                    v2.quantity = v2.quantity > 0 ? v2.quantity - 1 : 0;
-
-                    // 修改购物车中该菜品的数量
-                    for (let j = 0; j < cartList.length; j++) {
-                        if (cartList[j].dish_id == item.dish_id && cartList[j].eat_type == item.eat_type &&
-                            JSON.stringify(cartList[j].mandatory_options) === JSON.stringify(item.mandatory_options) &&
-                            JSON.stringify(cartList[j].optional_options) === JSON.stringify(item.optional_options)) {
-                            cartList[j].quantity -= 1;
-                            if (cartList[j].quantity <= 0) {
-                                cartList.splice(j, 1);
-                                j--; // 后续元素索引向前移动，需要减少索引j
-                            }
-                            break;
-                        }
-                    }
-
-                    if (cartList.length <= 0) {
-                        this.setData({
-                            cartList: [],
-                            totalNum: 0,
-                            totalPrice: 0,
-                        })
-                        this.cascadeDismiss()
-                    }
-                    wx.setStorageSync('cart', cartList)
+        let dishList = this.data.menuArr
+        dishList.forEach(category => {
+            category.list.forEach(dish => {
+                dish.quantity = 0;
+                let cartItem = cartList.find(cart => cart.dish_id === dish.dish_id);
+                if (cartItem && cartItem.note === "") {
+                    dish.quantity = cartItem.quantity;
                 }
             })
         })
+        this.setData({
+            menuArr: dishList
+        })
+    },
+
+    // 2.选择
+    changeStores() {
+        wx.navigateTo({
+            url: '/pages/Home/store/store',
+        })
+    },
+    onServiceTypeChange(e) {
+        this.setData({
+            serviceType: e.detail.value
+        });
+        app.globalData.serviceType = e.detail.value
+        if (e.detail.value == "外卖") {
+            // 选择地址
+            if (!app.globalData.addressInfo) {
+                wx.navigateTo({
+                    url: '/pages/Home/address/address'
+                })
+            }
+            // 修改eatType
+            this.setData({
+                currentEatType: '打包'
+            })
+        }
+    },
+
+
+    // 3.购物车操作
+    minusCount(e) {
+        let index = e.currentTarget.dataset.index;
+        let cartList = wx.getStorageSync('cart') || [];
+
+        // 减少数量
+        if (cartList[index].quantity > 1) {
+            cartList[index].quantity -= 1;
+        } else {
+            cartList[index].quantity = 0;
+            cartList.splice(index, 1);
+        }
+
+        // 数据存储
+        wx.setStorageSync('cart', cartList)
         this.setData({
             cartList: cartList,
-            menuArr: menuArr
         })
-        this.getCartList();
-    },
-    addCount(e) {
-        let item = e.currentTarget.dataset.item;
-        let arr = wx.getStorageSync('cart') || [];
-        let flag = false;
-        let menuArr = this.data.menuArr
-        menuArr.forEach(v => {
-            v.list.forEach(v2 => {
-                if (v2.dish_id == item.dish_id) {
-                    // 菜品数据当前菜品+1
-                    v2.quantity += 1;
-                    // 购物车当前菜品+1
-                    if (arr.length > 0) {
-                        for (let j in arr) {
-                            if (arr[j].dish_id == item.dish_id &&
-                                arr[j].eat_type == item.eat_type && JSON.stringify(arr[j].mandatory_options) === JSON.stringify(item.mandatory_options) && JSON.stringify(arr[j].optional_options) === JSON.stringify(item.optional_options)) {
-                                arr[j].quantity += 1;
-                                flag = true;
-                                wx.setStorageSync('cart', arr)
-                                break;
-                            }
-                        }
-                        if (!flag) arr.push(v2);
-                    } else arr.push(v2);
-                    wx.setStorageSync('cart', arr)
-                }
-            })
-        })
+        this.getCartList()
+        this.updateDishQuantities()
 
-        this.setData({
-            cartList: arr,
-            menuArr: menuArr
-        })
-        this.getCartList();
-    },
-    deleteOne(e) {
-        var dish = e.currentTarget.dataset.dish;
-        var index = e.currentTarget.dataset.index;
-        var arr = wx.getStorageSync('cart')
-        let menuArr = this.data.menuArr
-        menuArr.forEach(v => {
-            v.list.forEach(v2 => {
-                if (v2.dish_id == dish.dish_id) {
-                    v2.quantity -= dish.quantity;
-                }
-            })
-        })
-
-        arr.splice(index, 1);
-        if (arr.length <= 0) {
-            this.setData({
-                menuArr: menuArr,
-                cartList: [],
-                totalNum: 0,
-                totalPrice: 0,
-            })
+        if (cartList.length <= 0) {
             this.cascadeDismiss()
         }
-        wx.setStorageSync('cart', arr)
+    },
+    addCount(e) {
+        let index = e.currentTarget.dataset.index;
+        let cartList = wx.getStorageSync('cart') || [];
+        cartList[index].quantity += 1;
+
+        // 数据存储
+        wx.setStorageSync('cart', cartList)
         this.setData({
-            cartList: arr,
-            menuArr: menuArr
+            cartList: cartList,
         })
-        this.getCartList();
+        this.getCartList()
+        this.updateDishQuantities()
+    },
+    deleteOne(e) {
+        var index = e.currentTarget.dataset.index;
+        var cart = wx.getStorageSync('cart')
+        cart.splice(index, 1);
+        wx.setStorageSync('cart', cart)
+        this.setData({
+            cartList: cart,
+        })
+        this.getCartList()
+        this.updateDishQuantities()
+
+        if (cart.length <= 0) {
+            this.cascadeDismiss()
+        }
     },
     cleanList() {
-        let menuArr = this.data.menuArr
-        menuArr.forEach(v => {
-            v.list.forEach(v2 => {
-                v2.quantity = 0
-            })
-        })
         wx.setStorageSync('cart', "")
         this.setData({
-            menuArr: menuArr,
             cartList: [],
             totalNum: 0,
             totalPrice: 0,
         })
+        this.updateDishQuantities()
         this.cascadeDismiss()
     },
 
 
-    // 6.菜品详情操作
+    // 4.菜品详情页操作
     onEatTypeChange(e) {
         this.setData({
             currentEatType: e.currentTarget.dataset.option
@@ -355,10 +290,40 @@ Page({
             currentOptional: values
         });
     },
-    onSmallDishChange(e) {
-
+    small_dish_minus(e) {
+        let target = e.currentTarget.dataset.item;
+        let menuList = this.data.small_dish_list
+        menuList.forEach(item => {
+            if (item.dish_id == target.dish_id) {
+                item.quantity = item.quantity > 0 ? item.quantity - 1 : 0
+            }
+        })
+        this.setData({
+            small_dish_list: menuList
+        })
+    },
+    small_dish_add(e) {
+        let target = e.currentTarget.dataset.item;
+        let menuList = this.data.small_dish_list
+        menuList.forEach(item => {
+            if (item.dish_id == target.dish_id) {
+                item.quantity = item.quantity + 1;
+            }
+        })
+        this.setData({
+            small_dish_list: menuList
+        })
     },
     addToCart() {
+        this.addMainDish()
+        //this.addSmallDish()
+        this.goDetailDismiss()
+        wx.showToast({
+            title: '加购成功！',
+        })
+        this.getCartList();
+    },
+    addMainDish() {
         let currentDish = this.data.currentDish;
         let currentMandatory = this.data.currentMandatory;
         let currentOptional = this.data.currentOptional;
@@ -366,7 +331,7 @@ Page({
         let values = Object.values(this.data.currentMandatory);
         wx.setStorageSync('mandatory', currentMandatory);
 
-        // 准备插入数据
+        // 准备数据
         let item = {};
         item.dish_id = currentDish.dish_id;
         item.dish_name = currentDish.dish_name;
@@ -376,19 +341,10 @@ Page({
         item.mandatory_options = currentMandatory;
         item.mandatory_values = values;
         item.optional_options = currentOptional;
-        console.log('c', item)
+        item.note = "";
 
         let arr = wx.getStorageSync('cart') || [];
         let f = false;
-        let menuArr = this.data.menuArr
-        // 更新菜单中菜品数量
-        menuArr.forEach(v => {
-            v.list.forEach(v2 => {
-                if (v2.dish_id == item.dish_id) {
-                    v2.quantity += 1;
-                }
-            })
-        })
 
         // 更新购物车中菜品数量
         if (arr.length > 0) {
@@ -415,17 +371,34 @@ Page({
         wx.setStorageSync('cart', arr)
         this.setData({
             cartList: arr,
-            menuArr: menuArr
         })
-        this.goDetailDismiss()
-        wx.showToast({
-            title: '加购成功！',
+    },
+    addSmallDish() {
+        let smallDishes = this.data.small_dish_list;
+        let smallCart = this.data.cartList;
+
+        smallDishes.forEach(dish => {
+            if (dish.quantity > 0) {
+                let item = {};
+                item.dish_id = dish.dish_id;
+                item.dish_name = dish.dish_name;
+                item.price = dish.price;
+                item.quantity = dish.quantity;
+                item.eat_type = '';
+                item.note = '放在' + this.data.currentDish.dish_name + '中'
+                item.quantity = 1;
+                smallCart.push(item);
+            }
         })
-        this.getCartList();
+
+        wx.setStorageSync('cart', smallCart)
+        this.setData({
+            cartList: smallCart
+        })
     },
 
 
-    // 7.确认结算
+    // 5.确认结算
     gotoOrder: function () {
         var arr = wx.getStorageSync('cart') || [];
         if (!arr || arr.length == 0) {
@@ -459,10 +432,16 @@ Page({
 
 
 
+    // 6.主界面操作
+    // 6.1 菜品数量增加
+    minusMenuCount(){
 
+    },
+    addMenuCount(){
 
+    },
 
-    // 界面分类滚动
+    // 6.2 界面滚动
     getHeightArr() {
         let _this = this;
         wx.getSystemInfo({
@@ -519,7 +498,76 @@ Page({
         }
     },
 
-    // 购物车开关
+    // 6.3 详情页
+    goDetailToggle: function (e) {
+        let that = this;
+        let dish = this.data.dataList
+        if (that.data.maskVisual2 == "hidden") {
+            let current = e.currentTarget.dataset.item
+            let small_dish = this.data.small_dish_list
+            small_dish.forEach(item => {
+                item.quantity = 0
+            })
+            that.setData({
+                currentDish: current,
+                currentOptional: current.optional_options,
+                small_dish_list: small_dish
+            })
+            console.log('当前菜品', current)
+            that.goDetailPopup()
+        } else {
+            this.updateDishQuantities(dish)
+            that.goDetailDismiss()
+        }
+
+    },
+    goDetailPopup: function () {
+        var that = this;
+        // 购物车打开动画
+        var animation = wx.createAnimation({
+            duration: 200,
+            timingFunction: 'ease-in-out',
+            delay: 0
+        });
+        that.animation = animation;
+        animation.translate(0, -675).step();
+        that.setData({
+            animationData2: that.animation.export(),
+        });
+        // 遮罩渐变动画
+        var animationMask2 = wx.createAnimation({
+            duration: 200,
+            timingFunction: 'linear',
+        });
+        that.animationMask2 = animationMask2;
+        animationMask2.opacity(0.8).step();
+        that.setData({
+            animationMask2: that.animationMask2.export(),
+            maskVisual2: "show",
+            maskFlag2: false,
+        });
+    },
+    goDetailDismiss: function () {
+        var that = this
+        // 购物车关闭动画
+        that.animation.translate(0, 285).step();
+        that.setData({
+            animationData2: that.animation.export()
+        });
+        // 遮罩渐变动画
+        that.animationMask2.opacity(0).step();
+        that.setData({
+            animationMask2: that.animationMask2.export(),
+        });
+        // 隐藏遮罩层
+        that.setData({
+            maskVisual2: "hidden",
+            maskFlag2: true,
+            currentDish: {}
+        });
+    },
+
+    // 6.4 购物车
     cascadeToggle: function () {
         var that = this;
         var arr = this.data.cartList
@@ -577,66 +625,4 @@ Page({
             maskFlag: true
         });
     },
-
-    // 详情页开关
-    goDetailToggle: function (e) {
-        let that = this;
-        if (that.data.maskVisual2 == "hidden") {
-            console.log('当前菜品', e.currentTarget.dataset.item)
-            that.setData({
-                currentDish: e.currentTarget.dataset.item,
-            })
-            let options = that.data.currentDish.optional_options;
-            that.setData({
-                currentOptional: options
-            })
-            that.goDetailPopup()
-        } else
-            that.goDetailDismiss()
-    },
-    goDetailPopup: function () {
-        var that = this;
-        // 购物车打开动画
-        var animation = wx.createAnimation({
-            duration: 200,
-            timingFunction: 'ease-in-out',
-            delay: 0
-        });
-        that.animation = animation;
-        animation.translate(0, -675).step();
-        that.setData({
-            animationData2: that.animation.export(),
-        });
-        // 遮罩渐变动画
-        var animationMask2 = wx.createAnimation({
-            duration: 200,
-            timingFunction: 'linear',
-        });
-        that.animationMask2 = animationMask2;
-        animationMask2.opacity(0.8).step();
-        that.setData({
-            animationMask2: that.animationMask2.export(),
-            maskVisual2: "show",
-            maskFlag2: false,
-        });
-    },
-    goDetailDismiss: function () {
-        var that = this
-        // 购物车关闭动画
-        that.animation.translate(0, 285).step();
-        that.setData({
-            animationData2: that.animation.export()
-        });
-        // 遮罩渐变动画
-        that.animationMask2.opacity(0).step();
-        that.setData({
-            animationMask2: that.animationMask2.export(),
-        });
-        // 隐藏遮罩层
-        that.setData({
-            maskVisual2: "hidden",
-            maskFlag2: true,
-            currentDish: {}
-        });
-    }
 })
