@@ -61,39 +61,39 @@ Page({
     },
 
     onLoad() {
-        if (!app.globalData.storeInfo) {
-            this.getStores()
-        } else {
+        // if (!app.globalData.storeInfo) {
+        //     this.getStores()
+        // } else {
             this.getFoodList()
-        }
+        // }
     },
 
     // 1.信息获取与更新
-    getStores() {
-        let that = this;
-        wx.request({
-            url: baseUrl + 'stores/',
-            method: 'GET',
-            data: {
-                latitude: app.globalData.latitude,
-                longitude: app.globalData.longitude,
-            },
-            success: (res) => {
-                if (res.data.success) {
-                    console.log('获取门店信息成功', res.data.stores[0]);
-                    app.globalData.stores = res.data.stores;
-                    app.globalData.storeInfo = res.data.stores[0];
-                    this.setData({
-                        storeInfo: res.data.stores[0]
-                    })
-                    that.getFoodList()
-                }
-            },
-            fail: (err) => {
-                console.log('获取门店信息失败', err);
-            }
-        });
-    },
+    // getStores() {
+    //     let that = this;
+    //     wx.request({
+    //         url: baseUrl + 'stores/',
+    //         method: 'GET',
+    //         data: {
+    //             latitude: app.globalData.latitude,
+    //             longitude: app.globalData.longitude,
+    //         },
+    //         success: (res) => {
+    //             if (res.data.success) {
+    //                 console.log('获取门店信息成功', res.data.stores[0]);
+    //                 app.globalData.stores = res.data.stores;
+    //                 app.globalData.storeInfo = res.data.stores[0];
+    //                 this.setData({
+    //                     storeInfo: res.data.stores[0]
+    //                 })
+    //                 that.getFoodList()
+    //             }
+    //         },
+    //         fail: (err) => {
+    //             console.log('获取门店信息失败', err);
+    //         }
+    //     });
+    // },
     getCartList() {
         var cartList = wx.getStorageSync('cart') || [];
         var totalP = 0;

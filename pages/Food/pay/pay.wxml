@@ -96,8 +96,8 @@
     </view>
     <!-- 2.积点 -->
     <view class="coupons_block">
-        <text class="coupons_title">积点（共26积点）</text>
-        <text class="coupons_detail">去使用 ></text>
+        <text class="coupons_title">积点</text>
+        <text class="coupons_detail_none">暂无积点可以使用</text>
     </view>
     <!-- 3.结算信息 -->
     <view class="total_block">
@@ -110,7 +110,7 @@
 <view class="title2">支付方式</view>
 <view class="root3">
     <!-- 1.余额支付 -->
-    <view class="coupons_block" bindtap="selectPaymentMethod" data-method="余额支付">
+    <view class="coupons_block" bindtap="selectPaymentMethod" data-method="余额支付" wx:if="{{false}}">
         <text class="coupons_title">余额支付（可用 ￥{{userInfo.balance}}）</text>
         <radio class="payment_radio" value="余额支付" checked="{{paymentMethod == '余额支付'?true:false}}" />
     </view>

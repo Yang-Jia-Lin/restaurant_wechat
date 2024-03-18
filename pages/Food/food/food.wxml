@@ -1,9 +1,9 @@
 <!-- 外卖或自提选择区域 -->
 <view class="top_info_root">
     <view class="store_root">
-        <view class="store_name_root" bindtap="changeStores">
+        <view class="store_name_root">
             <view class="store_name">{{storeInfo.store_name}}</view>
-            <view bindtap="changeStores">切换门店 ></view>
+            <view>切换门店 ></view>
         </view>
         <view class="store_info">
             <text>门店{{storeInfo.business_status}} </text>

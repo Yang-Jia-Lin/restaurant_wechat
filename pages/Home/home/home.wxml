@@ -9,7 +9,7 @@
 <!-- 2.选择门店 -->
 <view class="store_root">
     <view>{{storeInfo.store_name}}</view>
-    <view bindtap="changeStores">全部门店 ></view>
+    <view>全部门店 ></view>
 </view>
 
 <!-- 3.主选择按钮 -->

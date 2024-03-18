@@ -15,7 +15,7 @@ page {
     background-color: rgb(251, 244, 229);
     border-radius: 25rpx;
     box-shadow: 0 0 1px gray;
-    margin: 10rpx;
+    margin: 15rpx;
 }
 .store_root {
     width: 60%;
@@ -42,25 +42,31 @@ page {
 
 /* 右侧选择 */
 .type_root{
+    height: 70rpx;
     background-color: white;
-    border-radius: 20rpx;
+    border-radius: 30rpx;
     display: flex;
     flex-direction: row;
-    margin: 20rpx 40rpx 20rpx 0;
     font-size: 18px;
+    margin: auto 20rpx;
 }
 .type-on{
-    padding: 10rpx 20rpx;
+    height: 60rpx;
+    line-height: 60rpx;
+    padding: 0 20rpx;
+    margin: 5rpx;
     background-color: rgb(150, 102, 13);
     color: white;
-    border-radius: 20rpx;
+    border-radius: 25rpx;
     font-weight: bold;
 }
 .type-off{
-    padding: 10rpx 20rpx;
+    height: 70rpx;
+    line-height: 70rpx;
+    padding: 0 20rpx;
     background-color: white;
     color: black;
-    border-radius: 20rpx;
+    border-radius: 30rpx;
 }
 
 
