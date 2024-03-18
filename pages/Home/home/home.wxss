@@ -95,7 +95,6 @@ page {
     height: 50px;
     border-radius: 50%;
     margin-right: 10px;
-    color: black;
 }
 
 .username {
@@ -105,6 +104,29 @@ page {
 .greeting {
     padding: 20rpx;
     width: 75%;
+}
+.profile3 {
+    width: 92%;
+    background-color: #f3ede3;
+    border-radius: 5px;
+    padding: 25rpx;
+    margin: 0 10rpx 10rpx 10rpx;
+}
+.balance_root{
+    display: flex;
+    flex-direction: row;
+    font-size: 21px;
+    font-weight: bolder;
+}
+.balance_name{
+    padding: 0 90rpx 0 10rpx;
+}
+.balance_number{
+    color: darkred;
+}
+.balance_describe{
+    color: rgb(128, 128, 128);
+    padding: 0 30rpx 20rpx 40rpx;
 }
 
 .btn {

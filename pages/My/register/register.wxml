@@ -1,6 +1,6 @@
 <view data-weui-theme="{{theme}}">
-	<button class="avatar-wrapper" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
-		<image class="avatar" src="{{avatarUrl}}"></image>
+	<button class="avatar-wrapper" open-type="chooseAvatar-delete" bindchooseavatar="onChooseAvatar">
+		<image class="avatar" src="{{avatarUrl}}" />
 	</button>
 	<mp-form>
 		<mp-cells>

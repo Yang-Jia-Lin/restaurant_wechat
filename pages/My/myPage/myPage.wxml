@@ -2,20 +2,20 @@
 <wxs src="../../../utils/filter.wxs" module="filters" />
 
 <!-- 顶部会员卡图案 -->
-<view class="top_card">
+<view wx:if="{{isUserRegister}}" class="top_card">
     <img src="/image/home2.png" alt="" />
 </view>
 
 <!-- 个人信息部分 -->
-<view wx:if="{{!isUserRegister}}" class="user_info_root">
-    <text>小主，快来领取唐合丰面馆会员卡，消费的积点，还可享受多重好礼呢~</text>
-    <view class="reg_btn" bindtap="goToRegister">免费注册</view>
+<view wx:if="{{!isUserRegister}}" class="profile2">
+    <text class="greeting">小主，快来领取唐合丰会员卡~ 消费得积点，更有好礼相送哦！</text>
+    <view class="btn" bindtap="goToRegister">免费注册</view>
 </view>
 <view wx:else="" class="user_info_root">
     <view class="user_info">
-        <img src="/image/home2.png" class="user_avatar" />
+        <image class="user_avatar" src="{{userInfo.avatar_url}}"/>
         <view>
-            <view class="user_name">同学</view>
+            <view class="user_name">{{userInfo.nickname}}</view>
             <view class="user_id">NO.{{userInfo.user_id}}</view>
         </view>
     </view>
@@ -31,7 +31,7 @@
         </view>
         <view class="border"></view>
         <view class="user_shop_block">
-            <view class="block_number">2</view>
+            <view class="block_number">0</view>
             <view class="block_text">优惠券</view>
         </view>
     </view>

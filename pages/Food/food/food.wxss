@@ -403,11 +403,9 @@ page {
     height: 675px;
     background: #EBE0CC;
     z-index: 999;
-    overflow: auto;
     position: fixed;
     left: 0;
     bottom: -675px;
-    /* 注意同时修改动画弹出大小 */
     display: flex;
     flex-direction: column;
 }
@@ -420,7 +418,12 @@ page {
     flex-direction: row;
     justify-content: space-between;
 }
-
+.detail_scroll_view {
+    flex: 1;  /* 占据剩余空间 */
+    overflow: auto;  /* 允许滚动 */
+    background-color: #f5ecdc;
+    padding-bottom: 20rpx;
+}
 .detail_close {
     height: 60rpx;
     width: 15%;
@@ -457,12 +460,13 @@ page {
     height: 250rpx;
     width: 250rpx;
     border-radius: 25rpx;
-    margin: 15rpx 0 0 60rpx;
+    margin: 30rpx 0 0 30rpx;
 }
 
 .detail_intro {
     width: 360rpx;
-    margin: 35rpx auto;
+    margin: auto auto;
+    margin-top: 30rpx;
     font-size: 18px;
     color: rgb(114, 81, 37);
 }
@@ -533,7 +537,7 @@ page {
 /* 选项 */
 .option_not_selected {
     width: 30%;
-    height: 60rpx;
+    height: auto;
     text-align: center;
     line-height: 60rpx;
     font-size: 20px;
@@ -542,8 +546,7 @@ page {
 
 .option_selected {
     width: 30%;
-    height: 60rpx;
-    line-height: 60rpx;
+    height: auto;
     text-align: center;
     font-size: 20px;
     color: white;
@@ -594,5 +597,5 @@ page {
     text-align: center;
     line-height: 80rpx;
 
-    margin: 50rpx auto;
+    margin: 20rpx auto;
 }

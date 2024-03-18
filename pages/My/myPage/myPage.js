@@ -4,12 +4,16 @@ const baseUrl = app.globalData.baseUrl
 Page({
     data: {
         userInfo: app.globalData.userInfo,
-        isUserRegister: true,
+        isUserRegister: app.globalData.isUserRegister,
         recentOrder: {},
         haveOrder: false,
     },
 
     onShow() {
+        this.setData({
+            userInfo:app.globalData.userInfo,
+            isUserRegister: app.globalData.isUserRegister
+        })
         let order_id = wx.getStorageSync('orderId') || ''
         if(order_id){
             this.getRecentOrder(order_id);
@@ -52,6 +56,11 @@ Page({
     },
 
     // 页面跳转
+    goToRegister() {
+        wx.navigateTo({
+            url: '/pages/My/register/register',
+        })
+    },
     goToMyOrder() {
         wx.navigateTo({
             url: '../../My/myOrder/myOrder',

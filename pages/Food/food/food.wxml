@@ -194,3 +194,84 @@
         </view>
     </view>
 </view>
+
+
+<!-- 选规格弹窗 -->
+<view hidden="{{maskFlag2}}" class="modal-mask2" bindtap="goDetailToggle" />
+<view animation="{{animationData2}}" class="detail_root">
+    <!-- 弹窗头部：详情页标题 -->
+    <view class="detail_title_root">
+        <view class="detail_close" bindtap="goDetailToggle">返回</view>
+        <view class="detail_name">{{currentDish.dish_name}}</view>
+    </view>
+
+    <!-- 弹窗内容区，可滚动 -->
+    <scroll-view class="detail_scroll_view" scroll-y="true">
+        <!-- 1.详细介绍 -->
+        <view class="detail_intro_root">
+            <image src="{{currentDish.icon}}" mode="" class="detail_pic" />
+            <view class="detail_intro">{{currentDish.flavor_description}}</view>
+        </view>
+        <!-- 2.口味选择等内容 -->
+        <view class="detail_choose_root">
+            <!-- 就餐方式 -->
+            <view class="option_title" wx:if="{{serviceType=='到店'}}">就餐方式</view>
+            <view class="mandatory_choose" wx:if="{{serviceType=='到店'}}">
+                <view class="optional_options">
+                    <view class="{{currentEatType == '堂食' ? 'option_selected' : 'option_not_selected'}}" bindtap="onEatTypeChange" data-option="堂食">新鲜现吃</view>
+                    <view class="{{currentEatType === '打包' ? 'option_selected' : 'option_not_selected'}}" bindtap="onEatTypeChange" data-option="打包">打包带走</view>
+                </view>
+            </view>
+
+            <!-- 必选项 -->
+            <view class="option_title">必选</view>
+            <view class="mandatory_choose" wx:for="{{currentDish.mandatory_options}}" wx:for-item="optionItem" wx:key="index">
+                <view class="option_name">{{optionItem.name}}</view>
+                <view class="mandatory_options">
+                    <view wx:for="{{optionItem.options}}" wx:for-item="optionValue" class="{{currentMandatory[optionItem.name] === optionValue ? 'option_selected' : 'option_not_selected'}}" bindtap="onMandatoryOptionChange" data-name="{{optionItem.name}}" data-option="{{optionValue}}" wx:key="index">
+                        <text>{{optionValue}}</text>
+                        <text wx:if="{{optionValue=='标准'}}">(220g)</text>
+                        <text wx:if="{{optionValue=='大份'}}">(270g)</text>
+                        <text wx:if="{{optionValue=='加加量'}}">(340g)</text>
+                    </view>
+                </view>
+                
+            </view>
+
+            <!-- 可选项 -->
+            <view class="option_title">其他</view>
+            <view class="optional_choose">
+                <checkbox-group class="optional_options" bindchange="onOptionalOptionChange">
+                    <label wx:for="{{currentDish.optional_options}}" class="option_not_selected" wx:key="index">
+                        <checkbox value="{{item}}" checked="true" />{{item}}
+                    </label>
+                </checkbox-group>
+            </view>
+
+            <!-- 小菜 -->
+            <view class="option_title">给朕加料</view>
+            <view class="mandatory_choose" wx:for="{{small_dish_list}}" wx:for-item="smallItem" wx:key="index">
+                <view class="small_dish_name">
+                    <text>{{smallItem.dish_name}}</text>
+                    <text class="small_dish_price">￥{{smallItem.price}}</text>
+                </view>
+                <view class="small_dish_stepper">
+                    <view bindtap="small_dish_minus" data-item="{{smallItem}}">
+                        <image class="small_dish_jiajian" src="/image/jian.png" />
+                    </view>
+                    <view class="small_dish_value">
+                        {{smallItem.quantity}}
+                    </view>
+                    <view bindtap="small_dish_add" data-item="{{smallItem}}">
+                        <image class="small_dish_jiajian" src="/image/jia.png" />
+                    </view>
+                </view>
+            </view>
+        </view>
+    </scroll-view>
+
+    <!-- 弹窗底部：加入购物车 -->
+    <view class="addToCart" bindtap="addToCart">
+        加入购物车
+    </view>
+</view>

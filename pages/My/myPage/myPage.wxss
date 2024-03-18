@@ -21,13 +21,39 @@ page {
     margin: -40rpx 40rpx 40rpx 40rpx;
     padding: 40rpx;
 }
+.profile2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 300rpx;
+    background-color: #f3ede3;
+    border-radius: 25px;
+    padding: 20rpx;
+    margin: 60rpx 30rpx 30rpx 30rpx;
+}
+.greeting {
+    margin: 1rpx auto;
+    padding: 20rpx;
+    width: 80%;
+    font-size: 18px;
+}
+.btn {
+    background-color: rgb(199, 102, 11);
+    color: white;
+    width: 20%;
+    padding: 10px;
+    margin: 20rpx auto;
+    text-align: center;
+    border: none;
+    border-radius: 5px;
+}
 /* 1.基本信息部分 */
 .user_info{
     display: flex;
     flex-direction: row;
 }
 .user_avatar {
-    background-color: darkgreen;
+    border: 1px solid bisque;
     width: 70px;
     height: 70px;
     border-radius: 50%;
@@ -104,7 +130,7 @@ page {
     width: 80rpx;
     height: 80rpx;
     border-radius: 20rpx;
-    background-color: yellowgreen;
+    background-color: rgb(223, 214, 165);
 }
 .block_name{
     font-size: 16px;

@@ -4,7 +4,6 @@ const baseUrl = app.globalData.baseUrl
 Page({
     data: {
         userInfo: app.globalData.userInfo,
-
         avatarUrl: app.globalData.userInfo.avatar_url,
         nickname: '微信用户',
         phone: '点击获取',
@@ -12,7 +11,9 @@ Page({
     },
     // 获取头像
     onChooseAvatar(e) {
-        const {avatarUrl} = e.detail
+        const {
+            avatarUrl
+        } = e.detail
         console.log(avatarUrl);
         this.setData({
             ['userInfo.avatarUrl']: avatarUrl,
@@ -38,11 +39,11 @@ Page({
                 success: res => {
                     if (res.code) {
                         wx.request({
-                            url: app.globalData.baseUrl+'users/phone', 
+                            url: app.globalData.baseUrl + 'users/phone',
                             method: 'POST',
                             data: {
-                                code: res.code, 
-                                encryptedData: e.detail.encryptedData, 
+                                code: res.code,
+                                encryptedData: e.detail.encryptedData,
                                 iv: e.detail.iv // 加密算法的初始向量
                             },
                             success: (res) => {
@@ -75,24 +76,70 @@ Page({
     // 注册
     getRegister() {
         let that = this
-        wx.request({
-            url: baseUrl + 'users/'+this.data.userInfo.user_id,
-            method: 'PUT',
-            data:{
-                phone_number: that.data.phone
-            },
-            success: (res) => {
-                if (res.statusCode === 200) {
-                    console.log('注册成功', res.data);
-                    app.globalData.isUserRegister = true
-                    
-                } else {
-                    console.log('注册失败:', res.errMsg);
+        if (this.data.phone === "点击获取" || this.data.phone.length != 11) {
+            wx.showModal({
+                title: '提示',
+                content: '请先获取正确的电话号码',
+                showCancel: false, // 隐藏取消按钮
+            })
+            return;
+        } else {
+            wx.request({
+                url: baseUrl + 'users/' + this.data.userInfo.user_id,
+                method: 'PUT',
+                data: {
+                    phone_number: that.data.phone,
+                    nickname: that.data.nickname,
+                },
+                success: (res) => {
+                    if (res.statusCode === 200) {
+                        console.log('注册成功', res.data);
+                        this.setUserInfo(res.data.updatedUser)
+                        wx.showModal({
+                            title: '提示',
+                            content: '注册成功！',
+                            showCancel: false,
+                            success: function () {
+                                const pages = getCurrentPages(); 
+                                const prevPage = pages[pages.length - 2]; 
+                                if (prevPage) {
+                                    if (typeof prevPage.handleDataFromRegisterPage === 'function') {
+                                        prevPage.handleDataFromRegisterPage({
+                                            registered: true
+                                        });
+                                    }
+                                }
+                                wx.navigateBack()
+                            }
+                        })
+                    } else {
+                        console.log('注册失败:', res.errMsg);
+                        wx.showModal({
+                            title: '提示',
+                            content: '注册失败，请重试或联系工作人员！',
+                            showCancel: false, // 隐藏取消按钮
+                        })
+                        return;
+                    }
+                },
+                fail: (err) => {
+                    console.error('请求服务器失败:', err);
+                    wx.showModal({
+                        title: '提示',
+                        content: '注册失败，请重试或联系工作人员！',
+                        showCancel: false, // 隐藏取消按钮
+                    })
+                    return;
                 }
-            },
-            fail: (err) => {
-                console.error('请求服务器失败:', err);
-            }
+            });
+        }
+    },
+    setUserInfo(userInfo) {
+        app.globalData.userInfo = userInfo;
+        this.setData({
+            userInfo: userInfo,
+            isUserRegister: !!userInfo.phone_number
         });
+        wx.setStorageSync('userInfo', userInfo);
     }
 })

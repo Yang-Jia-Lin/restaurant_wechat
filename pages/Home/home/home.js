@@ -39,71 +39,61 @@ Page({
     },
 
     // 获取用户信息
-    getUserInfo(){
-        const userInfo = wx.getStorageSync('userInfo');
-	  	if (userInfo) {
-			console.log('使用本地用户信息',userInfo);
-            app.globalData.userInfo = userInfo;
-            this.setData({
-                userInfo: userInfo
-            })
-            if(userInfo.phone_number){
-                app.globalData.isUserRegister = true
-                this.setData({
-                    isUserRegister: true
-                })
-			}
-	  	} else {
-			this.fetchUserInfo().then(userInfo => {
-                console.log('获取到用户信息：', userInfo);
-                wx.setStorageSync('userInfo', userInfo)
-                this.setData({
-                    userInfo: userInfo
-                })
-                if(userInfo.phone_number){
-                    app.globalData.isUserRegister = true
-                    this.setData({
-                        isUserRegister: true
-                    })
+    getUserInfo() {
+        const localUserInfo = wx.getStorageSync('userInfo') || {};
+        if (localUserInfo) {
+            console.log('首先使用本地用户信息', localUserInfo);
+            this.setUserInfo(localUserInfo);
+        }
+    
+        wx.login({
+            success: res => {
+                if (res.code) {
+                    console.log('获取到code:', res.code);
+                    const requestUrl = `${app.globalData.baseUrl}users/login`;
+                    wx.request({
+                        url: requestUrl,
+                        method: 'POST',
+                        data: {
+                            code: res.code
+                        },
+                        success: res => {
+                            if (res.statusCode === 200 && res.data.user) {
+                                const serverUserInfo = res.data.user;
+                                console.log('从服务器获取到用户信息:', serverUserInfo);
+                                this.setUserInfo(serverUserInfo);
+                            } else {
+                                console.error('服务器获取用户信息失败');
+                            }
+                        },
+                        fail: () => {
+                            console.error('请求服务器失败');
+                        }
+                    });
+                } else {
+                    console.error('获取code失败: ' + res.errMsg);
                 }
-              }).catch(error => {
-                console.error('获取用户信息失败:', error);
-            }); 
-	  	}
+            },
+            fail: () => {
+                console.error('wx.login失败');
+            }
+        });
     },
-	fetchUserInfo() {
-		wx.setStorageSync('userInfo', {})
-	  	return new Promise((resolve, reject) => {
-			wx.login({
-				success: res => {
-					if (res.code) {
-						console.log('获取到code:', res.code);
-						const requestUrl = `${app.globalData.baseUrl}users/login`;
-						wx.request({
-							url: requestUrl,
-							method: 'POST',
-							data: { code: res.code },
-							success: res => {
-								if (res.statusCode === 200 && res.data.user) {
-									const user = res.data.user;
-									console.log('从服务器获取用户信息');
-									app.globalData.userInfo = user;
-                                    wx.setStorageSync('userInfo', user);
-									resolve(user);
-								} else {
-									reject(new Error('服务器获取用户信息失败'));
-								}
-							},
-							fail: reject
-						});
-					} else {
-						reject(new Error('获取code失败: ' + res.errMsg));
-					}
-				},
-				fail: reject 
-			});
-	  	});
-	},
+    setUserInfo(userInfo) {
+        app.globalData.userInfo = userInfo;
+        app.globalData.isUserRegister = !!userInfo.phone_number;
+        this.setData({
+            userInfo: userInfo,
+            isUserRegister: !!userInfo.phone_number
+        });
+        wx.setStorageSync('userInfo', userInfo);
+    },
+    handleDataFromRegisterPage: function(data) {
+        if (data.registered) {
+            this.getUserInfo()
+        }
+    },
+    
     // 获取轮播图数据
     getTopBanner() {
         wx.request({
@@ -166,7 +156,7 @@ Page({
             }
         });
     },
-    
+
 
 
     // 点击事件
@@ -183,7 +173,7 @@ Page({
     },
     eatOut() {
         app.globalData.serviceType = '外卖';
-        if(!app.globalData.addressInfo){
+        if (!app.globalData.addressInfo) {
             wx.navigateTo({
                 url: '/pages/Home/address/address'
             })

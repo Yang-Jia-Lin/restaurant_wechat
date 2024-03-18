@@ -44,8 +44,17 @@
         <image class="avatar" src="{{userInfo.avatar_url}}" />
         <text class="username">您好！欢迎光临唐合丰拌面馆~</text>
     </view>
-    <view class="profile2">
-        <text class="greeting">余额</text>
-        <text class="greeting">积点</text>
+    <view class="profile3">
+        <view class="balance_root">
+            <view class="balance_name">我的积点</view>
+            <view class="balance_number">× {{userInfo.points}}</view>
+        </view>
+        <view class="balance_describe">
+            可兑换优惠券，或下单时抵扣菜品哦~
+        </view>
+        <view class="balance_root">
+            <view class="balance_name">我的余额</view>
+            <view class="balance_number">￥{{userInfo.balance}}</view>
+        </view>
     </view>
 </view>
