@@ -12,23 +12,58 @@ page {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    background-color: rgb(251, 244, 229);
+    border-radius: 25rpx;
+    box-shadow: 0 0 1px gray;
+    margin: 10rpx;
 }
-
 .store_root {
     width: 60%;
+    padding: 10rpx 20rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    font-size: 14px;
 }
-
 .store_name_root {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+}
+.store_name{
+    font-size: 20px;
+    font-weight: bolder;
+    color: rgb(128, 58, 0);
+}
+.store_info{
+    color: rgb(158, 158, 157);
 }
 
 /* 右侧选择 */
-.serviceType_option {
-    width: 40%;
-    margin: 35rpx;
+.type_root{
+    background-color: white;
+    border-radius: 20rpx;
+    display: flex;
+    flex-direction: row;
+    margin: 20rpx 40rpx 20rpx 0;
+    font-size: 18px;
 }
+.type-on{
+    padding: 10rpx 20rpx;
+    background-color: rgb(150, 102, 13);
+    color: white;
+    border-radius: 20rpx;
+    font-weight: bold;
+}
+.type-off{
+    padding: 10rpx 20rpx;
+    background-color: white;
+    color: black;
+    border-radius: 20rpx;
+}
+
+
 
 
 
@@ -64,6 +99,18 @@ page {
     background-color: rgb(255, 252, 241);
     border-radius: 15rpx;
     box-shadow: 0 0 15rpx rgba(0, 0, 0, 0.15);
+}
+.active2{
+    color: #857633;
+    font-size: 24px;
+    font-weight: bolder;
+    background-color: rgb(255, 252, 241);
+    border-radius: 15rpx;
+    box-shadow: 0 0 15rpx rgba(0, 0, 0, 0.15);
+}
+.small-name{
+    font-size: 16px;
+    font-weight: normal;
 }
 
 /* 右侧菜单整体 */

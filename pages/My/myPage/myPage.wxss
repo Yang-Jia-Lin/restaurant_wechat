@@ -7,11 +7,11 @@ page {
 
 /* 顶部会员卡 */
 .top_card{
-    height: 180rpx;
+    height: 150rpx;
     width: 75%;
     margin: 30rpx auto;
     border-radius: 20rpx;
-    background-color: blanchedalmond;
+    background-color: #EBE0CC;
 }
 
 /* 用户信息 */

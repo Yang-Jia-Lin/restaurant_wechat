@@ -40,8 +40,8 @@
         </view>
         <view class="dish_detail_root" wx:if="{{arr_item.mandatory_options!=null}}">
             <view class="detail1">
-                <text wx:if="{{arr_item.mandatory_options['份量']=='加量'}}">加量</text>
-                <text>{{arr_item.mandatory_options['主食']}}</text>
+                <text>{{arr_item.mandatory_options['份量']}}</text>
+                <text>{{arr_item.mandatory_options['种类']}}</text>
             </view>
             <view class="detail2">
                 <text>{{arr_item.mandatory_options['辣度']}}</text>
@@ -49,6 +49,11 @@
             </view>
             <view class="detail3">
                 <text wx:for="{{arr_item.optional_options}}" wx:key="key">{{item}} </text>
+            </view>
+        </view>
+        <view class="dish_detail_root" wx:if="{{arr_item.note!==''}}">
+            <view class="detail3">
+                {{arr_item.note}}
             </view>
         </view>
     </view>

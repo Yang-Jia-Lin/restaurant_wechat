@@ -111,19 +111,19 @@ page {
     margin-bottom: 17rpx;
 }
 .detail1{
-    margin: 0 15rpx 0 0;
+    margin: 0 10rpx 0 0;
     font-size: 20px;
     font-weight: 550;
     color: rgb(88, 45, 2);
 }
 .detail2{
-    margin: 0 15rpx;
+    margin: 0 10rpx;
     color: rgb(151, 76, 0);
     font-size: 18px;
     font-weight: 500;
 }
 .detail3{
-    margin: 0 15rpx;
+    margin: 0 10rpx;
     color: rgb(88, 45, 2);
     font-size: 18px;
     font-weight: 500;

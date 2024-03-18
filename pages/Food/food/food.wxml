@@ -2,31 +2,29 @@
 <view class="top_info_root">
     <view class="store_root">
         <view class="store_name_root" bindtap="changeStores">
-            <view>{{storeInfo.store_name}}</view>
+            <view class="store_name">{{storeInfo.store_name}}</view>
             <view bindtap="changeStores">切换门店 ></view>
         </view>
         <view class="store_info">
-            <text>门店{{storeInfo.business_status}}</text>
+            <text>门店{{storeInfo.business_status}} </text>
             <text>外卖{{storeInfo.takeout_status}}</text>
         </view>
     </view>
-    <view class="serviceType_option">
-        <radio-group bindchange="onServiceTypeChange">
-            <label class="radio-label">
-                <radio value="到店" checked="{{serviceType=='到店'?true:false}}" /> 到店
-            </label>
-            <label class="radio-label">
-                <radio value="外卖" checked="{{serviceType=='外卖'?true:false}}" /> 外卖
-            </label>
-        </radio-group>
+    <view class="type_root" bindtap="onServiceTypeChange">
+        <view class="{{serviceType=='到店'?'type-on':'type-off'}}">到店</view>
+        <view class="{{serviceType=='到店'?'type-off':'type-on'}}">外卖</view>
     </view>
+
+
 </view>
 
 <!-- 菜单区域  -->
 <view class="main">
     <!-- 左侧菜单 -->
     <scroll-view scroll-y="true" scroll-with-animation="true" bindscroll="rightScrollFn" class="left">
-        <view wx:for="{{menuArr}}" data-myid="{{item.id}}" wx:key="index" class="scroll-view-item left-tab {{leftActiveNum==item.id ? 'active' : ''}}" bindtap="leftClickFn">{{item.title}}
+        <view wx:for="{{menuArr}}" data-myid="{{item.id}}" wx:key="index" class="scroll-view-item left-tab {{leftActiveNum==item.id ? item.title=='拌'||item.title=='汤'?'active2':'active' : ''}}" bindtap="leftClickFn">
+            <text>{{item.title}} </text>
+            <text class="small-name" wx:if="{{item.title=='拌'||item.title=='汤'}}">面·粉</text>
         </view>
     </scroll-view>
 
@@ -42,7 +40,7 @@
                         <view class="dish_sale">销量：{{item.sales}} </view>
                         <view class="dish_price_root">
                             <view class="dish_price" data-index="{{index}}">{{item.price}}</view>
-                            <view class="dish_stepper" wx:if="{{item.category.category_name!='小菜'}}" bindtap="goDetailToggle" data-item="{{item}}">
+                            <view class="dish_stepper" wx:if="{{item.category.category_name!='给朕加料'}}" bindtap="goDetailToggle" data-item="{{item}}">
                                 <text>选规格</text>
                             </view>
                             <view class="dish_stepper2" wx:else="">
@@ -87,7 +85,7 @@
         <block wx:for="{{cartList}}" wx:key="index" wx:for-index="index">
             <view class="cart_cells_root" wx:if="{{item.quantity > 0}}">
                 <view class="cart_cells_detail">
-                    <view class="cells_name" data-index="{{index}}">{{item.dish_name}} {{item.eat_type=='打包'?'(打包)':''}}</view>
+                    <view class="cells_name" data-index="{{index}}">{{item.dish_name}} {{item.eat_type=='打包'&&serviceType=='到店'?'(打包)':''}}</view>
                     <view class="cells_price" data-index="{{index}}">￥{{item.price}}</view>
                 </view>
 
@@ -235,7 +233,7 @@
                         <text wx:if="{{optionValue=='加加量'}}">(340g)</text>
                     </view>
                 </view>
-                
+
             </view>
 
             <!-- 可选项 -->

@@ -185,21 +185,22 @@ Page({
         })
     },
     onServiceTypeChange(e) {
-        this.setData({
-            serviceType: e.detail.value
-        });
-        app.globalData.serviceType = e.detail.value
-        if (e.detail.value == "外卖") {
-            // 选择地址
+        if(this.data.serviceType=='到店'){
+            app.globalData.serviceType = '外卖'
+            this.setData({
+                serviceType: '外卖'
+            });
             if (!app.globalData.addressInfo) {
                 wx.navigateTo({
                     url: '/pages/Home/address/address'
                 })
             }
-            // 修改eatType
+            this.setData({currentEatType: '打包'})
+        } else {
+            app.globalData.serviceType = '到店'
             this.setData({
-                currentEatType: '打包'
-            })
+                serviceType: '到店'
+            });
         }
     },
 
@@ -342,6 +343,10 @@ Page({
         item.mandatory_values = values;
         item.optional_options = currentOptional;
         item.note = "";
+        // 加量面加钱逻辑
+        if(item.mandatory_options['份量']=="加加量"){
+            item.price = (parseFloat(item.price) + 1).toFixed(2);
+        }
 
         let arr = wx.getStorageSync('cart') || [];
         let f = false;
@@ -527,9 +532,10 @@ Page({
         })
     },
     leftClickFn(e) {
+        console.log(e)
         this.setData({
-            leftActiveNum: e.target.dataset.myid,
-            Tab: e.target.dataset.myid
+            leftActiveNum: e.currentTarget.dataset.myid,
+            Tab: e.currentTarget.dataset.myid
         })
     },
     rightScrollFn(e) {

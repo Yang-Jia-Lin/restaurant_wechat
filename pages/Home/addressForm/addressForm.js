@@ -5,7 +5,7 @@ let baseUrl = app.globalData.baseUrl
 Page({
     data: {
         phone: app.globalData.userInfo.phone_number,
-        name: '',
+        name: app.globalData.userInfo.nickname,
         sex: '请选择性别',
         address: '请选择楼栋',
         default: false,
@@ -41,7 +41,7 @@ Page({
         }
         if(app.globalData.userInfo.nickname){
             this.setData({
-                phone: app.globalData.userInfo.nickname
+                name: app.globalData.userInfo.nickname
             })
         }
     },
