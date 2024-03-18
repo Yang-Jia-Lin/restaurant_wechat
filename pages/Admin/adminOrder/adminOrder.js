@@ -230,6 +230,37 @@ Page({
         wx.makePhoneCall({
             phoneNumber: e.currentTarget.dataset.phone
         })
+    },
+
+    // 打印小票
+    printClick(e){
+        const order = e.currentTarget.dataset.order
+        wx.request({
+            url: baseUrl + 'printer/',
+            method: 'POST',
+            data: {
+                order: order
+            },
+            success: (res) => {
+                console.log(res)
+                if (res.data.success) {
+                    wx.showToast({
+                        title: '打印成功',
+                    });
+                } else {
+                    wx.showToast({
+                        icon: 'none',
+                        title: '打印失败，请检查打印机',
+                    });
+                }
+            },
+            fail: () => {
+                wx.showToast({
+                    icon: 'none',
+                    title: '打印失败，请检查打印机',
+                });
+            }
+        })
     }
 
 })
