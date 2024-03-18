@@ -16,6 +16,12 @@ Page({
     onLoad() {
         this.getMyOrderList();
     },
+    onShareAppMessage: function () {
+        return {
+            title: '唐合丰面馆，一家独特的重庆拌面馆，快来尝尝吧！',
+            path: '/pages/Home/home/home'
+        }
+    },
     onRefresh() {
         //导航条加载动画
         wx.showNavigationBarLoading()

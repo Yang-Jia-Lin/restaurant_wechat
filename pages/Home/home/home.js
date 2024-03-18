@@ -11,6 +11,13 @@ Page({
         isUserRegister: app.globalData.isUserRegister,
         userInfo: app.globalData.userInfo
     },
+    // 用户点击右上角分享
+    onShareAppMessage: function () {
+        return {
+            title: '唐合丰面馆，一家独特的重庆拌面馆，快来尝尝吧！',
+            path: '/pages/Home/home/home'
+        }
+    },
     onLoad() {
         // 用户、轮播图、位置+门店
         this.getUserInfo();
@@ -45,7 +52,7 @@ Page({
             console.log('首先使用本地用户信息', localUserInfo);
             this.setUserInfo(localUserInfo);
         }
-    
+
         wx.login({
             success: res => {
                 if (res.code) {
@@ -88,12 +95,12 @@ Page({
         });
         wx.setStorageSync('userInfo', userInfo);
     },
-    handleDataFromRegisterPage: function(data) {
+    handleDataFromRegisterPage: function (data) {
         if (data.registered) {
             this.getUserInfo()
         }
     },
-    
+
     // 获取轮播图数据
     getTopBanner() {
         wx.request({

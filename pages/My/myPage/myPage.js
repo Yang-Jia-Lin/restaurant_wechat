@@ -8,7 +8,12 @@ Page({
         recentOrder: {},
         haveOrder: false,
     },
-
+    onShareAppMessage: function () {
+        return {
+            title: '唐合丰面馆，一家独特的重庆拌面馆，快来尝尝吧！',
+            path: '/pages/Home/home/home'
+        }
+    },
     onShow() {
         this.setData({
             userInfo:app.globalData.userInfo,
