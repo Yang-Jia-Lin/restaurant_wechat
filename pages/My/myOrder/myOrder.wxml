@@ -25,7 +25,7 @@
     </view>
     <!-- 3.已完成订单title -->
     <view class="title_root2" wx:elif="{{item.order_status=='已完成'}}">
-        <view class="pickup-num">已完成</view>
+        <view class="pickup-num">已完成 {{item.pickup_number}}号</view>
         <view class="order-id" wx:if="{{item.order_status=='已完成'}}">订单编号：{{item.order_id}}</view>
     </view>
     <!-- 4.已取消/退款中/已退款 订单title -->
