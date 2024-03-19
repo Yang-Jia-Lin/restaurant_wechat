@@ -82,7 +82,7 @@ Page({
         deliveryTimeType: '立即',
         deliveryTimeOptions: [],
         deliveryTime: '',
-        
+
 
         // 优惠信息
         couponsNum: 0,
@@ -360,7 +360,7 @@ Page({
             call_name: "",
             phone: app.globalData.userInfo.phone_number,
         };
-        if(this.data.serviceType == '外卖'){
+        if (this.data.serviceType == '外卖') {
             orderData.address = this.data.addressInfo.address_detail
             orderData.call_name = this.data.addressInfo.name
             orderData.phone = this.data.addressInfo.phone
@@ -426,7 +426,7 @@ Page({
     },
 
     // 步骤3：支付完成后处理
-    endPayment(){
+    endPayment() {
         // 1.增加销量
         const dishIds = this.data.cartList.map(item => item.dish_id);
         wx.request({
@@ -443,12 +443,55 @@ Page({
             }
         });
 
-        // 2.清空购物车
+        // 2.赠送积点
+        let point = this.data.totalPrice > 10 ? 1 : 0.5
+        let points = (parseFloat(this.data.userInfo.points) + point).toFixed(2)
+        wx.request({
+            url: baseUrl + 'users/' + this.data.userInfo.user_id,
+            method: 'PUT',
+            data: {
+                points: points
+            },
+            success: (res) => {
+                if (res.statusCode === 200) {
+                    console.log('增加成功', res.data);
+                    this.setUserInfo(res.data.updatedUser)
+                } else {
+                    console.log('增加失败:', res.errMsg);
+                    wx.showModal({
+                        title: '提示',
+                        content: '积点增加失败，请重试或联系工作人员！',
+                        showCancel: false,
+                    })
+                    return;
+                }
+            },
+            fail: (err) => {
+                console.log('增加失败:', err);
+                wx.showModal({
+                    title: '提示',
+                    content: '积点增加失败，请重试或联系工作人员！',
+                    showCancel: false,
+                })
+                return;
+            }
+        });
+
+        // 3.清空购物车
         wx.setStorageSync('cart', []);
 
-        // 3.跳转订单详情
+        // 4.跳转订单详情
         wx.redirectTo({
             url: '/pages/My/myOrder/myOrder'
         })
     },
+
+    setUserInfo(userInfo) {
+        app.globalData.userInfo = userInfo;
+        this.setData({
+            userInfo: userInfo,
+            isUserRegister: !!userInfo.phone_number
+        });
+        wx.setStorageSync('userInfo', userInfo);
+    }
 })

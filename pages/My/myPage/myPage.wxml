@@ -46,7 +46,7 @@
 <view class="recent_order_root" bindtap="goToMyOrder">
     <view wx:if="{{haveOrder}}">
         <!-- 订单title -->
-        <view class="title_root" wx:if="{{recentOrder.order_status=='制作中'||recentOrder.order_status=='配送中'}}">
+        <view class="title_root" wx:if="{{recentOrder.order_status=='制作中'||recentOrder.order_status=='配送中'||recentOrder.order_status=='已完成'}}">
             <view class="pickup-num">取餐号 {{recentOrder.pickup_number}}</view>
             <view class="order-status">{{recentOrder.order_status}}</view>
         </view>

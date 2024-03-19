@@ -33,7 +33,7 @@
         <text class="username">您好！欢迎光临唐合丰拌面馆~</text>
     </view>
     <view class="profile2">
-        <text class="greeting">小主，快来领取唐合丰会员卡\n 消费得积点，注册立享8折优惠哦！</text>
+        <text class="greeting">小主，快来领取唐合丰会员卡\n 消费得积点，注册即送2个积点哦！</text>
         <view class="btn" bindtap="goToRegister">免费注册</view>
     </view>
 </view>

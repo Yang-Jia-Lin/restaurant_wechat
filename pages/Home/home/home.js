@@ -16,6 +16,13 @@ Page({
             path: '/pages/Home/home/home'
         }
     },
+    onShow() {
+        this.setData({
+            storeInfo: app.globalData.storeInfo,
+            isUserRegister: app.globalData.isUserRegister,
+            userInfo: app.globalData.userInfo
+        })
+    },
     onLoad() {
         // 用户、轮播图、位置+门店
         this.getUserInfo();
