@@ -4,31 +4,8 @@ Page({
     data: {
         isAdmin: false,
         username: '',
-        password: ''
-    },
-    // 去订单页
-    goHouchu() {
-        wx.navigateTo({
-            url: '/pages/Admin/adminOrder/adminOrder',
-        })
-    },
-    // 去堂食菜品管理页
-    goChange() {
-        wx.navigateTo({
-            url: '/pages/Admin/adminChange/adminChange',
-        })
-    },
-    // 去外卖菜品管理页
-    goOutAdmin() {
-        wx.navigateTo({
-            url: '/pages/Admin/adminChangeOut/adminChangeOut',
-        })
-    },
-    // 去功能设置页
-    goSetting() {
-        wx.navigateTo({
-            url: '/pages/Admin/adminSetting/adminSetting',
-        })
+        password: '',
+        adminInfo: {}
     },
 
     onLoad() {
@@ -66,8 +43,6 @@ Page({
         }
         this.login(this.data.username, this.data.password)
     },
-
-    //登录
     login(username, password) {
         wx.request({
             url: baseUrl + 'admins/login',
@@ -81,7 +56,8 @@ Page({
                 if (res.statusCode === 200) {
                     console.log("登录成功", res);
                     this.setData({
-                        isAdmin: true
+                        isAdmin: true,
+                        adminInfo: res.data
                     });
                     wx.setStorageSync('username', username);
                     wx.setStorageSync('password', password);
@@ -105,6 +81,27 @@ Page({
                 });
             }
         });
-    }
+    },
 
+    // 页面跳转
+    goOrder() {
+        wx.navigateTo({
+            url: '/pages/Admin/adminOrder/adminOrder',
+        })
+    },
+    goAllOrder(){
+        wx.navigateTo({
+            url: '/pages/Admin/adminAllOrder/adminAllOrder',
+        })
+    },
+    goDish() {
+        wx.navigateTo({
+            url: '/pages/Admin/adminDish/adminDish',
+        })
+    },
+    goStore() {
+        wx.navigateTo({
+            url: '/pages/Admin/adminStore/adminStore',
+        })
+    },
 })

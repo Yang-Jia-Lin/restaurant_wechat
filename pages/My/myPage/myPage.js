@@ -20,7 +20,7 @@ Page({
             isUserRegister: app.globalData.isUserRegister
         })
         let order_id = wx.getStorageSync('orderId') || ''
-        if(order_id){
+        if(order_id!==''){
             this.getRecentOrder(order_id);
         }
     },
@@ -30,15 +30,23 @@ Page({
             method: 'GET',
             success: (res) => {
                 console.log(res);
-                if(res.data.order_status!='已完成' && res.data.order_status!='待支付'){
-                    this.setData({
-                        recentOrder: res.data,
-                        haveOrder: true
-                    })
+                if(res.statusCode == 200){
+                    if(res.data.order_status!='已完成' && res.data.order_status!='待支付'){
+                        this.setData({
+                            recentOrder: res.data,
+                            haveOrder: true
+                        })
+                    } 
+                }
+                else {
+                    this.setData({ haveOrder: false })
+                    wx.setStorageSync('orderId', '')
                 }
             },
             fail: (err) => {
                 console.error(err)
+                wx.setStorageSync('orderId', '')
+                this.setData({ haveOrder: false })
             }
         })
     },

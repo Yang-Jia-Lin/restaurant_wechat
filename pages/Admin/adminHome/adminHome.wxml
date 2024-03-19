@@ -17,9 +17,9 @@
 <!-- 2.登录成功的状态 -->
 <view wx:if="{{isAdmin}}">
     <view class="tab">
-        <text class="tabNum" bindtap="goHouchu">订单管理</text>
-        <text class="tabNum" bindtap="goChange">堂食菜品管理</text>
-        <text class="tabNum" bindtap="goOutAdmin">外卖菜品管理</text>
-        <text class="tabNum" bindtap="goSetting">功能设置</text>
+        <text class="tabNum" bindtap="goOrder">订单制作</text>
+        <text class="tabNum" bindtap="goAllOrder" wx:if="{{adminInfo.role=='超级管理员'}}">全部订单</text>
+        <text class="tabNum" bindtap="goDish" wx:if="{{adminInfo.role=='超级管理员'}}">菜品管理</text>
+        <text class="tabNum" bindtap="goStore" wx:if="{{adminInfo.role=='超级管理员'}}">门店设置</text>
     </view>
 </view>

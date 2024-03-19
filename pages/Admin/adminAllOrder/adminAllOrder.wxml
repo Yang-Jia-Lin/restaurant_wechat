@@ -1,23 +1,12 @@
 <!--导入时间格式化工具filter.wxs-->
 <wxs src="../../../utils/filter.wxs" module="filters" />
 
-<!-- 导航条 -->
-<view class="navbar">
-    <lable wx:for="{{navbar}}" data-idx="{{index}}" class="item {{currentTab==index ? 'active' : ''}}" wx:key="unique" bindtap="navbarTap">
-        <text>{{item}}</text>
-        <text wx:if="{{index==0}}" class="number">{{number1!=0?number1:''}}</text>
-        <text wx:if="{{index==1}}" class="number">{{number2!=0?number2:''}}</text>
-        <text wx:if="{{index==2}}" class="number">{{number3!=0?number3:''}}</text>
-    </lable>
-</view>
-
-
 <!-- 订单详情 -->
 <view class='order_list_root' wx:for="{{list}}" wx:key="key">
     <!-- 标题区 -->
     <view class='title_root'>
         <view class="pickup_number" wx:if="{{item.pickup_number!=0}}">
-            {{item.pickup_number}} 号
+            {{item.pickup_number}} 号 {{item.order_status}}
         </view>
         <view class="pickup_number" wx:else="">等待中</view>
         <view class="time" wx:if="{{item.order_type == '外卖'}}">
@@ -67,19 +56,7 @@
     <view class="order_note" wx:if="{{item.address}}">地址：{{item.address}}
     </view>
     <view class="button_root">
-        <view wx:if="{{item.order_status == '制作中'}}" class='button2' data-order='{{item}}' bindtap='printClick'>
-            打印小票
-        </view>
-        <view wx:if="{{item.order_status == '制作中'}}" class='button1' data-order='{{item}}' bindtap='madeClick'>
-            完成制作
-        </view>
-        <view wx:if="{{item.order_status == '等待中'}}" class='button1' data-id='{{item.order_id}}' bindtap='makeClick'>
-            提前排号
-        </view>
-        <view wx:if="{{item.order_status == '配送中'}}" class='button1' data-id='{{item.order_id}}' bindtap='takeOutClick'>
-            配送完成
-        </view>
-        <view wx:if="{{item.order_status == '配送中'}}" class='button1' data-phone='{{item.phone}}' bindtap='makeCall'>
+        <view wx:if="{{item.phone!==''}}" class='button1' data-phone='{{item.phone}}' bindtap='makeCall'>
             拨打电话
         </view>
     </view>

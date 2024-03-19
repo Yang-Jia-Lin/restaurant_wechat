@@ -42,18 +42,22 @@ page {
 
 /* 右侧选择 */
 .type_root{
+    width: 30%;
     height: 70rpx;
     background-color: white;
     border-radius: 30rpx;
     display: flex;
     flex-direction: row;
     font-size: 18px;
-    margin: auto 20rpx;
+    margin: auto 0;
+    margin-right: 20rpx;
 }
 .type-on{
+    width: 50%;
     height: 60rpx;
     line-height: 60rpx;
-    padding: 0 20rpx;
+    text-align: center;
+    padding: 0 10rpx;
     margin: 5rpx;
     background-color: rgb(150, 102, 13);
     color: white;
@@ -61,9 +65,11 @@ page {
     font-weight: bold;
 }
 .type-off{
+    width: 50%;
     height: 70rpx;
     line-height: 70rpx;
-    padding: 0 20rpx;
+    text-align: center;
+    padding: 0 10rpx;
     background-color: white;
     color: black;
     border-radius: 30rpx;
@@ -293,6 +299,20 @@ page {
     color: #fff;
     font-size: 40rpx;
     background-color: #d3bd81;
+    border-radius: 30rpx;
+}
+.choose_not_ok{
+    position: absolute;
+    width: 25%;
+    height: 70rpx;
+    margin: 5rpx;
+    top: 0;
+    right: 0;
+    line-height: 70rpx;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-size: 40rpx;
+    background-color: #c8c8c8;
     border-radius: 30rpx;
 }
 

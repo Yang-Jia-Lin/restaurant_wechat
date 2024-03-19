@@ -14,16 +14,16 @@
 
         "pages/Admin/adminHome/adminHome",
         "pages/Admin/adminOrder/adminOrder",
-        "pages/Admin/adminChange/adminChange",
-        "pages/Admin/adminChangeOut/adminChangeOut",
-        "pages/Admin/adminSetting/adminSetting"
+        "pages/Admin/adminAllOrder/adminAllOrder",
+        "pages/Admin/adminDish/adminDish",
+        "pages/Admin/adminStore/adminStore"
     ],
 
     "window": {
         "backgroundColor": "#f3eeda",
         "backgroundTextStyle": "light",
         "navigationBarBackgroundColor": "#EBE0CC",
-        "navigationBarTitleText": "唐合丰重庆拌面馆",
+        "navigationBarTitleText": "唐合丰粉面馆",
         "navigationBarTextStyle": "black"
     },
 
