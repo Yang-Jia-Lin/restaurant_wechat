@@ -92,12 +92,12 @@
     <view class="coupons_block">
         <text class="coupons_title">优惠券</text>
         <text class="coupons_detail" wx:if="{{couponsNum>0}}">有{{couponsNum}}张优惠券可用</text>
-        <text class="coupons_detail_none" wx:else="">暂无优惠券可用</text>
+        <text class="coupons_detail_none" wx:else="">功能开发中，敬请期待</text>
     </view>
     <!-- 2.积点 -->
     <view class="coupons_block">
         <text class="coupons_title">积点</text>
-        <text class="coupons_detail_none">暂无积点可以使用</text>
+        <text class="coupons_detail_none">功能开发中，敬请期待</text>
     </view>
     <!-- 3.结算信息 -->
     <view class="total_block">
