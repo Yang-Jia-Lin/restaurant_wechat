@@ -16,7 +16,7 @@
 <view class="category_root">
     <view bindtap='eatIn' class="category_item">
         <image class="category_item_image" src="/image/home1.png" />
-        <text>{{isNeedSaoMa?'扫码':'到店'}}</text>
+        <text>到店</text>
         <text class="small_item">锻炼身体自己取</text>
     </view>
     <view bindtap='eatOut' class="category_item">
@@ -27,19 +27,19 @@
 </view>
 
 <!-- 4.如果用户没有注册，显示注册按钮  -->
-<view wx:if="{{!isUserRegister}}" class="container">
+<view wx:if="{{!userInfo.phone_number}}" class="container">
     <view class="profile">
         <image class="avatar" src="{{userInfo.avatar_url}}" />
         <text class="username">您好！欢迎光临唐合丰拌面馆~</text>
     </view>
     <view class="profile2">
-        <text class="greeting">小主，快来领取唐合丰会员卡\n 消费得积点，注册即送2个积点哦！</text>
+        <text class="greeting">小主，快来注册唐合丰会员卡\n 注册即送积点儿，一个积分抵1元哦！</text>
         <view class="btn" bindtap="goToRegister">免费注册</view>
     </view>
 </view>
 
 <!-- 5.如果用户注册，显示用户账户信息 -->
-<view wx:if="{{isUserRegister}}" class="container">
+<view wx:else="" class="container">
     <view class="profile">
         <image class="avatar" src="{{userInfo.avatar_url}}" />
         <text class="username">您好！欢迎光临唐合丰拌面馆~</text>
@@ -50,11 +50,7 @@
             <view class="balance_number">× {{userInfo.points}}</view>
         </view>
         <view class="balance_describe">
-            可兑换优惠券，或下单时抵扣菜品哦~
-        </view>
-        <view class="balance_root">
-            <view class="balance_name">我的余额</view>
-            <view class="balance_number">￥{{userInfo.balance}}</view>
+            消费得积点，1个积点抵扣1元。快来下单一碗牛肉面，立即获得1个积点儿吧！
         </view>
     </view>
 </view>

@@ -21,7 +21,6 @@ function generateOptions(startTime, endTime) {
     }
     return options;
 }
-
 function convertToDateTime(timeStr) {
     // 获取当前日期
     const now = new Date();
@@ -36,29 +35,9 @@ function convertToDateTime(timeStr) {
 
     return now;
 }
-
-function getDistance() {
-    let nowLatitude = app.globalData.latitude;
-    let nowLongitude = app.globalData.longitude;
-    let storeLatitude = app.globalData.storeInfo.latitude;
-    let storeLongitude = app.globalData.storeInfo.longitude;
-
-    function toRadians(degrees) {
-        return degrees * Math.PI / 180;
-    }
-
-    let R = 6371; // 地球半径，单位是公里
-    let dLat = toRadians(storeLatitude - nowLatitude);
-    let dLon = toRadians(storeLongitude - nowLongitude);
-    let lat1 = toRadians(nowLatitude);
-    let lat2 = toRadians(storeLatitude);
-
-    let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    let distance = R * c;
-
-    return distance.toFixed(2);
+function getCurrentHourMinutes() {
+    const now = new Date();
+    return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:00`;
 }
 
 Page({
@@ -67,7 +46,7 @@ Page({
         userInfo: app.globalData.userInfo,
         storeInfo: app.globalData.storeInfo,
         serviceType: app.globalData.serviceType,
-        distance: 3000,
+        distance: app.globalData.storeInfo.distance.toFixed(2),
 
         // 订单信息
         cartList: [],
@@ -83,7 +62,6 @@ Page({
         deliveryTimeOptions: [],
         deliveryTime: '',
 
-
         // 优惠信息
         couponsNum: 0,
         currentCouponsId: null,
@@ -96,38 +74,12 @@ Page({
             addressInfo: app.globalData.addressInfo,
             deliveryNowClock: false,
             deliveryReserveClock: false
-        })
-        if (this.data.serviceType == '到店') {
-            let distance = getDistance();
-            this.setData({
-                distance: distance
-            })
-            this.generateTakeTimeOptions();
-        } else {
-            this.generateDeliveryTimeOptions();
-        }
-        this.getTotalPrice()
+        });
+        this.getTotalPrice();
+        this.data.serviceType === '到店' ? this.generateTakeTimeOptions() : this.generateDeliveryTimeOptions();
     },
 
-    // 1.更新总价格
-    getTotalPrice() {
-        let arr = wx.getStorageSync('cart') || [];
-        let totalP = this.data.totalPrice
-        let totalN = this.data.totalNum
-        let couponsPrice = this.data.curentCouponsPrice
-        for (var i in arr) {
-            totalP += arr[i].quantity * arr[i].price;
-            totalN += arr[i].quantity
-        }
-        totalP -= couponsPrice
-        this.setData({
-            cartList: arr,
-            totalPrice: totalP,
-            totalNum: totalN
-        })
-    },
-
-    // 2.生成可用取餐时间（自提）/ 派送时间（外送）
+    // 1.生成可用取餐时间（自提）/ 派送时间（外送）
     generateTakeTimeOptions: function () {
         // 当前时间
         const now = new Date();
@@ -199,13 +151,47 @@ Page({
             deliveryTime: timeOptions[0] || "暂无可用时间",
         });
 
-        this.checkTime()
+        this.checkTakeoutTime()
     },
     timeToMinutes: function (time) {
         const [hours, minutes] = time.split(":");
         return parseInt(hours) * 60 + parseInt(minutes);
     },
     checkTime() {
+        // 当前时间
+        const now = new Date();
+        const currentHourMinutes = (now.getHours() < 10 ? '0' : '') + now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes() + ':00';
+        // 营业时间
+        const businessHours = this.data.storeInfo.business_hours.split(" ");
+        // 判断时间是否在某区间内（函数）
+        const isWithinPeriod = (start, end, current) => {
+            const startMinutes = this.timeToMinutes(start);
+            const endMinutes = this.timeToMinutes(end);
+            const currentMinutes = this.timeToMinutes(current);
+            return currentMinutes >= startMinutes && currentMinutes <= endMinutes;
+        };
+        // 检查当前时间是否可用
+        const isOutOfBusinessHours = !businessHours.some(period => {
+            let [periodStart, periodEnd] = period.split("-");
+            return isWithinPeriod(periodStart, periodEnd, currentHourMinutes);
+        });
+        
+        if (isOutOfBusinessHours) {
+            this.setData({
+                deliveryNowClock: true,
+                deliveryTimeType: '预约'
+            });
+            console.log('现在不能送！')
+        } else if (this.data.deliveryTime == "暂无可用时间") {
+            this.setData({
+                deliveryReserveClock: true,
+                deliveryNowClock: true,
+                deliveryTimeType: ''
+            });
+            console.log('本店打烊了！现在不能点！')
+        }
+    },
+    checkTakeoutTime() {
         // 当前时间
         const now = new Date();
         const currentHourMinutes = (now.getHours() < 10 ? '0' : '') + now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes() + ':00';
@@ -248,6 +234,24 @@ Page({
             });
             console.log('本店打烊了！今天不能送！')
         }
+    },
+
+    // 2.计算价格
+    getTotalPrice() {
+        let arr = wx.getStorageSync('cart') || [];
+        let totalP = this.data.totalPrice
+        let totalN = this.data.totalNum
+        let couponsPrice = this.data.curentCouponsPrice
+        for (var i in arr) {
+            totalP += arr[i].quantity * arr[i].price;
+            totalN += arr[i].quantity
+        }
+        totalP -= couponsPrice
+        this.setData({
+            cartList: arr,
+            totalPrice: totalP,
+            totalNum: totalN
+        })
     },
 
     // 3.处理点击事件
@@ -300,25 +304,6 @@ Page({
         });
     },
     onPayButtonClick() {
-        // 验证门店营业状态
-        if (this.data.storeInfo.business_status != '营业中') {
-            wx.showModal({
-                title: '提示',
-                content: '本店暂未营业，请确认后再下单',
-                showCancel: false, // 隐藏取消按钮
-                confirmText: '确定',
-            });
-            return; // 退出支付逻辑
-        } else if (app.globalData.serviceType == '外卖' &&
-            this.data.storeInfo.takeout_status != '可配送') {
-            wx.showModal({
-                title: '提示',
-                content: '线下忙不过来啦，到店点餐吧！',
-                showCancel: false, // 隐藏取消按钮
-                confirmText: '确定',
-            });
-            return; // 退出支付逻辑
-        }
         if (this.data.deliveryTime == "暂无可用时间") {
             wx.showModal({
                 title: '提示',
@@ -485,13 +470,4 @@ Page({
             url: '/pages/My/myOrder/myOrder'
         })
     },
-
-    setUserInfo(userInfo) {
-        app.globalData.userInfo = userInfo;
-        this.setData({
-            userInfo: userInfo,
-            isUserRegister: !!userInfo.phone_number
-        });
-        wx.setStorageSync('userInfo', userInfo);
-    }
 })

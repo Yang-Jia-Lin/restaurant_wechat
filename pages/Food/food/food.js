@@ -44,56 +44,57 @@ Page({
         maskVisual2: "hidden",
         maskFlag2: true,
     },
+    onShow() {
+        // 刷新购物车和用户选择的信息
+        this.getCartList()
+        this.setData({
+            serviceType: app.globalData.serviceType,
+            addressInfo: app.globalData.addressInfo
+        })
+    },
+    onLoad() {
+        this.getFoodList()
+        app.on('storeInfoUpdated', this.updateInfo);
+        this.confirmStatus()
+    },
+    onUnload() {
+        app.off('storeInfoUpdated', this.updateStoreInfo);
+    },
+    updateInfo() {
+        this.setData({
+            storeInfo: app.globalData.storeInfo,
+        });
+        this.confirmStatus()
+    },
     onShareAppMessage: function () {
         return {
             title: '唐合丰面馆，一家独特的重庆拌面馆，快来尝尝吧！',
             path: '/pages/Home/home/home'
         }
     },
+    
 
-    onShow() {
-        this.getCartList()
-        this.setData({
-            storeInfo: app.globalData.storeInfo,
-            serviceType: app.globalData.serviceType,
-            addressInfo: app.globalData.addressInfo
-        })
+    // 获取信息
+    confirmStatus(){
+        if(app.globalData.serviceType=='到店' && app.globalData.storeInfo.business_status!=='营业中'){
+            wx.showModal({
+                title: '提示',
+                content: '本店暂未营业，请确认后再下单',
+                showCancel: false,
+                confirmText: '确定',
+            });
+            return; 
+        }
+        if(app.globalData.serviceType=='外卖' && app.globalData.storeInfo.takeout_status!=='可配送'){
+            wx.showModal({
+                title: '提示',
+                content: '外卖暂不配送，请确认后再下单',
+                showCancel: false,
+                confirmText: '确定',
+            });
+            return; 
+        }
     },
-
-    onLoad() {
-        // if (!app.globalData.storeInfo) {
-        //     this.getStores()
-        // } else {
-            this.getFoodList()
-        // }
-    },
-
-    // 1.信息获取与更新
-    // getStores() {
-    //     let that = this;
-    //     wx.request({
-    //         url: baseUrl + 'stores/',
-    //         method: 'GET',
-    //         data: {
-    //             latitude: app.globalData.latitude,
-    //             longitude: app.globalData.longitude,
-    //         },
-    //         success: (res) => {
-    //             if (res.data.success) {
-    //                 console.log('获取门店信息成功', res.data.stores[0]);
-    //                 app.globalData.stores = res.data.stores;
-    //                 app.globalData.storeInfo = res.data.stores[0];
-    //                 this.setData({
-    //                     storeInfo: res.data.stores[0]
-    //                 })
-    //                 that.getFoodList()
-    //             }
-    //         },
-    //         fail: (err) => {
-    //             console.log('获取门店信息失败', err);
-    //         }
-    //     });
-    // },
     getCartList() {
         var cartList = wx.getStorageSync('cart') || [];
         var totalP = 0;
@@ -185,12 +186,12 @@ Page({
     },
 
     // 2.选择
-    changeStores() {
-        wx.navigateTo({
-            url: '/pages/Home/store/store',
-        })
-    },
-    onServiceTypeChange(e) {
+    // changeStores() {
+    //     wx.navigateTo({
+    //         url: '/pages/Home/store/store',
+    //     })
+    // },
+    onServiceTypeChange() {
         if(this.data.serviceType=='到店'){
             app.globalData.serviceType = '外卖'
             this.setData({
@@ -208,6 +209,7 @@ Page({
                 serviceType: '到店'
             });
         }
+        this.confirmStatus()
     },
 
 
@@ -420,7 +422,36 @@ Page({
             })
             return;
         }
-        if (this.data.serviceType == '外卖' && !this.data.addressInfo) {
+        if (this.data.serviceType == '外卖' && app.globalData.storeInfo.takeout_status!=='可配送') {
+            wx.showModal({
+                title: '提示',
+                content: '外卖暂不配送',
+                success(res) {
+                    if (res.confirm) {
+                        wx.switchTab({
+                          url: '/pages/Home/home/home',
+                        })
+                    } else if (res.cancel) {
+                        return;
+                    }
+                }
+            });
+        } else if (this.data.serviceType == '到店' && app.globalData.storeInfo.business_status!=='营业中') {
+            wx.showModal({
+                title: '提示',
+                content: '门店暂不营业',
+                success(res) {
+                    if (res.confirm) {
+                        wx.switchTab({
+                          url: '/pages/Home/home/home',
+                        })
+                    } else if (res.cancel) {
+                        return;
+                    }
+                }
+            });
+        }
+        else if (this.data.serviceType == '外卖' && !this.data.addressInfo) {
             wx.showModal({
                 title: '提示',
                 content: '请选择配送地址',

@@ -109,24 +109,26 @@ page {
     width: 92%;
     background-color: #f3ede3;
     border-radius: 5px;
-    padding: 25rpx;
+    padding: 20rpx;
     margin: 0 10rpx 10rpx 10rpx;
 }
 .balance_root{
     display: flex;
     flex-direction: row;
+    align-items: baseline;
     font-size: 21px;
     font-weight: bolder;
 }
 .balance_name{
-    padding: 0 90rpx 0 10rpx;
+    padding: 10rpx 90rpx 10rpx 20rpx;
 }
 .balance_number{
     color: darkred;
+    font-size: 24px;
 }
 .balance_describe{
-    color: rgb(128, 128, 128);
-    padding: 0 30rpx 20rpx 40rpx;
+    color: rgb(167, 167, 167);
+    padding: 0 5rpx 0 20rpx;
 }
 
 .btn {
