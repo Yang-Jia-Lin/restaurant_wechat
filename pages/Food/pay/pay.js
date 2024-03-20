@@ -21,6 +21,7 @@ function generateOptions(startTime, endTime) {
     }
     return options;
 }
+
 function convertToDateTime(timeStr) {
     // 获取当前日期
     const now = new Date();
@@ -35,10 +36,23 @@ function convertToDateTime(timeStr) {
 
     return now;
 }
+
 function getCurrentHourMinutes() {
     const now = new Date();
     return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:00`;
 }
+
+function timeToMinutes(time) {
+    const [hours, minutes] = time.split(":");
+    return parseInt(hours) * 60 + parseInt(minutes);
+}
+
+function isWithinPeriod(start, end, current) {
+    const startMinutes = timeToMinutes(start);
+    const endMinutes = timeToMinutes(end);
+    const currentMinutes = timeToMinutes(current);
+    return currentMinutes >= startMinutes && currentMinutes <= endMinutes;
+};
 
 Page({
     data: {
@@ -79,125 +93,49 @@ Page({
         this.data.serviceType === '到店' ? this.generateTakeTimeOptions() : this.generateDeliveryTimeOptions();
     },
 
-    // 1.生成可用取餐时间（自提）/ 派送时间（外送）
+    // 1.生成可用预约取餐时间
     generateTakeTimeOptions: function () {
-        // 当前时间
-        const now = new Date();
-        const currentHourMinutes = (now.getHours() < 10 ? '0' : '') + now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes() + ':00';
-
-        // 营业时间
+        const currentHourMinutes = getCurrentHourMinutes();
         const businessHours = this.data.storeInfo.business_hours.split(" ");
         let timeOptions = [];
 
-        // 计算可用堂食时间
+        // 1.计算可用预约堂食时间
         businessHours.forEach(period => {
             let [periodStart, periodEnd] = period.split("-");
             let startTime = currentHourMinutes > periodStart ? currentHourMinutes : periodStart;
             let options = generateOptions(startTime, periodEnd);
-            timeOptions = [...timeOptions, ...options];
+            timeOptions.push(...options);
         });
-
+        timeOptions = [...new Set(timeOptions)];
         this.setData({
-            deliveryTimeOptions: timeOptions.filter((option, index) => timeOptions.indexOf(option) === index), // 移除重复项
+            deliveryTimeOptions: timeOptions,
             deliveryTime: timeOptions[0] || "暂无可用时间",
         });
 
-        this.checkTime()
-    },
-    generateDeliveryTimeOptions: function () {
-        // 当前时间
-        const now = new Date();
-        const currentHourMinutes = (now.getHours() < 10 ? '0' : '') + now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes() + ':00';
-
-        // 营业时间
-        const businessHours = this.data.storeInfo.business_hours.split(" ");
-        // 高峰时间
-        const peakTimes = [{
-                start: this.data.storeInfo.takeout_stop_begin1,
-                end: this.data.storeInfo.takeout_stop_end1
-            },
-            {
-                start: this.data.storeInfo.takeout_stop_begin2,
-                end: this.data.storeInfo.takeout_stop_end2
-            }
-        ];
-
-        // 计算当前可用外卖时间
-        let timeOptions = [];
-        businessHours.forEach(period => {
-            let [periodStart, periodEnd] = period.split("-");
-            let startTime = currentHourMinutes > periodStart ? currentHourMinutes : periodStart;
-            let options = generateOptions(startTime, periodEnd);
-            options = options.filter(time => {
-                const timeInMinutes = this.timeToMinutes(time);
-                return !peakTimes.some(peakTime => {
-                    return timeInMinutes >= this.timeToMinutes(peakTime.start) && timeInMinutes <= this.timeToMinutes(peakTime.end);
-                });
-            });
-            timeOptions = [...timeOptions, ...options];
-        });
-        // 检查可用时间是否小于25分钟
-        if (timeOptions[0]) {
-            const nearestTime = convertToDateTime(timeOptions[0])
-            const timeDiff = nearestTime - now; // 计算时间差（毫秒）
-            const diffInMinutes = timeDiff / (1000 * 60); // 转换为分钟
-            if (diffInMinutes < 25) {
-                timeOptions = timeOptions.slice(1);
-            }
-        }
-        // 去重后设置数据
-        this.setData({
-            deliveryTimeOptions: timeOptions.filter((option, index) => timeOptions.indexOf(option) === index),
-            deliveryTime: timeOptions[0] || "暂无可用时间",
-        });
-
-        this.checkTakeoutTime()
-    },
-    timeToMinutes: function (time) {
-        const [hours, minutes] = time.split(":");
-        return parseInt(hours) * 60 + parseInt(minutes);
-    },
-    checkTime() {
-        // 当前时间
-        const now = new Date();
-        const currentHourMinutes = (now.getHours() < 10 ? '0' : '') + now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes() + ':00';
-        // 营业时间
-        const businessHours = this.data.storeInfo.business_hours.split(" ");
-        // 判断时间是否在某区间内（函数）
-        const isWithinPeriod = (start, end, current) => {
-            const startMinutes = this.timeToMinutes(start);
-            const endMinutes = this.timeToMinutes(end);
-            const currentMinutes = this.timeToMinutes(current);
-            return currentMinutes >= startMinutes && currentMinutes <= endMinutes;
-        };
-        // 检查当前时间是否可用
+        // 2.计算当前是否可以立即取餐
         const isOutOfBusinessHours = !businessHours.some(period => {
             let [periodStart, periodEnd] = period.split("-");
             return isWithinPeriod(periodStart, periodEnd, currentHourMinutes);
         });
-        
         if (isOutOfBusinessHours) {
             this.setData({
                 deliveryNowClock: true,
                 deliveryTimeType: '预约'
             });
-            console.log('现在不能送！')
-        } else if (this.data.deliveryTime == "暂无可用时间") {
+            console.log('现在不能送！');
+        } else if (this.data.deliveryTime === "暂无可用时间") {
             this.setData({
                 deliveryReserveClock: true,
                 deliveryNowClock: true,
                 deliveryTimeType: ''
             });
-            console.log('本店打烊了！现在不能点！')
+            console.log('本店打烊了！现在不能点！');
         }
     },
-    checkTakeoutTime() {
-        // 当前时间
-        const now = new Date();
-        const currentHourMinutes = (now.getHours() < 10 ? '0' : '') + now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes() + ':00';
-        // 营业时间
+    generateDeliveryTimeOptions: function () {
+        const currentHourMinutes = getCurrentHourMinutes();
         const businessHours = this.data.storeInfo.business_hours.split(" ");
-        // 高峰时间
+        let timeOptions = [];
         const peakTimes = [{
                 start: this.data.storeInfo.takeout_stop_begin1,
                 end: this.data.storeInfo.takeout_stop_end1
@@ -207,32 +145,51 @@ Page({
                 end: this.data.storeInfo.takeout_stop_end2
             }
         ];
-        // 判断时间是否在某区间内（函数）
-        const isWithinPeriod = (start, end, current) => {
-            const startMinutes = this.timeToMinutes(start);
-            const endMinutes = this.timeToMinutes(end);
-            const currentMinutes = this.timeToMinutes(current);
-            return currentMinutes >= startMinutes && currentMinutes <= endMinutes;
-        };
-        // 检查当前时间是否可用
+
+        // 1.计算当前可用预约外卖时间
+        businessHours.forEach(period => {
+            let [periodStart, periodEnd] = period.split("-");
+            let startTime = currentHourMinutes > periodStart ? currentHourMinutes : periodStart;
+            let options = generateOptions(startTime, periodEnd);
+            options = options.filter(time =>
+                !peakTimes.some(peakTime => isWithinPeriod(peakTime.start, peakTime.end, time))
+            );
+            timeOptions.push(...options);
+        });
+        if (timeOptions.length > 0) {
+            const now = new Date(`1970/01/01 ${currentHourMinutes}`);
+            const nearestTimeOption = new Date(`1970/01/01 ${timeOptions[0]}`);
+            const diffInMinutes = (nearestTimeOption - now) / (1000 * 60);
+            if (diffInMinutes < 25) {
+                timeOptions.shift(); // 移除第一个元素
+            }
+        }
+        timeOptions = [...new Set(timeOptions)];
+        this.setData({
+            deliveryTimeOptions: timeOptions,
+            deliveryTime: timeOptions[0] || "暂无可用时间",
+        });
+
+        // 2.判断当前能否立即配送
         const isOutOfBusinessHours = !businessHours.some(period => {
             let [periodStart, periodEnd] = period.split("-");
             return isWithinPeriod(periodStart, periodEnd, currentHourMinutes);
         });
         const isInPeakTime = peakTimes.some(peakTime => isWithinPeriod(peakTime.start, peakTime.end, currentHourMinutes));
+
         if (isInPeakTime || isOutOfBusinessHours) {
             this.setData({
                 deliveryNowClock: true,
                 deliveryTimeType: '预约'
             });
-            console.log('现在不能送！')
-        } else if (this.data.deliveryTime == "暂无可用时间") {
+            console.log('现在不能送！');
+        } else if (this.data.deliveryTime === "暂无可用时间") {
             this.setData({
                 deliveryReserveClock: true,
                 deliveryNowClock: true,
                 deliveryTimeType: ''
             });
-            console.log('本店打烊了！今天不能送！')
+            console.log('本店打烊了！今天不能送！');
         }
     },
 
@@ -413,54 +370,12 @@ Page({
     // 步骤3：支付完成后处理
     endPayment() {
         // 1.增加销量
-        const dishIds = this.data.cartList.map(item => item.dish_id);
-        wx.request({
-            url: baseUrl + 'dishes/sales/increment',
-            method: 'PUT',
-            data: {
-                dishIds: dishIds
-            },
-            success: (res) => {
-                console.log('增加销量中', res)
-            },
-            fail: (err) => {
-                console.error('增加销量错误：', err);
-            }
-        });
+        this.addSales()
 
         // 2.赠送积点
-        let point = this.data.totalPrice > 10 ? 1 : 0.5
-        let points = (parseFloat(this.data.userInfo.points) + point).toFixed(2)
-        wx.request({
-            url: baseUrl + 'users/' + this.data.userInfo.user_id,
-            method: 'PUT',
-            data: {
-                points: points
-            },
-            success: (res) => {
-                if (res.statusCode === 200) {
-                    console.log('增加成功', res.data);
-                    this.setUserInfo(res.data.updatedUser)
-                } else {
-                    console.log('增加失败:', res.errMsg);
-                    wx.showModal({
-                        title: '提示',
-                        content: '积点增加失败，请重试或联系工作人员！',
-                        showCancel: false,
-                    })
-                    return;
-                }
-            },
-            fail: (err) => {
-                console.log('增加失败:', err);
-                wx.showModal({
-                    title: '提示',
-                    content: '积点增加失败，请重试或联系工作人员！',
-                    showCancel: false,
-                })
-                return;
-            }
-        });
+        if(app.globalData.userInfo.phone_number){
+            this.addPoints()
+        }
 
         // 3.清空购物车
         wx.setStorageSync('cart', []);
@@ -470,4 +385,43 @@ Page({
             url: '/pages/My/myOrder/myOrder'
         })
     },
+    addSales() {
+        const dishIds = this.data.cartList.map(item => item.dish_id);
+        wx.request({
+            url: baseUrl + 'dishes/sales/increment',
+            method: 'PUT',
+            data: {
+                dishIds: dishIds
+            }
+        });
+    },
+    addPoints() {
+        let point = this.data.totalPrice > 10 ? 1 : 0.5
+        let points = (parseFloat(app.globalData.userInfo.points) + point).toFixed(2)
+        wx.request({
+            url: baseUrl + 'users/' + this.data.userInfo.user_id,
+            method: 'PUT',
+            data: {
+                points: points
+            },
+            success: (res) => {
+                if (res.statusCode === 200) {
+                    console.log('增加成功', res.data);
+                    app.globalData.userInfo = res.data.updatedUser
+                    wx.setStorageSync('userInfo', res.data.updatedUser)
+                } else {
+                    console.log('增加失败:', res.errMsg);
+                    wx.showToast({
+                        title: '积点增加失败，请重试或联系工作人员！',
+                    })
+                }
+            },
+            fail: (err) => {
+                console.log('增加失败:', err);
+                wx.showToast({
+                    title: '积点增加失败，请重试或联系工作人员！',
+                })
+            }
+        });
+    }
 })

@@ -14,6 +14,12 @@ Page({
             path: '/pages/Home/home/home'
         }
     },
+    onShow(){
+        this.setData({
+            storeInfo: app.globalData.storeInfo,
+            userInfo: app.globalData.userInfo,
+        })
+    },
     onLoad() {
         this.getTopBanner();
         app.on('storeInfoUpdated', this.updateInfo);

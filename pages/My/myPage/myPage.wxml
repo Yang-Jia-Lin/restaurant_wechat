@@ -2,12 +2,12 @@
 <wxs src="../../../utils/filter.wxs" module="filters" />
 
 <!-- 顶部会员卡图案 -->
-<view wx:if="{{isUserRegister}}" class="top_card">
+<view wx:if="{{userInfo.phone_number}}" class="top_card">
     <img src="/image/home2.png" alt="" />
 </view>
 
 <!-- 个人信息部分 -->
-<view wx:if="{{!isUserRegister}}" class="profile2">
+<view wx:if="{{!userInfo.phone_number}}" class="profile2">
     <text class="greeting">小主，快来领取唐合丰会员卡~ 消费得积点，更有好礼相送哦！</text>
     <view class="btn" bindtap="goToRegister">免费注册</view>
 </view>
@@ -103,5 +103,5 @@
 <!-- 登录/退出 -->
 <view class="login">
     <view class="admin_login_btn" bindtap="goToAdmin">管理员登录</view>
-    <view class="user_not_reg_btn" wx:if="{{isUserRegister}}">账号注销</view>
+    <view class="user_not_reg_btn" wx:if="{{userInfo.phone_number}}">账号注销</view>
 </view>

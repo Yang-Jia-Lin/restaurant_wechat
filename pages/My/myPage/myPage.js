@@ -4,7 +4,6 @@ const baseUrl = app.globalData.baseUrl
 Page({
     data: {
         userInfo: app.globalData.userInfo,
-        isUserRegister: app.globalData.isUserRegister,
         recentOrder: {},
         haveOrder: false,
     },
@@ -16,14 +15,42 @@ Page({
     },
     onShow() {
         this.setData({
-            userInfo: app.globalData.userInfo,
-            isUserRegister: app.globalData.isUserRegister
+            userInfo: app.globalData.userInfo
         })
         let order_id = wx.getStorageSync('orderId') || ''
         if (order_id !== '') {
             this.getRecentOrder(order_id);
         }
     },
+    onRefresh() {
+        //导航条加载动画
+        wx.showNavigationBarLoading()
+        //loading 提示框
+        wx.showLoading({
+            title: 'Loading...',
+        })
+        setTimeout(function () {
+            wx.hideLoading();
+            wx.hideNavigationBarLoading();
+            wx.stopPullDownRefresh();
+        }, 1000)
+        this.onShow();
+    },
+    onPullDownRefresh() {
+        this.onRefresh();
+    },
+    onLoad() {
+        app.on('userInfoUpdated', this.updateInfo);
+    },
+    onUnload() {
+        app.off('userInfoUpdated', this.updateInfo);
+    },
+    updateInfo() {
+        this.setData({
+            userInfo: app.globalData.userInfo
+        });
+    },
+
     getRecentOrder(order_id) {
         wx.request({
             url: baseUrl + 'orders/user/details/' + order_id,
@@ -51,23 +78,7 @@ Page({
             }
         })
     },
-    onRefresh() {
-        //导航条加载动画
-        wx.showNavigationBarLoading()
-        //loading 提示框
-        wx.showLoading({
-            title: 'Loading...',
-        })
-        setTimeout(function () {
-            wx.hideLoading();
-            wx.hideNavigationBarLoading();
-            wx.stopPullDownRefresh();
-        }, 1000)
-        this.onShow();
-    },
-    onPullDownRefresh() {
-        this.onRefresh();
-    },
+    
 
     // 页面跳转
     goToRegister() {

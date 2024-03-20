@@ -65,6 +65,7 @@ Page({
             storeInfo: app.globalData.storeInfo,
         });
         this.confirmStatus()
+        this.getFoodList()
     },
     onShareAppMessage: function () {
         return {
