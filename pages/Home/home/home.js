@@ -70,15 +70,9 @@ Page({
     },
     eatOut() {
         app.globalData.serviceType = '外卖';
-        if (!app.globalData.addressInfo) {
-            wx.navigateTo({
-                url: '/pages/Home/address/address'
-            })
-        } else {
-            wx.switchTab({
-                url: '/pages/Food/food/food'
-            })
-        }
+        wx.navigateTo({
+            url: '/pages/Home/address/address'
+        })
     },
     goToRegister() {
         wx.navigateTo({

@@ -76,7 +76,6 @@ Page({
     // 注册
     getRegister() {
         let that = this
-        let points = (parseFloat(that.data.userInfo.points) + 2).toFixed(2)
         if (this.data.phone === "点击获取" || this.data.phone.length != 11) {
             wx.showModal({
                 title: '提示',
@@ -91,7 +90,7 @@ Page({
                 data: {
                     phone_number: that.data.phone,
                     nickname: that.data.nickname,
-                    points: points
+                    points: 2
                 },
                 success: (res) => {
                     if (res.statusCode === 200) {
@@ -102,15 +101,6 @@ Page({
                             content: '注册成功！',
                             showCancel: false,
                             success: function () {
-                                const pages = getCurrentPages(); 
-                                const prevPage = pages[pages.length - 2]; 
-                                if (prevPage) {
-                                    if (typeof prevPage.handleDataFromRegisterPage === 'function') {
-                                        prevPage.handleDataFromRegisterPage({
-                                            registered: true
-                                        });
-                                    }
-                                }
                                 wx.navigateBack()
                             }
                         })
@@ -137,11 +127,8 @@ Page({
         }
     },
     setUserInfo(userInfo) {
+        this.trigger('userInfoUpdated'); 
         app.globalData.userInfo = userInfo;
-        this.setData({
-            userInfo: userInfo,
-            isUserRegister: !!userInfo.phone_number
-        });
         wx.setStorageSync('userInfo', userInfo);
     }
 })

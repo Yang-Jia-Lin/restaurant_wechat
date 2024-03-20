@@ -196,14 +196,12 @@ Page({
         if(this.data.serviceType=='到店'){
             app.globalData.serviceType = '外卖'
             this.setData({
-                serviceType: '外卖'
+                serviceType: '外卖',
+                currentEatType: '打包'
             });
-            if (!app.globalData.addressInfo) {
-                wx.navigateTo({
-                    url: '/pages/Home/address/address'
-                })
-            }
-            this.setData({currentEatType: '打包'})
+            wx.navigateTo({
+                url: '/pages/Home/address/address'
+            })
         } else {
             app.globalData.serviceType = '到店'
             this.setData({
@@ -452,7 +450,7 @@ Page({
                 }
             });
         }
-        else if (this.data.serviceType == '外卖' && !this.data.addressInfo) {
+        else if (this.data.serviceType == '外卖' && !this.data.addressInfo.phone) {
             wx.showModal({
                 title: '提示',
                 content: '请选择配送地址',
