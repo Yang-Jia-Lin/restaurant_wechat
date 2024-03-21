@@ -33,8 +33,16 @@ Page({
             success: (res) => {
                 console.log("获取订单", res.data);
                 if (res.statusCode === 200) {
+                    let list = res.data
+                    list.forEach(order => {
+                        if (order.orderDetails && Array.isArray(order.orderDetails)) {
+                            order.orderDetails.forEach(detail => {
+                                detail.dish_name_short = detail.dish_name.substring(0, 3);
+                            });
+                        }
+                    });
                     this.setData({
-                        list: res.data
+                        list: list
                     })
                 } else {
                     console.error("获取订单失败", res);

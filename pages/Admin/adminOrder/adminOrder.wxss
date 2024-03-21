@@ -90,6 +90,9 @@ page {
     flex-direction: row;
     align-items: center;
 }
+.names{
+    padding-right: 20rpx;
+}
 .dish_type{
     color: rgb(185, 48, 48);
     font-weight: 550;
@@ -110,14 +113,8 @@ page {
     justify-content: start;
     margin-bottom: 17rpx;
 }
-.detail1{
-    margin: 0 10rpx 0 0;
-    font-size: 20px;
-    font-weight: 550;
-    color: rgb(88, 45, 2);
-}
 .detail2{
-    margin: 0 10rpx;
+    margin-right: 20rpx;
     color: rgb(151, 76, 0);
     font-size: 18px;
     font-weight: 500;
@@ -152,14 +149,14 @@ page {
     height: 90rpx;
 }
 .button2{
+    border: 1px solid darkgrey;
     background-color:rgb(223, 223, 223);
-    border-radius: 25rpx;
     box-shadow: 0 0 20rpx rgba(161, 161, 161, 0.15);
-    font-size: 20px;
+    font-size: 18px;
     text-align: center;
-    line-height: 90rpx;
-    width: 32%;
-    height: 90rpx;
+    line-height: 60rpx;
+    width: 30%;
+    height: 60rpx;
 }
 
 

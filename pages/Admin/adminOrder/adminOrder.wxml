@@ -31,7 +31,9 @@
     <view class='dishes_root' wx:for="{{item.orderDetails}}" wx:for-item="arr_item" wx:key="key">
         <view class="dish_title_root">
             <view class="dish_name">
-                <view class="names">{{arr_item.dish_name}}</view>
+                <view class="names">{{arr_item.dish_name_short}}</view>
+                <view>{{arr_item.mandatory_options['份量']}}</view>
+                <view>{{arr_item.mandatory_options['种类']}}</view>
                 <view class="dish_type">{{arr_item.eat_type=='打包'?'（打包）':''}}</view>
             </view>
             <view class="{{arr_item.quantity>1?'big':'dish_quantity'}}">
@@ -39,10 +41,6 @@
             </view>
         </view>
         <view class="dish_detail_root" wx:if="{{arr_item.mandatory_options!=null}}">
-            <view class="detail1">
-                <text>{{arr_item.mandatory_options['份量']}}</text>
-                <text>{{arr_item.mandatory_options['种类']}}</text>
-            </view>
             <view class="detail2" wx:if="{{arr_item.dish_id > 8 && arr_item.dish_id < 16}}">
                 <text>{{arr_item.mandatory_options['辣度']}}</text>
             </view>
