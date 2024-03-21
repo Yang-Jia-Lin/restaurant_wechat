@@ -61,5 +61,8 @@
     },
     "useExtendedLib": {
         "weui": true
-    }
+    },
+    "requiredPrivateInfos": [
+        "getLocation"
+    ]
 }

@@ -70,6 +70,13 @@
                     "query": "",
                     "launchMode": "default",
                     "scene": null
+                },
+                {
+                    "name": "管理员所有订单",
+                    "pathName": "pages/Admin/adminAllOrder/adminAllOrder",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
                 }
             ]
         }
