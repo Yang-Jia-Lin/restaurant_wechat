@@ -27,7 +27,7 @@
 </view>
 
 <!-- 4.如果用户没有注册，显示注册按钮  -->
-<view wx:if="{{!userInfo.phone_number}}" class="container">
+<view wx:if="{{userInfo.openid && !userInfo.phone_number}}" class="container">
     <view class="profile">
         <image class="avatar" src="{{userInfo.avatar_url}}" />
         <text class="username">您好！欢迎光临唐合丰拌面馆~</text>
@@ -39,7 +39,7 @@
 </view>
 
 <!-- 5.如果用户注册，显示用户账户信息 -->
-<view wx:else="" class="container">
+<view wx:elif="{{userInfo.openid}}" class="container">
     <view class="profile">
         <image class="avatar" src="{{userInfo.avatar_url}}" />
         <text class="username">您好！欢迎光临唐合丰拌面馆~</text>

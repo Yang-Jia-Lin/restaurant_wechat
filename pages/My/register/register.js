@@ -9,6 +9,19 @@ Page({
         phone: '点击获取',
         isHavePhone: false
     },
+    onLoad() {
+        app.on('userInfoUpdated', this.updateInfo);
+    },
+    onUnload() {
+        app.off('userInfoUpdated', this.updateInfo);
+    },
+    updateInfo() {
+        this.setData({
+            userInfo: app.globalData.userInfo
+        });
+    },
+
+
     // 获取头像
     onChooseAvatar(e) {
         const {
@@ -127,7 +140,7 @@ Page({
         }
     },
     setUserInfo(userInfo) {
-        this.trigger('userInfoUpdated'); 
+        app.trigger('userInfoUpdated'); 
         app.globalData.userInfo = userInfo;
         wx.setStorageSync('userInfo', userInfo);
     }
