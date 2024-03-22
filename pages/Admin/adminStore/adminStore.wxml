@@ -17,8 +17,8 @@
         <view class="dish-root" wx:for="{{menuArrIn}}" wx:key="index">
             <view class="dish-name">{{item.dish.dish_name}}</view>
             <view class="dish-status">
-                <view class="{{item.dish_status=='上架'?'dish-on':''}}" bindtap="goUpDish" data-id="{{item.dish_id}}" data-type="到店" data-status="上架">上架</view>
-                <view class="{{item.dish_status=='下架'?'dish-on':''}}" bindtap="goUpDish" data-id="{{item.dish_id}}" data-type="到店" data-status="下架">下架</view>
+                <view class="{{item.dish_status=='上架'?'dish-on':'dish-off'}}" bindtap="goUpDish" data-id="{{item.dish_id}}" data-type="到店" data-status="上架">上架</view>
+                <view class="{{item.dish_status=='下架'?'dish-on':'dish-off'}}" bindtap="goUpDish" data-id="{{item.dish_id}}" data-type="到店" data-status="下架">下架</view>
             </view>
         </view>
     </view>
@@ -27,8 +27,8 @@
         <view class="dish-root" wx:for="{{menuArrOut}}" wx:key="index">
             <view class="dish-name">{{item.dish.dish_name}}</view>
             <view class="dish-status">
-                <view class="{{item.dish_status=='上架'?'dish-on':''}}" bindtap="goUpDish" data-id="{{item.dish_id}}" data-type="外卖" data-status="上架">上架</view>
-                <view class="{{item.dish_status=='下架'?'dish-on':''}}" bindtap="goUpDish" data-id="{{item.dish_id}}" data-type="外卖" data-status="下架">下架</view>
+                <view class="{{item.dish_status=='上架'?'dish-on':'dish-off'}}" bindtap="goUpDish" data-id="{{item.dish_id}}" data-type="外卖" data-status="上架">上架</view>
+                <view class="{{item.dish_status=='下架'?'dish-on':'dish-off'}}" bindtap="goUpDish" data-id="{{item.dish_id}}" data-type="外卖" data-status="下架">下架</view>
             </view>
         </view>
     </view>
