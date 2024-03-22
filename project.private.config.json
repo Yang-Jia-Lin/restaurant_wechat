@@ -77,6 +77,13 @@
                     "query": "",
                     "launchMode": "default",
                     "scene": null
+                },
+                {
+                    "name": "门店设置",
+                    "pathName": "pages/Admin/adminStore/adminStore",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
                 }
             ]
         }

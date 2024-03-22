@@ -15,30 +15,25 @@ page {
     background: #ffffff;
     margin: 20rpx 70rpx;
     height: 75rpx;
-    line-height: 75rpx;
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
+    align-items: baseline;
 }
 
 .input {
     font-size: 20px;
     width: 60%;
     height: 75rpx;
-    line-height: 75rpx;
     padding-left: 10rpx;
     border: 2px solid #c7b89d;
     border-radius: 25rpx;
 }
 
 /*按钮 */
-.btn_fabu {
-    width: 60%;
-    height: 80rpx;
-    margin-top: 80rpx;
-    align-items: center;
-    border-radius: 95rpx;
-    font-size: 25px;
+.btn {
+    margin-top: 50rpx;
+    font-size: 20px;
 }
 
 .tab {

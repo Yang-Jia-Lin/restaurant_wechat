@@ -53,9 +53,13 @@
     </view>
     <view class="order_note" wx:if="{{item.address}}">地址：{{item.address}}
     </view>
+    <!-- 订单价格 -->
+    <view class="price-root">
+        总价：{{item.total_price}}元
+    </view>
     <view wx:if="{{item.phone}}" class='button1' data-phone='{{item.phone}}' bindtap='makeCall'>
-            拨打电话
-        </view>
+        拨打电话
+    </view>
     <view class='order_time'>
         下单时间：{{item.order_time?filters.formatDate(item.order_time):''}}
     </view>

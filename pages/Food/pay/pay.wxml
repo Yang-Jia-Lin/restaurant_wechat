@@ -80,6 +80,7 @@
             <view class="options">
                 <text wx:for="{{item.mandatory_values}}" wx:key="index">{{item}}/</text>
                 <text wx:for="{{item.optional_options}}" wx:key="index">{{item}}/</text>
+                <text wx:if="{{item.note!==''}}">{{item.note}}</text>
             </view>
             <text>X{{item.quantity}}</text>
         </view>

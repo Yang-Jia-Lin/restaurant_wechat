@@ -41,11 +41,10 @@ page {
 
 
 /* 订单详情 */
-
 /* 订单块整体 */
 .order_list_root {
     background-color: white;
-    margin: 0 30rpx 45rpx 30rpx;
+    margin: 20rpx 30rpx 25rpx 30rpx;
     width: 92%;
     border-radius: 25rpx;
 }

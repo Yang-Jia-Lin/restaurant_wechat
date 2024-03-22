@@ -109,6 +109,14 @@ page {
     font-size: 40rpx;
     color: black;
 }
+
+.price-root{
+    margin: 0 55rpx 30rpx 55rpx;
+    text-align: end;
+    font-size: 21px;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+}
 /* 底部下单时间 */
 .order_time {
     padding: 10rpx 0;
