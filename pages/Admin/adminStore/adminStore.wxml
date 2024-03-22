@@ -1,11 +1,35 @@
-<!-- 设置营业状态 -->
+<!-- 营业状态 -->
 <view class="root">
-	<view class="type_root" bindtap="onServiceTypeChange">
-		<view class="{{business_status=='营业中'?'on':'off'}}">上线</view>
-		<view class="{{business_status=='暂不营业'?'on':'off'}}">下线</view>
-	</view>
-	<view class="type_root" bindtap="onServiceTypeChange">
-		<view class="{{takeout_status=='可配送'?'on':'off'}}">上线</view>
-		<view class="{{takeout_status=='暂不配送'?'on':'off'}}">下线</view>
-	</view>
+    <view class="type_root">
+        <view class="{{business_status=='营业中'?'on':'off'}}" bindtap="onServiceTypeChange" data-bstatus="营业中">营业中</view>
+        <view class="{{business_status=='休息中'?'on':'off'}}" bindtap="onServiceTypeChange" data-bstatus="休息中">暂不营业</view>
+    </view>
+    <view class="type_root">
+        <view class="{{takeout_status=='可配送'?'on':'off'}}" bindtap="onServiceTypeChange" data-tstatus="可配送">可配送</view>
+        <view class="{{takeout_status=='暂不配送'?'on':'off'}}" bindtap="onServiceTypeChange" data-tstatus="暂不配送">暂不配送</view>
+    </view>
+</view>
+
+<!-- 菜单区域  -->
+<view class="menu-root">
+    <view class="left">
+        <view class="menu-title">到店</view>
+        <view class="dish-root" wx:for="{{menuArrIn}}" wx:key="index">
+            <view class="dish-name">{{item.dish.dish_name}}</view>
+            <view class="dish-status">
+                <view class="{{item.dish_status=='上架'?'dish-on':''}}" bindtap="goUpDish" data-id="{{item.dish_id}}" data-type="到店" data-status="上架">上架</view>
+                <view class="{{item.dish_status=='下架'?'dish-on':''}}" bindtap="goUpDish" data-id="{{item.dish_id}}" data-type="到店" data-status="下架">下架</view>
+            </view>
+        </view>
+    </view>
+    <view class="right">
+        <view class="menu-title">外卖</view>
+        <view class="dish-root" wx:for="{{menuArrOut}}" wx:key="index">
+            <view class="dish-name">{{item.dish.dish_name}}</view>
+            <view class="dish-status">
+                <view class="{{item.dish_status=='上架'?'dish-on':''}}" bindtap="goUpDish" data-id="{{item.dish_id}}" data-type="外卖" data-status="上架">上架</view>
+                <view class="{{item.dish_status=='下架'?'dish-on':''}}" bindtap="goUpDish" data-id="{{item.dish_id}}" data-type="外卖" data-status="下架">下架</view>
+            </view>
+        </view>
+    </view>
 </view>

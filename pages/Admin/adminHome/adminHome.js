@@ -94,11 +94,6 @@ Page({
             url: '/pages/Admin/adminAllOrder/adminAllOrder',
         })
     },
-    goDish() {
-        wx.navigateTo({
-            url: '/pages/Admin/adminDish/adminDish',
-        })
-    },
     goStore() {
         wx.navigateTo({
             url: '/pages/Admin/adminStore/adminStore',

@@ -15,7 +15,6 @@
         "pages/Admin/adminHome/adminHome",
         "pages/Admin/adminOrder/adminOrder",
         "pages/Admin/adminAllOrder/adminAllOrder",
-        "pages/Admin/adminDish/adminDish",
         "pages/Admin/adminStore/adminStore"
     ],
 

@@ -10,7 +10,6 @@ Page({
 
         // 全局数据
         menuArr: [],
-        dishList: [],
         cartList: wx.getStorageSync('cart') || [],
         totalPrice: 0,
         totalNum: 0,
