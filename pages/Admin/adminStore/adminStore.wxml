@@ -1,10 +1,18 @@
+<!-- 自动打印 -->
+<view class="print">
+    <text>订单自动打印 </text>
+    <switch checked="{{shouldPrint}}" bindchange="onSwitchChange" />
+</view>
+
 <!-- 营业状态 -->
 <view class="root">
     <view class="type_root">
+    <view>营业状态</view>
         <view class="{{business_status=='营业中'?'on':'off'}}" bindtap="onServiceTypeChange" data-bstatus="营业中">营业中</view>
         <view class="{{business_status=='休息中'?'on':'off'}}" bindtap="onServiceTypeChange" data-bstatus="休息中">暂不营业</view>
     </view>
     <view class="type_root">
+        <view>外卖状态</view>
         <view class="{{takeout_status=='可配送'?'on':'off'}}" bindtap="onServiceTypeChange" data-tstatus="可配送">可配送</view>
         <view class="{{takeout_status=='暂不配送'?'on':'off'}}" bindtap="onServiceTypeChange" data-tstatus="暂不配送">暂不配送</view>
     </view>

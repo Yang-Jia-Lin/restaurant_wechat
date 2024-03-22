@@ -11,12 +11,16 @@ Page({
 		// 菜品状态
 		menuArrIn: [],
 		menuArrOut: [],
+
+		// 打印机状态
+		shouldPrint: false
 	},
 
 	// 初始化各个状态
 	onLoad() {
 		this.getStoreInfo()
 		this.getFoodList()
+		this.getPrintingPreference()
 	},
 	getStoreInfo() {
 		wx.request({
@@ -76,7 +80,26 @@ Page({
 			}
 		});
 	},
-	
+	getPrintingPreference: function () {
+		wx.request({
+			url: baseUrl + 'setPrinter/get', // 替换为实际的后端接口地址
+			method: 'GET',
+			success: (res) => {
+				if (res.data.success) {
+					console.log('获取打印机状态成功', res.data)
+					this.setData({
+						shouldPrint: res.data.shouldPrint,
+					});
+				} else {
+					console.log('获取打印设置失败');
+				}
+			},
+			fail: () => {
+				console.log('请求失败');
+			}
+		});
+	},
+
 
 
 	// 修改门店状态
@@ -121,22 +144,50 @@ Page({
 	},
 
 	// 修改菜品状态
-	goUpDish(e){
+	goUpDish(e) {
 		const dish_id = e.currentTarget.dataset.id;
 		const serviceType = e.currentTarget.dataset.type;
 		const status = e.currentTarget.dataset.status;
 		wx.request({
-		  url: `${baseUrl}dishes/status/1/${dish_id}/${serviceType}`,
-		  data: { dish_status: status },
-		  method: 'PUT',
-		  success: (res) => {
-			  console.log(res)
-			  this.getFoodList()
-		  },
-		  fail: (err) =>{
-			console.error(err)
-		  }
+			url: `${baseUrl}dishes/status/1/${dish_id}/${serviceType}`,
+			data: {
+				dish_status: status
+			},
+			method: 'PUT',
+			success: (res) => {
+				console.log(res)
+				this.getFoodList()
+			},
+			fail: (err) => {
+				console.error(err)
+			}
 		})
+	},
+
+	// 修改打印机状态
+	onSwitchChange: function (e) {
+		const newShouldPrint = e.detail.value;
+		wx.request({
+			url: baseUrl + 'setPrinter/set',
+			method: 'POST',
+			data: {
+				shouldPrint: newShouldPrint,
+			},
+			success: (res) => {
+				if (res.data.success) {
+					console.log('修改打印机状态成功', res.data)
+					this.setData({
+						shouldPrint: newShouldPrint,
+					});
+				} else {
+					console.log('设置打印偏好失败');
+				}
+			},
+			fail: () => {
+				// 请求失败的处理
+				console.log('请求失败');
+			}
+		});
 	},
 
 })
