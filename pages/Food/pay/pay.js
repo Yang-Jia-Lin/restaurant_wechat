@@ -145,15 +145,21 @@ Page({
                 end: this.data.storeInfo.takeout_stop_end2
             }
         ];
-
+    
+        // 获取当前日期并判断是否为周末
+        const today = new Date();
+        const isWeekend = today.getDay() === 6 || today.getDay() === 0; // 6 = Saturday, 0 = Sunday
+    
         // 1.计算当前可用预约外卖时间
         businessHours.forEach(period => {
             let [periodStart, periodEnd] = period.split("-");
             let startTime = currentHourMinutes > periodStart ? currentHourMinutes : periodStart;
             let options = generateOptions(startTime, periodEnd);
-            options = options.filter(time =>
-                !peakTimes.some(peakTime => isWithinPeriod(peakTime.start, peakTime.end, time))
-            );
+            if (!isWeekend) { // 如果不是周末，则过滤掉高峰时段
+                options = options.filter(time =>
+                    !peakTimes.some(peakTime => isWithinPeriod(peakTime.start, peakTime.end, time))
+                );
+            }
             timeOptions.push(...options);
         });
         if (timeOptions.length > 0) {
@@ -164,19 +170,19 @@ Page({
                 timeOptions.shift(); // 移除第一个元素
             }
         }
-        timeOptions = [...new Set(timeOptions)];
+        timeOptions = [...new Set(timeOptions)]; // 去重
         this.setData({
             deliveryTimeOptions: timeOptions,
             deliveryTime: timeOptions[0] || "暂无可用时间",
         });
-
+    
         // 2.判断当前能否立即配送
         const isOutOfBusinessHours = !businessHours.some(period => {
             let [periodStart, periodEnd] = period.split("-");
             return isWithinPeriod(periodStart, periodEnd, currentHourMinutes);
         });
         const isInPeakTime = peakTimes.some(peakTime => isWithinPeriod(peakTime.start, peakTime.end, currentHourMinutes));
-
+        
         if (isInPeakTime || isOutOfBusinessHours) {
             this.setData({
                 deliveryNowClock: true,
@@ -191,7 +197,7 @@ Page({
             });
             console.log('本店打烊了！今天不能送！');
         }
-    },
+    },    
 
     // 2.计算价格
     getTotalPrice() {

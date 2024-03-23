@@ -66,7 +66,7 @@
 
     <!-- 点击事件 -->
     <view class="button_root" wx:if="{{item.order_status == '等待中'}}">
-        <view class='button' data-id='{{item.order_id}}' bindtap='makeClick'>
+        <view class='button' wx:if="{{item.order_type!='外卖'}}" data-id='{{item.order_id}}' bindtap='makeClick'>
             提前排号
         </view>
         <view class='button' data-id='{{item.order_id}}' bindtap='cancleOrder'>

@@ -117,28 +117,42 @@ Page({
         });
     },
     makeClick(e){
-        const order_id = e.currentTarget.dataset.id
+        wx.showModal({
+          title: '提示',
+          content: '提前排号后将立即开始制作，请确认您能否立即到店取餐',
+          complete: (res) => {
+            if (res.cancel) {
+                return;
+            }
+            if (res.confirm) {
+                this.preMake(e.currentTarget.dataset.id)
+            }
+          }
+        })
+    },
+    preMake(order_id){
         wx.request({
             url: baseUrl + 'orders/' + order_id + '/begin-make',
             method: 'PATCH',
             success: (res) => {
+                console.log(res)
                 if (res.statusCode === 200) {
                     console.log(res)
                     wx.showToast({
-                        title: '修改成功',
+                        title: '排号成功',
                     });
                     this.getMyOrderList();
                 } else {
                     wx.showToast({
                         icon: 'none',
-                        title: '提交失败',
+                        title: '排号失败，请重试',
                     });
                 }
             },
             fail: () => {
                 wx.showToast({
                     icon: 'none',
-                    title: '提交失败',
+                    title: '排号失败，请重试',
                 });
             }
         })
