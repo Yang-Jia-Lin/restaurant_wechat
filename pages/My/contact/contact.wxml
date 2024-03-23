@@ -1,0 +1,15 @@
+<!--pages/phone/phone.wxml-->
+<view class="bord">
+    <view class="phone" bindtap="Call1">
+        <text>订单与产品问题</text>
+    </view>
+    <view class="phone" bindtap="Call3">
+        <text>外卖问题</text>
+    </view>
+    <view class="phone" bindtap="Call2">
+        <text>小程序问题</text>
+    </view>
+    <view>
+        （点击对应内容拨打电话）
+    </view>
+</view>

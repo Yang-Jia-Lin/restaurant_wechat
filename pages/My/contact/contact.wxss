@@ -1,0 +1,20 @@
+page{
+    background-color: #f6f6f6;
+}
+.bord{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin-top: 30rpx;
+}
+
+.phone{
+    width: 60%;
+    background-color: white;
+    border-radius: 10rpx;
+    color:rgb(145, 58, 0);
+    font-size: 25px;
+    font-weight: bold;
+    margin: 50rpx auto;
+    padding: 50rpx 0;
+}

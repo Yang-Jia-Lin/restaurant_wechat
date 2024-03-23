@@ -3,7 +3,7 @@
 
 <!-- 顶部会员卡图案 -->
 <view wx:if="{{userInfo.phone_number}}" class="top_card">
-    <img src="/image/home2.png" alt="" />
+    <image class="card-img2" src="https://forestlamb.online/public/restaurant/carousel/card1.png"/>
 </view>
 
 <!-- 个人信息部分 -->
@@ -13,7 +13,7 @@
 </view>
 <view wx:else="" class="user_info_root">
     <view class="user_info">
-        <image class="user_avatar" src="{{userInfo.avatar_url}}"/>
+        <image class="user_avatar" src="{{userInfo.avatar_url}}" />
         <view>
             <view class="user_name">{{userInfo.nickname}}</view>
             <view class="user_id">NO.{{userInfo.user_id}}</view>
@@ -82,26 +82,23 @@
 <view class="block_title">我的服务</view>
 <view class="order_root">
     <view class="block">
-        <img class="block_img" src="/image/home2.png" />
+        <image class="block_img" src="/image/balance.png" />
         <view class="block_name">立即充值</view>
     </view>
     <view class="block">
-        <img class="block_img" src="/image/home2.png" />
+        <image class="block_img" src="/image/card.png" />
         <view class="block_name">卡券兑换</view>
     </view>
-    <view class="block">
-        <img class="block_img" src="/image/home2.png" />
+    <view class="block" bindtap="contact_us">
+        <image class="block_img" src="/image/contact.png" />
         <view class="block_name">联系客服</view>
     </view>
     <view class="block">
-        <img class="block_img" src="/image/home2.png" />
+        <image class="block_img" src="/image/more.png" />
         <view class="block_name">更多服务</view>
     </view>
 </view>
 
-
-<!-- 登录/退出 -->
-<view class="login">
-    <view class="admin_login_btn" bindtap="goToAdmin">管理员登录</view>
-    <view class="user_not_reg_btn" wx:if="{{userInfo.phone_number}}">账号注销</view>
+<view class="admin_login_btn" bindtap="goToAdmin">
+    管理员登录
 </view>

@@ -13,6 +13,11 @@ page {
     border-radius: 20rpx;
     background-color: #EBE0CC;
 }
+.card-img2{
+    width: 50%;
+    height: 190rpx;
+    margin: 0 0 0 45%;
+}
 
 /* 用户信息 */
 .user_info_root{
@@ -127,40 +132,28 @@ page {
     align-items: center;
 }
 .block_img{
-    width: 80rpx;
-    height: 80rpx;
+    width: 70rpx;
+    height: 70rpx;
+    padding: 10rpx;
     border-radius: 20rpx;
-    background-color: rgb(223, 214, 165);
 }
 .block_name{
-    font-size: 16px;
+    font-size: 13px;
     margin-top: 10rpx;
+    color: #423b2f;
 }
 .none{
     height: 100rpx;
 }
 
-/* 登录退出按钮 */
-.login{
-    margin: 30rpx;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-}
 .admin_login_btn{
+    width: 30%;
+    text-align: center;
     background-color: white;
     color: rgb(136, 136, 136);
     border-radius: 20rpx;
-    padding: 20rpx 70rpx;
-    margin: 0 auto;
-}
-.user_not_reg_btn{
-    background-color: white;
-    color:rgb(189, 0, 0);
-    border: rgb(189, 0, 0) 1px solid;
-    border-radius: 20rpx;
-    padding: 20rpx 80rpx;
-    margin: 0 auto;
+    padding: 20rpx;
+    margin: 30rpx auto;
 }
 
 

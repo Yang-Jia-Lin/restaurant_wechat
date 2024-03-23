@@ -91,6 +91,11 @@ Page({
             url: '../../My/myOrder/myOrder',
         })
     },
+    contact_us(){
+        wx.navigateTo({
+            url: '../../My/contact/contact',
+        })
+    },
     goToAdmin() {
         wx.navigateTo({
             url: '../../Admin/adminHome/adminHome',

@@ -11,6 +11,7 @@
         "pages/My/myPage/myPage",
         "pages/My/myOrder/myOrder",
         "pages/My/register/register",
+        "pages/My/contact/contact",
 
         "pages/Admin/adminHome/adminHome",
         "pages/Admin/adminOrder/adminOrder",
