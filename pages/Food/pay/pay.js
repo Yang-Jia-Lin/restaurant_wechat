@@ -39,6 +39,7 @@ function convertToDateTime(timeStr) {
 
 function getCurrentHourMinutes() {
     const now = new Date();
+    now.setHours(9,0,0,0)
     return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:00`;
 }
 
@@ -145,11 +146,11 @@ Page({
                 end: this.data.storeInfo.takeout_stop_end2
             }
         ];
-    
+
         // 获取当前日期并判断是否为周末
         const today = new Date();
         const isWeekend = today.getDay() === 6 || today.getDay() === 0; // 6 = Saturday, 0 = Sunday
-    
+
         // 1.计算当前可用预约外卖时间
         businessHours.forEach(period => {
             let [periodStart, periodEnd] = period.split("-");
@@ -175,14 +176,14 @@ Page({
             deliveryTimeOptions: timeOptions,
             deliveryTime: timeOptions[0] || "暂无可用时间",
         });
-    
+
         // 2.判断当前能否立即配送
         const isOutOfBusinessHours = !businessHours.some(period => {
             let [periodStart, periodEnd] = period.split("-");
             return isWithinPeriod(periodStart, periodEnd, currentHourMinutes);
         });
         const isInPeakTime = peakTimes.some(peakTime => isWithinPeriod(peakTime.start, peakTime.end, currentHourMinutes));
-        
+
         if (isInPeakTime || isOutOfBusinessHours) {
             this.setData({
                 deliveryNowClock: true,
@@ -197,7 +198,7 @@ Page({
             });
             console.log('本店打烊了！今天不能送！');
         }
-    },    
+    },
 
     // 2.计算价格
     getTotalPrice() {
@@ -289,6 +290,10 @@ Page({
 
     // 步骤1：创建订单并获取支付码
     createPayment(deliveryTime) {
+        // 显示加载提示
+        wx.showLoading({
+            title: '加载中',
+        });
         // 订单数据
         let orderData = {
             user_id: app.globalData.userInfo.user_id,
@@ -342,6 +347,10 @@ Page({
                 });
                 console.error('订单创建错误：', createOrderError);
                 reject('订单创建失败');
+            },
+            complete: () => {
+                // 无论请求成功或失败，都关闭加载提示
+                wx.hideLoading();
             }
         });
     },
@@ -379,7 +388,7 @@ Page({
         this.addSales()
 
         // 2.赠送积点
-        if(app.globalData.userInfo.phone_number){
+        if (app.globalData.userInfo.phone_number) {
             this.addPoints()
         }
 

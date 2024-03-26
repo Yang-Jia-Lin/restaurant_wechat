@@ -7,10 +7,10 @@ Page({
         userInfo: app.globalData.userInfo || wx.getStorageSync('userInfo'),
         navbar: ["全部订单", "进行中", "已完成"],
         currentTab: 0,
-        
+
         list: [],
         groupedOrders: [],
-        currentList:[]
+        currentList: []
     },
 
     onLoad() {
@@ -41,6 +41,10 @@ Page({
     },
 
     getMyOrderList() {
+        // 显示加载提示
+        wx.showLoading({
+            title: '加载中',
+        });
         // 获取数据
         wx.request({
             url: baseUrl + 'orders/user/' + this.data.userInfo.user_id,
@@ -59,15 +63,19 @@ Page({
                     this.setData({
                         list: res.data,
                         currentList: res.data,
-                        groupedOrders: groupedOrders 
+                        groupedOrders: groupedOrders
                     });
-                    console.log('获取订单数据成功', res.data,groupedOrders);
+                    console.log('获取订单数据成功', res.data, groupedOrders);
                 } else {
                     console.log('获取订单数据失败:', res.errMsg);
                 }
             },
             fail: (err) => {
                 console.error('请求服务器失败:', err);
+            },
+            complete: () => {
+                // 无论请求成功或失败，都关闭加载提示
+                wx.hideLoading();
             }
         });
     },
@@ -76,7 +84,7 @@ Page({
         this.setData({
             currentTab: index
         })
-        if (index == 1) {   // 进行中
+        if (index == 1) { // 进行中
             const orders1 = this.data.groupedOrders['等待中'] || []
             const orders2 = this.data.groupedOrders['制作中'] || []
             const orders3 = this.data.groupedOrders['配送中'] || []
@@ -85,7 +93,7 @@ Page({
             this.setData({
                 currentList: currentOrders
             })
-        } else if (index == 2) {    // 已完成
+        } else if (index == 2) { // 已完成
             const orders1 = this.data.groupedOrders['已完成'] || []
             const orders2 = this.data.groupedOrders['已取消'] || []
             const orders3 = this.data.groupedOrders['已退款'] || []
@@ -116,21 +124,21 @@ Page({
             }
         });
     },
-    makeClick(e){
+    makeClick(e) {
         wx.showModal({
-          title: '提示',
-          content: '提前排号后将立即开始制作，请确认您能否立即到店取餐',
-          complete: (res) => {
-            if (res.cancel) {
-                return;
+            title: '提示',
+            content: '提前排号后将立即开始制作，请确认您能否立即到店取餐',
+            complete: (res) => {
+                if (res.cancel) {
+                    return;
+                }
+                if (res.confirm) {
+                    this.preMake(e.currentTarget.dataset.id)
+                }
             }
-            if (res.confirm) {
-                this.preMake(e.currentTarget.dataset.id)
-            }
-          }
         })
     },
-    preMake(order_id){
+    preMake(order_id) {
         wx.request({
             url: baseUrl + 'orders/' + order_id + '/begin-make',
             method: 'PATCH',

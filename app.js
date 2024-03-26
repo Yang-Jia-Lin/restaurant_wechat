@@ -73,6 +73,10 @@ App({
 	},
 	// 3.获取门店信息
 	getStores(latitude, longitude) {
+		// 显示加载提示
+		wx.showLoading({
+			title: '加载中',
+		});
 		if (!latitude || !longitude) {
 			latitude = 37.751915
 			longitude = 112.712555
@@ -100,6 +104,10 @@ App({
 				wx.showToast({
 					title: '获取门店失败，请重试',
 				})
+			},
+			complete: () => {
+				// 无论请求成功或失败，都关闭加载提示
+				wx.hideLoading();
 			}
 		});
 	},

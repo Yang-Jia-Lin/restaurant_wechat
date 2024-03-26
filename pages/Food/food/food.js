@@ -72,27 +72,27 @@ Page({
             path: '/pages/Home/home/home'
         }
     },
-    
+
 
     // 获取信息
-    confirmStatus(){
-        if(app.globalData.serviceType=='到店' && app.globalData.storeInfo.business_status!=='营业中'){
+    confirmStatus() {
+        if (app.globalData.serviceType == '到店' && app.globalData.storeInfo.business_status !== '营业中') {
             wx.showModal({
                 title: '提示',
                 content: '本店暂未营业，请确认后再下单',
                 showCancel: false,
                 confirmText: '确定',
             });
-            return; 
+            return;
         }
-        if(app.globalData.serviceType=='外卖' && app.globalData.storeInfo.takeout_status!=='可配送'){
+        if (app.globalData.serviceType == '外卖' && app.globalData.storeInfo.takeout_status !== '可配送') {
             wx.showModal({
                 title: '提示',
                 content: '外卖暂不配送，请确认后再下单',
                 showCancel: false,
                 confirmText: '确定',
             });
-            return; 
+            return;
         }
     },
     getCartList() {
@@ -111,6 +111,10 @@ Page({
         console.log('当前购物车', cartList)
     },
     getFoodList() {
+        // 显示加载提示
+        wx.showLoading({
+            title: '加载中',
+        });
         wx.request({
             url: baseUrl + 'dishes/store-dishes/',
             method: 'GET',
@@ -133,6 +137,10 @@ Page({
             },
             fail: error => {
                 console.error("菜品数据请求失败", error);
+            },
+            complete: () => {
+                // 无论请求成功或失败，都关闭加载提示
+                wx.hideLoading();
             }
         });
     },
@@ -174,7 +182,7 @@ Page({
         dishList.forEach(category => {
             category.list.forEach(dish => {
                 dish.quantity = 0;
-                let cartItem = cartList.find(cart => cart.dish_id === dish.dish_id && cart.note ==="");
+                let cartItem = cartList.find(cart => cart.dish_id === dish.dish_id && cart.note === "");
                 if (cartItem) {
                     dish.quantity = cartItem.quantity;
                 }
@@ -192,7 +200,7 @@ Page({
     //     })
     // },
     onServiceTypeChange() {
-        if(this.data.serviceType=='到店'){
+        if (this.data.serviceType == '到店') {
             app.globalData.serviceType = '外卖'
             this.setData({
                 serviceType: '外卖',
@@ -351,7 +359,7 @@ Page({
         item.optional_options = currentOptional;
         item.note = "";
         // 加量面加钱逻辑
-        if(item.mandatory_options['份量']=="加加量"){
+        if (item.mandatory_options['份量'] == "加加量") {
             item.price = (parseFloat(item.price) + 1).toFixed(2);
         }
 
@@ -421,36 +429,35 @@ Page({
             })
             return;
         }
-        if (this.data.serviceType == '外卖' && app.globalData.storeInfo.takeout_status!=='可配送') {
+        if (this.data.serviceType == '外卖' && app.globalData.storeInfo.takeout_status !== '可配送') {
             wx.showModal({
                 title: '提示',
                 content: '外卖暂不配送',
                 success(res) {
                     if (res.confirm) {
                         wx.switchTab({
-                          url: '/pages/Home/home/home',
+                            url: '/pages/Home/home/home',
                         })
                     } else if (res.cancel) {
                         return;
                     }
                 }
             });
-        } else if (this.data.serviceType == '到店' && app.globalData.storeInfo.business_status!=='营业中') {
+        } else if (this.data.serviceType == '到店' && app.globalData.storeInfo.business_status !== '营业中') {
             wx.showModal({
                 title: '提示',
                 content: '门店暂不营业',
                 success(res) {
                     if (res.confirm) {
                         wx.switchTab({
-                          url: '/pages/Home/home/home',
+                            url: '/pages/Home/home/home',
                         })
                     } else if (res.cancel) {
                         return;
                     }
                 }
             });
-        }
-        else if (this.data.serviceType == '外卖' && !this.data.addressInfo.phone) {
+        } else if (this.data.serviceType == '外卖' && !this.data.addressInfo.phone) {
             wx.showModal({
                 title: '提示',
                 content: '请选择配送地址',
@@ -475,15 +482,15 @@ Page({
 
     // 6.主界面操作
     // 6.1 菜品数量增加
-    minusMenuCount(e){
+    minusMenuCount(e) {
         let dishItem = e.currentTarget.dataset.item
         let cartList = wx.getStorageSync('cart') || [];
 
         // 更新购物车中菜品数量
         if (cartList.length > 0) {
             for (let j in cartList) {
-                if (cartList[j].dish_id === dishItem.dish_id && cartList[j].note ==="") {
-                    cartList[j].quantity = cartList[j].quantity-1>0?cartList[j].quantity-1:0;
+                if (cartList[j].dish_id === dishItem.dish_id && cartList[j].note === "") {
+                    cartList[j].quantity = cartList[j].quantity - 1 > 0 ? cartList[j].quantity - 1 : 0;
                     break;
                 }
             }
@@ -497,7 +504,7 @@ Page({
         this.getCartList()
         this.updateDishQuantities()
     },
-    addMenuCount(e){
+    addMenuCount(e) {
         let dishItem = e.currentTarget.dataset.item
         let item = {};
         item.dish_id = dishItem.dish_id;
@@ -513,7 +520,7 @@ Page({
         // 更新购物车中菜品数量
         if (cartList.length > 0) {
             for (let j in cartList) {
-                if (cartList[j].dish_id === item.dish_id && cartList[j].note ==="") {
+                if (cartList[j].dish_id === item.dish_id && cartList[j].note === "") {
                     cartList[j].quantity += 1;
                     f = true;
                     break;
