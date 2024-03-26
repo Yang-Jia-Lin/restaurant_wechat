@@ -93,7 +93,7 @@ Page({
         this.data.serviceType === '到店' ? this.generateTakeTimeOptions() : this.generateDeliveryTimeOptions();
     },
 
-    // 1.生成可用预约取餐时间
+    // 1.生成可用时间
     generateTakeTimeOptions: function () {
         const currentHourMinutes = getCurrentHourMinutes();
         const businessHours = this.data.storeInfo.business_hours.split(" ");

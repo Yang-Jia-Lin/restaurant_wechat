@@ -3,14 +3,16 @@ const baseUrl = app.globalData.baseUrl
 
 Page({
     data: {
-        navbar: ["待制作", "等待中", "待配送"],
-        number: 0,
+        navbar: ["待煮面", "待制作", "等待中", "待配送"],
+        number1: 0,
         number2: 0,
         number3: 0,
         currentTab: 0,
 
         list: [],
-        status: '制作中'
+        status: '制作中',
+
+        noodles_flag: true
     },
 
 
@@ -65,15 +67,23 @@ Page({
         })
         if (index == 0) {
             this.setData({
-                status: '制作中'
+                status: '制作中',
+                noodles_flag: true
             })
-        } else if (index == 1) {
+        }else if (index == 1) {
             this.setData({
-                status: '等待中'
+                status: '制作中',
+                noodles_flag: false
+            })
+        } else if (index == 2) {
+            this.setData({
+                status: '等待中',
+                noodles_flag: false
             })
         } else {
             this.setData({
-                status: '配送中'
+                status: '配送中',
+                noodles_flag: false
             })
         }
         this.getOrderList()
