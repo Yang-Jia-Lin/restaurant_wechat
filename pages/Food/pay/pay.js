@@ -39,7 +39,6 @@ function convertToDateTime(timeStr) {
 
 function getCurrentHourMinutes() {
     const now = new Date();
-    now.setHours(9,0,0,0)
     return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:00`;
 }
 
@@ -411,7 +410,7 @@ Page({
         });
     },
     addPoints() {
-        let point = this.data.totalPrice > 10 ? 1 : 0.5
+        let point = this.data.totalPrice >= 10 ? 1 : 0.5
         let points = (parseFloat(app.globalData.userInfo.points) + point).toFixed(2)
         wx.request({
             url: baseUrl + 'users/' + this.data.userInfo.user_id,
