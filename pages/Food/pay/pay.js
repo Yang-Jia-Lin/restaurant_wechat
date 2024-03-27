@@ -63,7 +63,7 @@ Page({
         distance: app.globalData.storeInfo.distance.toFixed(2),
 
         // 订单信息
-        cartList: [],
+        cartList: wx.getStorageSync('cart') || [],
         paymentMethod: '微信支付',
         totalPrice: 0.0,
         totalNum: 0,
@@ -202,8 +202,8 @@ Page({
     // 2.计算价格
     getTotalPrice() {
         let arr = wx.getStorageSync('cart') || [];
-        let totalP = this.data.totalPrice
-        let totalN = this.data.totalNum
+        let totalP = 0
+        let totalN = 0
         let couponsPrice = this.data.curentCouponsPrice
         for (var i in arr) {
             totalP += arr[i].quantity * arr[i].price;
