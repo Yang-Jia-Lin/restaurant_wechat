@@ -22,6 +22,12 @@
             {{item.pickup_number}} 号
         </view>
         <view class="pickup_number" wx:else="">等待中</view>
+        <view class="time" wx:if="{{item.order_type == '外卖'}}">
+            外卖 {{item.delivery_type=='立即'?'立即送出':filters.formatDeliveryTime(item.delivery_time)+'送达'}}
+        </view>
+        <view class="time" wx:elif="{{item.delivery_type == '预约'}}">
+            预约 {{filters.formatDeliveryTime(item.delivery_time)}}取餐
+        </view>
     </view>
     <!-- 菜品明细 -->
     <view class='dishes_root' wx:for="{{item.orderDetails}}" wx:for-item="arr_item" wx:key="key">
