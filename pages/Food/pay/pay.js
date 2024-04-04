@@ -410,7 +410,8 @@ Page({
         });
     },
     addPoints() {
-        let point = this.data.totalPrice >= 10 ? 1 : 0.5
+        let point = this.data.totalPrice >= 8 ? 0.5 : 0;
+        if (this.data.totalPrice > 10) point = 1;
         let points = (parseFloat(app.globalData.userInfo.points) + point).toFixed(2)
         wx.request({
             url: baseUrl + 'users/' + this.data.userInfo.user_id,
