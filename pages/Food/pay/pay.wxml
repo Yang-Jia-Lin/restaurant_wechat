@@ -93,12 +93,14 @@
     <view class="coupons_block">
         <text class="coupons_title">优惠券</text>
         <text class="coupons_detail" wx:if="{{couponsNum>0}}">有{{couponsNum}}张优惠券可用</text>
-        <text class="coupons_detail_none" wx:else="">真的马上就开发出来了🥹</text>
+        <text class="coupons_detail_none" wx:else="">功能开发中，尽情期待！</text>
     </view>
     <!-- 2.积点 -->
     <view class="coupons_block">
-        <text class="coupons_title">积点</text>
-        <text class="coupons_detail_none">真的马上就开发出来了🥹</text>
+        <text class="coupons_title">积点（{{points}}个）</text>
+        <text class="coupons_detail" wx:if="{{totalPrice<=userInfo.points&&pointsNum==0}}" bindtap="onPointClick">立即使用 ></text>
+        <text class="coupons_detail" wx:if="{{pointsNum!=0}}" bindtap="onPointClick">使用{{pointsNum}}个 ></text>
+        <text class="coupons_detail_none" wx:if="{{totalPrice>userInfo.points}}">积点不足，再去攒攒吧！</text>
     </view>
     <!-- 3.结算信息 -->
     <view class="total_block">

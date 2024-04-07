@@ -58,6 +58,7 @@ Page({
     data: {
         // 基本信息
         userInfo: app.globalData.userInfo,
+        
         storeInfo: app.globalData.storeInfo,
         serviceType: app.globalData.serviceType,
         distance: app.globalData.storeInfo.distance.toFixed(2),
@@ -77,17 +78,23 @@ Page({
         deliveryTime: '',
 
         // 优惠信息
+        pointsNum: 0,
+        points: 0,
         couponsNum: 0,
         currentCouponsId: null,
         curentCouponsPrice: 0
     },
     onShow() {
+        let points = parseFloat(this.data.userInfo.points)-this.data.pointsNum;
+        points = points.toFixed(1);
         this.setData({
+            userInfo: app.globalData.userInfo,
             serviceType: app.globalData.serviceType,
             storeInfo: app.globalData.storeInfo,
             addressInfo: app.globalData.addressInfo,
             deliveryNowClock: false,
-            deliveryReserveClock: false
+            deliveryReserveClock: false,
+            points: points
         });
         this.getTotalPrice();
         this.data.serviceType === '到店' ? this.generateTakeTimeOptions() : this.generateDeliveryTimeOptions();
@@ -209,11 +216,15 @@ Page({
             totalP += arr[i].quantity * arr[i].price;
             totalN += arr[i].quantity
         }
-        totalP -= couponsPrice
+        totalP -= couponsPrice;
+        totalP -= this.data.pointsNum;
+        let points = parseFloat(this.data.userInfo.points)-this.data.pointsNum;
+        points = points.toFixed(1);
         this.setData({
             cartList: arr,
             totalPrice: totalP,
-            totalNum: totalN
+            totalNum: totalN,
+            points: points
         })
     },
 
@@ -258,7 +269,24 @@ Page({
 
     },
     onPointClick() {
-
+        wx.showModal({
+            title: '提示',
+            content: '使用积点后当餐免单，确定使用吗？',
+            complete: (res) => {
+                if (res.cancel) {
+                    this.setData({
+                        pointsNum: 0
+                    })
+                    this.getTotalPrice()
+                }
+                if (res.confirm) {
+                    this.setData({
+                        pointsNum: this.data.totalPrice
+                    })
+                    this.getTotalPrice()
+                }
+            }
+        })
     },
     selectPaymentMethod: function (e) {
         // 更新支付方式
@@ -277,16 +305,24 @@ Page({
             return; // 退出支付逻辑
         }
 
-        // 创建订单
+        // 订单准备
         let deliveryTime = null
         if (this.data.delivery_type == '立即') {
             deliveryTime = new Date()
         } else {
             deliveryTime = convertToDateTime(this.data.deliveryTime)
         }
-        this.createPayment(deliveryTime)
+
+        // 创建订单
+        if (this.data.pointsNum == 0) {
+            this.createPayment(deliveryTime)
+        } else {
+            this.createPointsPay(deliveryTime)
+        }
+
     },
 
+    // 微信支付
     // 步骤1：创建订单并获取支付码
     createPayment(deliveryTime) {
         // 显示加载提示
@@ -410,33 +446,125 @@ Page({
         });
     },
     addPoints() {
-        let point = this.data.totalPrice >= 8 ? 0.5 : 0;
+        let point = this.data.totalPrice >= 8 ? 0.5 : 0.1;
         if (this.data.totalPrice > 10) point = 1;
-        let points = (parseFloat(app.globalData.userInfo.points) + point).toFixed(2)
+        
         wx.request({
-            url: baseUrl + 'users/' + this.data.userInfo.user_id,
+            url: baseUrl + 'users/addPoints/' + this.data.userInfo.user_id,
             method: 'PUT',
             data: {
-                points: points
+                pointsToAdd: point 
             },
             success: (res) => {
-                if (res.statusCode === 200) {
-                    console.log('增加成功', res.data);
+                console.log('积点增加ing', res);
+                if (res.data.success) {
                     app.globalData.userInfo = res.data.updatedUser
-                    wx.setStorageSync('userInfo', res.data.updatedUser)
+                    app.trigger('userInfoUpdated');
+                    wx.setStorageSync('userInfo', res.data.updatedUser);
                 } else {
-                    console.log('增加失败:', res.errMsg);
+                    console.log('积点增加失败:', res.errMsg);
                     wx.showToast({
                         title: '积点增加失败，请重试或联系工作人员！',
-                    })
+                        icon: 'none'
+                    });
                 }
             },
             fail: (err) => {
-                console.log('增加失败:', err);
+                console.log('积点增加失败:', err);
                 wx.showToast({
                     title: '积点增加失败，请重试或联系工作人员！',
-                })
+                    icon: 'none'
+                });
+            },
+            
+        });
+    },
+
+
+
+    // 积点支付
+    // 步骤1：创建订单并获取支付码
+    createPointsPay(deliveryTime) {
+        // 显示加载提示
+        wx.showLoading({
+            title: '加载中',
+        });
+        // 订单数据
+        let orderData = {
+            user_id: app.globalData.userInfo.user_id,
+            openid: app.globalData.userInfo.openid,
+            store_id: app.globalData.storeInfo.store_id,
+            order_type: app.globalData.serviceType,
+            pickup_number: 0,
+            order_status: '待支付',
+            order_time: new Date(),
+            delivery_type: this.data.deliveryTimeType,
+            delivery_time: deliveryTime,
+            total_price: this.data.totalPrice,
+            payment_method: this.data.paymentMethod,
+            description: '唐合丰面馆订单',
+            note: this.data.note,
+            address: "",
+            call_name: "",
+            phone: app.globalData.userInfo.phone_number,
+        };
+        if (this.data.serviceType == '外卖') {
+            orderData.address = this.data.addressInfo.address_detail
+            orderData.call_name = this.data.addressInfo.name
+            orderData.phone = this.data.addressInfo.phone
+        }
+        const orderDetails = this.data.cartList
+
+        // 发起订单
+        wx.request({
+            url: baseUrl + 'pay/create_and_pay_points',
+            method: 'POST',
+            data: {
+                orderData: orderData,
+                orderDetails: orderDetails,
+                pointsToDeduct: this.data.pointsNum,
+            },
+            success: (res) => {
+                console.log('创建订单中', res)
+                if (res.statusCode === 201 && res.data.success) {
+                    this.endPaymentPoint();
+                    wx.setStorageSync('orderId', res.data.order.order_id)
+                    app.globalData.userInfo = res.data.user
+                    app.trigger('userInfoUpdated');
+                    wx.setStorageSync('userInfo', res.data.user);
+                } else {
+                    wx.showToast({
+                        title: '支付创建失败，请退出重试',
+                        icon: 'none'
+                    });
+                }
+            },
+            fail: (createOrderError) => {
+                wx.showToast({
+                    title: '订单创建失败，请重试',
+                    icon: 'none'
+                });
+                console.error('订单创建错误：', createOrderError);
+                reject('订单创建失败');
+            },
+            complete: () => {
+                // 无论请求成功或失败，都关闭加载提示
+                wx.hideLoading();
             }
         });
-    }
+    },
+
+    // 步骤2：支付完成后处理
+    endPaymentPoint() {
+        // 1.增加销量
+        this.addSales()
+
+        // 2.清空购物车
+        wx.setStorageSync('cart', []);
+
+        // 3.跳转订单详情
+        wx.redirectTo({
+            url: '/pages/My/myOrder/myOrder'
+        })
+    },
 })
