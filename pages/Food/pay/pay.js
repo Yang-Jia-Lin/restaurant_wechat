@@ -39,6 +39,7 @@ function convertToDateTime(timeStr) {
 
 function getCurrentHourMinutes() {
     const now = new Date();
+    // now.setHours(7,0,0,0);
     return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:00`;
 }
 

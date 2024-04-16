@@ -99,7 +99,7 @@
     <view class="order_note" wx:if="{{item.address}}">地址：{{item.address}}
     </view>
     <view class="button_root">
-        <view wx:if="{{item.order_status == '制作中'}}" class='button2' data-order='{{item}}' bindtap='printClick'>
+        <view wx:if="{{item.order_status == '制作中' ||item.order_status == '配送中' }}" class='button2' data-order='{{item}}' bindtap='printClick'>
             打印小票
         </view>
         <view wx:if="{{item.order_status == '制作中'}}" class='button1' data-order='{{item}}' bindtap='madeClick'>
