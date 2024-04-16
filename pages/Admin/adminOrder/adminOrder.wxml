@@ -12,6 +12,7 @@
     </lable>
 </view>
 
+<view class="none"> </view>
 
 <!-- 订单详情 -->
 <!-- 待煮面 -->

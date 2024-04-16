@@ -447,7 +447,7 @@ Page({
     },
     addPoints() {
         let point = this.data.totalPrice >= 8 ? 0.5 : 0.1;
-        if (this.data.totalPrice > 10) point = 1;
+        if (this.data.totalPrice >= 10) point = 1;
         
         wx.request({
             url: baseUrl + 'users/addPoints/' + this.data.userInfo.user_id,

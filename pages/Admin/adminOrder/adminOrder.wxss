@@ -3,10 +3,17 @@ page {
 }
 
 /* 导航条 */
+
 .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80rpx;
+    z-index: 1000;
+    background-color: #fff; /* 背景颜色根据需要调整 */
     display: flex;
-    background: #fff;
-    margin-bottom: 25rpx;
+    margin-bottom: 60rpx;
 }
 .none_tab {
     position: relative;
@@ -44,11 +51,14 @@ page {
     font-weight: bold;
 }
 
+.none{
+    margin: 50rpx;
+}
 
 /* 订单块整体 */
 .order_list_root {
     background-color: white;
-    margin: 0 25rpx 25rpx 25rpx;
+    margin: 0rpx 25rpx 25rpx 25rpx;
     width: 93%;
     border-radius: 55rpx;
 }
