@@ -219,8 +219,8 @@ Page({
         }
         totalP -= couponsPrice;
         totalP -= this.data.pointsNum;
-        let points = parseFloat(this.data.userInfo.points)-this.data.pointsNum;
-        points = points.toFixed(1);
+        let points = this.data.userInfo.points-this.data.pointsNum;
+        points = +points.toFixed(1);
         this.setData({
             cartList: arr,
             totalPrice: totalP,
