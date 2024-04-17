@@ -2,8 +2,10 @@
 App({
 	globalData: {
 		baseUrl: "https://forestlamb.online/restaurant/",
-		userInfo:  wx.getStorageSync('userInfo') || {},
-		storeInfo: {store_name: '附近门店'},
+		userInfo: wx.getStorageSync('userInfo') || {},
+		storeInfo: {
+			store_name: '附近门店'
+		},
 		addressInfo: {},
 		serviceType: '到店',
 	},
@@ -15,27 +17,27 @@ App({
 
 	// 自定义事件触发
 	eventHandler: {},
-    on(event, callback) {
-        if (!this.eventHandler[event]) {
-            this.eventHandler[event] = [];
-        }
-        this.eventHandler[event].push(callback);
-    },
-    trigger(event, ...args) {
-        if (this.eventHandler[event]) {
-            this.eventHandler[event].forEach(callback => {
-                callback(...args);
-            });
-        }
-    },
-    off(event, callback) {
-        if (this.eventHandler[event]) {
-            const index = this.eventHandler[event].indexOf(callback);
-            if (index > -1) {
-                this.eventHandler[event].splice(index, 1);
-            }
-        }
-    },
+	on(event, callback) {
+		if (!this.eventHandler[event]) {
+			this.eventHandler[event] = [];
+		}
+		this.eventHandler[event].push(callback);
+	},
+	trigger(event, ...args) {
+		if (this.eventHandler[event]) {
+			this.eventHandler[event].forEach(callback => {
+				callback(...args);
+			});
+		}
+	},
+	off(event, callback) {
+		if (this.eventHandler[event]) {
+			const index = this.eventHandler[event].indexOf(callback);
+			if (index > -1) {
+				this.eventHandler[event].splice(index, 1);
+			}
+		}
+	},
 
 	// 1.获取授权
 	getSetting() {
@@ -113,36 +115,41 @@ App({
 	},
 
 	// 获取用户信息
-    getUserInfo() {
-        wx.login({
-            success: res => {
-                if (res.code) {
-                    wx.request({
-                        url: this.globalData.baseUrl+'users/login',
-                        method: 'POST',
-                        data: { code: res.code },
-                        success: (res) => {
+	getUserInfo() {
+		wx.login({
+			success: res => {
+				if (res.code) {
+					wx.request({
+						url: this.globalData.baseUrl + 'users/login',
+						method: 'POST',
+						data: {
+							code: res.code
+						},
+						success: (res) => {
 							console.log('获取用户信息', res)
-                            if (res.data.success) {
-								this.globalData.userInfo = res.data.user
-								this.trigger('userInfoUpdated'); 
-								wx.setStorageSync('userInfo', res.data.user);
-                            } else {
-                                console.error('服务器获取用户信息失败');
-                            }
-                        },
-                        fail: () => {
-                            console.error('请求服务器失败');
-                        }
-                    });
-                } else {
-                    console.error('获取code失败: ' + res.errMsg);
-                }
-            },
-            fail: () => {
-                console.error('微信登录失败');
-            }
-        });
-    },
+							if (res.data.success) {
+								let user = res.data.user;
+								user.points = +parseFloat(res.data.user.points).toFixed(1);
+								user.balance = +parseFloat(res.data.user.balance).toFixed(1);
+								this.globalData.userInfo = user
+								this.trigger('userInfoUpdated');
+								wx.setStorageSync('userInfo', user);
+							} else {
+								console.error('服务器获取用户信息失败');
+							}
+						},
+						fail: () => {
+							console.error('请求服务器失败');
+						}
+					});
+				} else {
+					console.error('获取code失败: ' + res.errMsg);
+				}
+			},
+			fail: () => {
+				console.error('微信登录失败');
+			}
+		});
+	},
 
 });

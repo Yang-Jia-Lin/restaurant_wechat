@@ -86,8 +86,8 @@ Page({
         curentCouponsPrice: 0
     },
     onShow() {
-        let points = parseFloat(this.data.userInfo.points)-this.data.pointsNum;
-        points = points.toFixed(1);
+        let points = this.data.userInfo.points-this.data.pointsNum;
+        points = +points.toFixed(1);
         this.setData({
             userInfo: app.globalData.userInfo,
             serviceType: app.globalData.serviceType,
@@ -530,9 +530,12 @@ Page({
                 if (res.statusCode === 201 && res.data.success) {
                     this.endPaymentPoint();
                     wx.setStorageSync('orderId', res.data.order.order_id)
-                    app.globalData.userInfo = res.data.user
+                    let user = res.data.user;
+					user.points = +parseFloat(res.data.user.points).toFixed(1);
+					user.balance = +parseFloat(res.data.user.balance).toFixed(1);
+                    app.globalData.userInfo = user
                     app.trigger('userInfoUpdated');
-                    wx.setStorageSync('userInfo', res.data.user);
+                    wx.setStorageSync('userInfo', user);
                 } else {
                     wx.showToast({
                         title: '支付创建失败，请退出重试',
