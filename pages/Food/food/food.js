@@ -54,7 +54,7 @@ Page({
     onLoad() {
         this.getFoodList()
         app.on('storeInfoUpdated', this.updateInfo);
-        this.confirmStatus()
+        // this.confirmStatus()
     },
     onUnload() {
         app.off('storeInfoUpdated', this.updateStoreInfo);
