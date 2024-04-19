@@ -1,8 +1,11 @@
-// app.js
+import { userLogin } from '/api/userService';
+import { fetchStores } from '/api/storeService';
+import { toFloat, showError } from '/utils/tool';
+
 App({
 	globalData: {
 		baseUrl: "https://forestlamb.online/restaurant/",
-		// 等待服务器获取的信息
+		// 等待获取的信息
 		userInfo: wx.getStorageSync('userInfo') || {
 			avatar_url: "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0",
 			balance: 0,
@@ -19,7 +22,7 @@ App({
 			longitude: 112.712555,
 			takeout_status: "可配送"
 		},
-		// 当前订单全局信息
+		// 全局信息
 		addressInfo: {},
 		serviceType: '到店',
 	},
@@ -29,7 +32,7 @@ App({
 		this.getUserInfo()
 	},
 
-	// 自定义事件触发
+	// 事件触发
 	eventHandler: {},
 	on(event, callback) {
 		if (!this.eventHandler[event]) {
@@ -53,7 +56,7 @@ App({
 		}
 	},
 
-	// 1.获取授权
+	// 准备：获取位置授权和位置
 	getSetting() {
 		wx.getSetting({
 			success: (res) => {
@@ -61,9 +64,11 @@ App({
 					wx.authorize({
 						scope: 'scope.userLocation',
 						success: () => {
+							// 同意：获取位置
 							this.getLocation();
 						},
 						fail: () => {
+							// 不同意：直接获取默认门店
 							this.getStores();
 						}
 					});
@@ -73,57 +78,18 @@ App({
 			}
 		});
 	},
-	// 2.获取位置信息
 	getLocation() {
 		wx.getLocation({
 			type: 'wgs84',
 			success: (res) => {
-				console.log('位置', res.latitude, res.longitude);
+				// 成功获取到位置，传入参数获取门店信息
+				console.log('位置：', res.latitude, res.longitude);
 				this.getStores(res.latitude, res.longitude);
 			},
 			fail: () => {
-				console.log("获取位置信息失败");
+				// 没有获取到位置信息，使用默认位置获取门店信息
+				showError("获取位置信息失败");
 				this.getStores();
-			}
-		});
-	},
-	// 3.获取门店信息
-	getStores(latitude, longitude) {
-		if (!latitude || !longitude) {
-			latitude = 37.751915
-			longitude = 112.712555
-		}
-		wx.showLoading({
-			title: '请求门店信息',
-			mask: true
-		});
-		wx.request({
-			url: this.globalData.baseUrl + 'stores/',
-			method: 'GET',
-			data: {
-				latitude: latitude,
-				longitude: longitude,
-			},
-			success: (res) => {
-				console.log('获取门店信息', res);
-				if (res.data.success) {
-					this.globalData.storeInfo = res.data.stores[0];
-					this.trigger('storeInfoUpdated'); // 触发事件
-				} else {
-					wx.showToast({
-						title: '获取门店失败，请重试',
-					})
-				}
-			},
-			fail: (err) => {
-				console.log('获取门店信息失败', err);
-				wx.showToast({
-					title: '获取门店失败，请重试',
-				})
-			},
-			complete: () => {
-				// 关闭加载提示
-				wx.hideLoading();
 			}
 		});
 	},
@@ -133,37 +99,37 @@ App({
 		wx.login({
 			success: res => {
 				if (res.code) {
-					wx.request({
-						url: this.globalData.baseUrl + 'users/login',
-						method: 'POST',
-						data: {
-							code: res.code
-						},
-						success: (res) => {
-							console.log('获取用户信息', res)
-							if (res.data.success) {
-								let user = res.data.user;
-								user.points = +parseFloat(res.data.user.points).toFixed(1);
-								user.balance = +parseFloat(res.data.user.balance).toFixed(1);
-								this.globalData.userInfo = user
-								this.trigger('userInfoUpdated');
-								wx.setStorageSync('userInfo', user);
-							} else {
-								console.error('服务器获取用户信息失败');
-							}
-						},
-						fail: () => {
-							console.error('请求服务器失败');
-						}
+					// 调用 API 获取用户信息
+					userLogin(res.code).then(user => {
+						console.log("用户信息：", user);
+						// 处理信息
+						user.points = toFloat(user.points, 1);
+						user.balance = toFloat(user.balance, 1);
+						// 同步信息：globalData、trigger、storage
+						this.globalData.userInfo = user;
+						this.trigger('userInfoUpdated');
+						wx.setStorageSync('userInfo', user);
+					}).catch(error => {
+						showError("获取用户失败", error);
 					});
 				} else {
-					console.error('获取code失败: ' + res.errMsg);
+					showError("获取code失败", res.errMsg);
 				}
 			},
 			fail: () => {
-				console.error('微信登录失败');
+				showError("微信登录失败");
 			}
 		});
 	},
 
+	// 获取门店信息
+	getStores(latitude, longitude) {
+		fetchStores(latitude, longitude).then(store => {
+			console.log("门店信息：", store);
+			this.globalData.storeInfo = store;
+			this.trigger('storeInfoUpdated');
+		}).catch(error => {
+			showError("获取门店信息失败", error);
+		});
+	}
 });

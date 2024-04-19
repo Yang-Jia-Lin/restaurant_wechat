@@ -8,3 +8,4 @@ $RECYCLE.BIN/
 *.*.config.json
 sitemap.json
 .eslintrc.js
+.jsbeautifyrc
