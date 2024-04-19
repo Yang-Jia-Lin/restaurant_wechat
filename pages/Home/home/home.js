@@ -1,5 +1,6 @@
+import { fetchTopBanner } from './../../../api/storeService';
+import { showError } from './../../../utils/tool';
 const app = getApp()
-const baseUrl = app.globalData.baseUrl
 
 Page({
     data: {
@@ -13,11 +14,8 @@ Page({
             path: '/pages/Home/home/home'
         }
     },
-    onShow(){
-        this.setData({
-            storeInfo: app.globalData.storeInfo,
-            userInfo: app.globalData.userInfo,
-        })
+    onShow() {
+        this.updateInfo()
     },
     onLoad() {
         this.getTopBanner();
@@ -37,24 +35,16 @@ Page({
 
     // 获取轮播图数据
     getTopBanner() {
-        wx.request({
-            url: baseUrl + 'carousels/',
-            success: (res) => {
-                if (res.statusCode === 200) {
-                    console.log('轮播图数据:', res.data);
-                    this.setData({
-                        topBanner: res.data
-                    });
-                } else {
-                    console.log('获取轮播图数据失败:', res.errMsg);
-                }
-            },
-            fail: (err) => {
-                console.error('请求服务器失败:', err);
-            }
+        fetchTopBanner().then(imageUrls => {
+            console.log("轮播图信息：", imageUrls);
+            this.setData({
+                topBanner: imageUrls
+            })
+        }).catch(error => {
+            showError("获取轮播图失败", error);
         });
     },
-    
+
     // 点击事件
     // changeStores() {
     //     wx.navigateTo({

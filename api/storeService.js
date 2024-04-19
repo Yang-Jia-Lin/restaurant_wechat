@@ -29,4 +29,26 @@ function fetchStores(latitude = 37.751915, longitude = 112.712555) {
 	});
 }
 
-export { fetchStores };
+function fetchTopBanner() {
+	return new Promise((resolve, reject) => {
+		wx.request({
+			url: `${baseUrl}carousels/`,
+			method: 'GET',
+			success: (res) => {
+				if (res.statusCode === 200) {
+					resolve(res.data);
+				} else {
+					reject('获取门店失败，请重试');
+				}
+			},
+			fail: () => {
+				reject('获取门店信息失败');
+			}
+		});
+	});
+}
+
+export {
+	fetchStores,
+	fetchTopBanner
+};
