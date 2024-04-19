@@ -27,7 +27,8 @@ Page({
         wx.showNavigationBarLoading()
         //loading 提示框
         wx.showLoading({
-            title: 'Loading...',
+            title: '加载中...',
+            mask: true
         })
         setTimeout(function () {
             wx.hideLoading();
@@ -43,7 +44,8 @@ Page({
     getMyOrderList() {
         // 显示加载提示
         wx.showLoading({
-            title: '加载中',
+            title: '加载中...',
+            mask: true
         });
         // 获取数据
         wx.request({

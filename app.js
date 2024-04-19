@@ -2,10 +2,24 @@
 App({
 	globalData: {
 		baseUrl: "https://forestlamb.online/restaurant/",
-		userInfo: wx.getStorageSync('userInfo') || {},
-		storeInfo: {
-			store_name: '附近门店'
+		// 等待服务器获取的信息
+		userInfo: wx.getStorageSync('userInfo') || {
+			avatar_url: "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0",
+			balance: 0,
+			nickname: "临时用户",
+			points: 0,
+			user_id: 0
 		},
+		storeInfo: {
+			store_name: '附近门店',
+			business_hours: "09:00:00-14:00:00 16:00:00-21:30:00",
+			business_status: "营业中",
+			distance: 0.11,
+			latitude: 37.750916,
+			longitude: 112.712555,
+			takeout_status: "可配送"
+		},
+		// 当前订单全局信息
 		addressInfo: {},
 		serviceType: '到店',
 	},
@@ -75,14 +89,14 @@ App({
 	},
 	// 3.获取门店信息
 	getStores(latitude, longitude) {
-		// 显示加载提示
-		wx.showLoading({
-			title: '加载中',
-		});
 		if (!latitude || !longitude) {
 			latitude = 37.751915
 			longitude = 112.712555
 		}
+		wx.showLoading({
+			title: '请求门店信息',
+			mask: true
+		});
 		wx.request({
 			url: this.globalData.baseUrl + 'stores/',
 			method: 'GET',
@@ -108,7 +122,7 @@ App({
 				})
 			},
 			complete: () => {
-				// 无论请求成功或失败，都关闭加载提示
+				// 关闭加载提示
 				wx.hideLoading();
 			}
 		});

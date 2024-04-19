@@ -328,7 +328,8 @@ Page({
     createPayment(deliveryTime) {
         // 显示加载提示
         wx.showLoading({
-            title: '加载中',
+            title: '加载中...',
+            mask: true
         });
         // 订单数据
         let orderData = {
@@ -488,7 +489,8 @@ Page({
     createPointsPay(deliveryTime) {
         // 显示加载提示
         wx.showLoading({
-            title: '加载中',
+            title: '加载中...',
+            mask: true
         });
         // 订单数据
         let orderData = {

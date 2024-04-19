@@ -1,4 +1,3 @@
-// pages/home/home.js
 const app = getApp()
 const baseUrl = app.globalData.baseUrl
 

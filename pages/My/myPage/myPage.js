@@ -27,7 +27,8 @@ Page({
         wx.showNavigationBarLoading()
         //loading 提示框
         wx.showLoading({
-            title: 'Loading...',
+            title: '加载中...',
+            mask: true
         })
         setTimeout(function () {
             wx.hideLoading();
@@ -78,7 +79,7 @@ Page({
             }
         })
     },
-    
+
 
     // 页面跳转
     goToRegister() {
@@ -91,7 +92,7 @@ Page({
             url: '../../My/myOrder/myOrder',
         })
     },
-    contact_us(){
+    contact_us() {
         wx.navigateTo({
             url: '../../My/contact/contact',
         })

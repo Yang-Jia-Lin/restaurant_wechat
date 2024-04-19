@@ -12,7 +12,8 @@ Page({
     onRefresh: function () {
         wx.showNavigationBarLoading()
         wx.showLoading({
-            title: 'Loading...',
+            title: '加载中',
+            mask: true
         })
         setTimeout(function () {
             wx.hideLoading();

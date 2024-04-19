@@ -114,6 +114,7 @@ Page({
         // 显示加载提示
         wx.showLoading({
             title: '加载中',
+            mask: true
         });
         wx.request({
             url: baseUrl + 'dishes/store-dishes/',
