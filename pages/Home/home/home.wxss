@@ -4,10 +4,10 @@ page {
 }
 
 /* 门店选择 */
-.store_root{
+.store_root {
     width: 80%;
     font-size: 32rpx;
-    
+
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -65,7 +65,7 @@ page {
 .container {
     display: flex;
     flex-direction: column;
-    align-items:flex-start;
+    align-items: flex-start;
     padding: 15rpx;
     margin: 60rpx 40rpx;
     border-radius: 30rpx;
@@ -75,7 +75,7 @@ page {
 
 .profile {
     display: flex;
-    align-items:center;
+    align-items: center;
     margin-bottom: 10px;
 }
 
@@ -84,7 +84,7 @@ page {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    align-items:center;
+    align-items: center;
     background-color: #f3ede3;
     border-radius: 5px;
     padding: 10rpx;
@@ -105,6 +105,7 @@ page {
     padding: 20rpx;
     width: 75%;
 }
+
 .profile3 {
     width: 92%;
     background-color: #f3ede3;
@@ -112,21 +113,25 @@ page {
     padding: 20rpx;
     margin: 0 10rpx 10rpx 10rpx;
 }
-.balance_root{
+
+.balance_root {
     display: flex;
     flex-direction: row;
     align-items: baseline;
     font-size: 21px;
     font-weight: bolder;
 }
-.balance_name{
+
+.balance_name {
     padding: 10rpx 90rpx 10rpx 20rpx;
 }
-.balance_number{
+
+.balance_number {
     color: darkred;
     font-size: 24px;
 }
-.balance_describe{
+
+.balance_describe {
     color: rgb(167, 167, 167);
     padding: 0 5rpx 0 20rpx;
 }
