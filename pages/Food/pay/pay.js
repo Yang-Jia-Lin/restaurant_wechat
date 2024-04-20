@@ -2,6 +2,8 @@ let app = getApp();
 const retryInterval = 1000;
 const baseUrl = app.globalData.baseUrl;
 
+
+// TODO: 方法tool.js导入
 function generateOptions(startTime, endTime) {
     let options = [];
     // 格式化时间
@@ -21,7 +23,6 @@ function generateOptions(startTime, endTime) {
     }
     return options;
 }
-
 function convertToDateTime(timeStr) {
     // 获取当前日期
     const now = new Date();
@@ -36,24 +37,22 @@ function convertToDateTime(timeStr) {
 
     return now;
 }
-
 function getCurrentHourMinutes() {
     const now = new Date();
     // now.setHours(7,0,0,0);
     return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:00`;
 }
-
 function timeToMinutes(time) {
     const [hours, minutes] = time.split(":");
     return parseInt(hours) * 60 + parseInt(minutes);
 }
-
 function isWithinPeriod(start, end, current) {
     const startMinutes = timeToMinutes(start);
     const endMinutes = timeToMinutes(end);
     const currentMinutes = timeToMinutes(current);
     return currentMinutes >= startMinutes && currentMinutes <= endMinutes;
 };
+
 
 Page({
     data: {
@@ -357,6 +356,7 @@ Page({
         }
         const orderDetails = this.data.cartList
 
+        // TODO: 使用模块化API
         // 发起订单
         wx.request({
             url: baseUrl + 'pay/create_and_pay',
@@ -420,6 +420,7 @@ Page({
     },
 
     // 步骤3：支付完成后处理
+    // TODO: 使用模块化API
     endPayment() {
         // 1.增加销量
         this.addSales()
@@ -483,8 +484,8 @@ Page({
     },
 
 
-
     // 积点支付
+    // TODO: 使用模块化API
     // 步骤1：创建订单并获取支付码
     createPointsPay(deliveryTime) {
         // 显示加载提示

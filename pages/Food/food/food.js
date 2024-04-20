@@ -54,7 +54,6 @@ Page({
     onLoad() {
         this.getFoodList()
         app.on('storeInfoUpdated', this.updateInfo);
-        // this.confirmStatus()
     },
     onUnload() {
         app.off('storeInfoUpdated', this.updateStoreInfo);
@@ -110,6 +109,7 @@ Page({
         });
         console.log('当前购物车', cartList)
     },
+    // TODO: 使用API模块化
     getFoodList() {
         // 显示加载提示
         wx.showLoading({

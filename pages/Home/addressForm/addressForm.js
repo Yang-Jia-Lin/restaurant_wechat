@@ -1,7 +1,7 @@
-let app = getApp();
-let baseUrl = app.globalData.baseUrl
+import { getAddress } from '../../../api/userService';
+import { showError } from './../../../utils/tool';
+const app = getApp()
 
-// 在JS文件中
 Page({
     data: {
         phone: app.globalData.userInfo.phone_number,
@@ -13,37 +13,31 @@ Page({
         addressOptions: [],
     },
 
-    onLoad() {
-        this.getAddress();
-    },
-
-    getAddress() {
-        wx.request({
-            url: baseUrl + 'address/',
-            success: (res) => {
-                if (res.statusCode === 200) {
-                    const add = res.data.map(item => item.address_value)
-                    this.setData({
-                        addressOptions: add
-                    });
-                } else {
-                    console.log('获取数据失败:', res.errMsg);
-                }
-            },
-            fail: (err) => {
-                console.error('请求服务器失败:', err);
-            }
-        });
-        if(app.globalData.userInfo.phone!=null){
+    // 同步数据
+    onShow() {
+        if (app.globalData.userInfo.phone != null) {
             this.setData({
                 phone: app.globalData.userInfo.phone
             })
         }
-        if(app.globalData.userInfo.nickname){
+        if (app.globalData.userInfo.nickname) {
             this.setData({
                 name: app.globalData.userInfo.nickname
             })
         }
+    },
+
+    // 获取数据
+    onLoad() {
+        getAddress().then(addresses => {
+            console.log("所有外送地址：", addresses);
+            this.setData({
+                addressOptions: addresses
+            });
+        }).catch(error => {
+            console.log(error);
+            showError("获取地址失败", error);
+        });
     },
 
     // 输入
@@ -107,11 +101,11 @@ Page({
             return;
         }
         // 修改其他地址为非默认地址
-        if(formData.default){
+        if (formData.default) {
             addressList.forEach(address => {
                 address.default = false;
             });
-            updatedAddressList = [formData , ...addressList];
+            updatedAddressList = [formData, ...addressList];
         } else {
             updatedAddressList = [...addressList, formData];
         }

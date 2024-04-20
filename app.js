@@ -1,6 +1,6 @@
 import { userLogin } from '/api/userService';
-import { fetchStores } from '/api/storeService';
-import { toFloat, showError } from '/utils/tool';
+import { fetchStore } from '/api/storeService';
+import { showError } from '/utils/tool';
 
 App({
 	globalData: {
@@ -99,13 +99,8 @@ App({
 		wx.login({
 			success: res => {
 				if (res.code) {
-					// 调用 API 获取用户信息
 					userLogin(res.code).then(user => {
 						console.log("用户信息：", user);
-						// 处理信息
-						user.points = toFloat(user.points, 1);
-						user.balance = toFloat(user.balance, 1);
-						// 同步信息：globalData、trigger、storage
 						this.globalData.userInfo = user;
 						this.trigger('userInfoUpdated');
 						wx.setStorageSync('userInfo', user);
@@ -122,9 +117,9 @@ App({
 		});
 	},
 
-	// 获取门店信息
+	// 获取默认门店信息
 	getStores(latitude, longitude) {
-		fetchStores(latitude, longitude).then(store => {
+		fetchStore(latitude, longitude).then(store => {
 			console.log("门店信息：", store);
 			this.globalData.storeInfo = store;
 			this.trigger('storeInfoUpdated');

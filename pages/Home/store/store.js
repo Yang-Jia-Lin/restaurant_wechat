@@ -1,42 +1,24 @@
+import { fetchAllStores } from '../../../api/storeService';
+import { showError } from './../../../utils/tool';
 const app = getApp()
-const baseUrl = app.globalData.baseUrl
 
 Page({
     data: {
-        stores: app.globalData.stores,
-    },
-
-    onShow() {
-        this.setData({
-            stores: app.globalData.stores
-        })
+        stores: [],
     },
 
     onLoad() {
-        this.getStores()
-    },
-
-    getStores() {
-        wx.request({
-            url: baseUrl + 'stores/',
-            method: 'GET',
-            data: {
-                latitude: app.globalData.latitude,
-                longitude: app.globalData.longitude,
-            },
-            success: (res) => {
-                if (res.data.success) {
-                    console.log('获取门店信息成功', res.data.stores[0]);
-                    app.globalData.stores = res.data.stores;
-                    app.globalData.storeInfo = res.data.stores[0];
-                    this.setData({
-                        stores: res.data.stores
-                    });
-                }
-            },
-            fail: (err) => {
-                console.log('获取门店信息失败', err);
-            }
+        const lan = app.globalData.latitude;
+        const lon = app.globalData.longitude;
+        fetchAllStores(lan, lon).then(stores => {
+            console.log("所有门店信息：", stores);
+            app.globalData.stores = stores;
+            app.globalData.storeInfo = stores[0];
+            this.setData({
+                stores: stores
+            });
+        }).catch(error => {
+            showError("获取门店信息失败", error);
         });
     },
 
