@@ -1,5 +1,5 @@
-let app = getApp()
-const baseUrl = app.globalData.baseUrl
+import { getStoreOrder, getStoreOrderNumber, updateOrderStatus, beginMakeOrder } from './../../../api/orderService';
+import { showError } from './../../../utils/tool';
 
 Page({
     data: {
@@ -27,7 +27,8 @@ Page({
         this.stopPolling(); // 页面卸载时停止定时器
     },
 
-    // 定时获取订单
+
+    // 获取订单（定时）
     startPolling: function () {
         this.pollingTimer = setInterval(() => {
             this.getOrderListAll();
@@ -37,6 +38,7 @@ Page({
     stopPolling: function () {
         clearInterval(this.pollingTimer);
     },
+
 
     // 下拉刷新
     onRefresh: function () {
@@ -71,7 +73,7 @@ Page({
                 status: '制作中',
                 noodles_flag: true
             })
-        }else if (index == 1) {
+        } else if (index == 1) {
             this.setData({
                 status: '制作中',
                 noodles_flag: false
@@ -91,159 +93,82 @@ Page({
     },
     // 获取订单页面数据
     getOrderList() {
-        wx.request({
-            url: baseUrl + 'orders/admin/store/1/status/' + this.data.status,
-            method: 'GET',
-            success: (res) => {
-                if (res.statusCode === 200) {
-                    console.log("订单列表", res.data);
-                    let list = res.data
-                    list.forEach(order => {
-                        if (order.orderDetails && Array.isArray(order.orderDetails)) {
-                            order.orderDetails.forEach(detail => {
-                                detail.dish_name_short = detail.dish_name.substring(0, 3);
-                            });
-                        }
-                    });
-                    this.setData({
-                        list: list
-                    })
-                } else {
-                    console.error("获取订单失败", res);
-                }
-            },
-            fail: (error) => {
-                console.error("请求订单列表失败", error);
-            }
-        });
+        getStoreOrder(1, this.data.status).then(list => {
+            this.setData({
+                list: list
+            })
+        }).catch(err => {
+            showError('获取订单失败', err)
+        })
     },
     getOrderListAll() {
-        console.log('获取订单数量')
-        wx.request({
-            url: baseUrl + 'orders/admin/store/1/statuses/',
-            method: 'POST',
-            data: {
-                statuses: ['制作中', '等待中', '配送中']
-            },
-            header: {
-                'Content-Type': 'application/json'
-            },
-            success: (res) => {
-                if (res.statusCode === 200) {
-                    console.log("订单数量", res.data['制作中']);
-                    this.setData({
-                        number1: res.data['制作中'],
-                        number2: res.data['等待中'],
-                        number3: res.data['配送中'],
-                    })
-                } else {
-                    console.error("获取订单数量失败", res);
-                }
-            },
-            fail: (error) => {
-                console.error("请求订单数量失败", error);
-            }
-        });
+        getStoreOrderNumber(1).then(({ n1, n2, n3 }) => {
+            this.setData({
+                number1: n1,
+                number2: n2,
+                number3: n3
+            })
+        }).catch(err => {
+            showError('获取数量失败', err)
+        })
     },
 
-
-    //修改状态：点击完成制作
+    // 修改状态
+    // 点击完成制作
     madeClick(e) {
         const order = e.currentTarget.dataset.order
         const order_id = order.order_id
         const status = order.order_type == '外卖' ? '配送中' : '已完成'
-        wx.request({
-            url: baseUrl + 'orders/' + order_id + '/status',
-            method: 'PATCH',
-            data: {
-                status: status
-            },
-            success: (res) => {
-                if (res.statusCode === 200) {
-                    console.log(res)
-                    wx.showToast({
-                        title: '修改成功',
-                    });
-                    this.getOrderListAll();
-                    this.getOrderList();
-                } else {
-                    wx.showToast({
-                        icon: 'none',
-                        title: '提交失败',
-                    });
-                }
-            },
-            fail: () => {
-                wx.showToast({
-                    icon: 'none',
-                    title: '提交失败',
-                });
-            }
+        updateOrderStatus(order_id, status).then(() => {
+            wx.showToast({
+                title: '修改成功',
+            });
+            this.getOrderListAll();
+            this.getOrderList();
+        }).catch(err => {
+            wx.showToast({
+                icon: 'none',
+                title: '提交失败',
+            });
+            showError('修改状态失败', err)
         })
     },
-    // 修改状态：点击提前制作
-    makeClick(e) {
-        const order_id = e.currentTarget.dataset.id
-        wx.request({
-            url: baseUrl + 'orders/' + order_id + '/begin-make',
-            method: 'PATCH',
-            success: (res) => {
-                if (res.statusCode === 200) {
-                    console.log(res)
-                    wx.showToast({
-                        title: '修改成功',
-                    });
-                    this.getOrderListAll();
-                    this.getOrderList();
-                } else {
-                    wx.showToast({
-                        icon: 'none',
-                        title: '提交失败',
-                    });
-                }
-            },
-            fail: () => {
-                wx.showToast({
-                    icon: 'none',
-                    title: '提交失败',
-                });
-            }
-        })
-    },
-    // 修改状态：点击配送完成
+    // 点击配送完成
     takeOutClick(e) {
         const order_id = e.currentTarget.dataset.id
         const status = '已完成'
-        wx.request({
-            url: baseUrl + 'orders/' + order_id + '/status',
-            method: 'PATCH',
-            data: {
-                status: status
-            },
-            success: (res) => {
-                if (res.statusCode === 200) {
-                    console.log(res)
-                    wx.showToast({
-                        title: '修改成功',
-                    });
-                    this.getOrderListAll();
-                    this.getOrderList();
-                } else {
-                    wx.showToast({
-                        icon: 'none',
-                        title: '提交失败',
-                    });
-                }
-            },
-            fail: () => {
-                wx.showToast({
-                    icon: 'none',
-                    title: '提交失败',
-                });
-            }
+        updateOrderStatus(order_id, status).then(() => {
+            wx.showToast({
+                title: '修改成功',
+            });
+            this.getOrderListAll();
+            this.getOrderList();
+        }).catch(err => {
+            wx.showToast({
+                icon: 'none',
+                title: '提交失败',
+            });
+            showError('修改状态失败', err)
         })
     },
-    // 配送时点击号码拨打电话
+    // 点击提前制作
+    makeClick(e) {
+        const order_id = e.currentTarget.dataset.id
+        beginMakeOrder(order_id).then(() => {
+            wx.showToast({
+                title: '修改成功',
+            });
+            this.getOrderListAll();
+            this.getOrderList();
+        }).catch(err => {
+            wx.showToast({
+                icon: none,
+                title: '修改失败',
+            });
+            wx.showError('修改失败', err)
+        })
+    },
+    // 点击号码拨打电话
     makeCall(e) {
         console.log(e)
         wx.makePhoneCall({
@@ -252,7 +177,7 @@ Page({
     },
 
     // 打印小票
-    printClick(e){
+    printClick(e) {
         const order = e.currentTarget.dataset.order
         wx.request({
             url: baseUrl + 'printer/',
