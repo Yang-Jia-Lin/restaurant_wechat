@@ -4,6 +4,7 @@ const app = getApp();
 
 Page({
     data: {
+        statusBarHeight: app.globalData.toolBarHeight,
         storeInfo: app.globalData.storeInfo,
         addressInfo: app.globalData.addressInfo,
         serviceType: app.globalData.serviceType,

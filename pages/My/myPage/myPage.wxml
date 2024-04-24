@@ -2,12 +2,12 @@
 <wxs src="../../../utils/filter.wxs" module="filters" />
 
 <!-- 顶部会员卡图案 -->
-<view wx:if="{{userInfo.phone_number}}" class="top_card">
+<view wx:if="{{userInfo.phone_number}}" class="top_card" style="margin-top:{{statusBarHeight}}px;">
     <image class="card-img2" src="https://forestlamb.online/public/restaurant/carousel/card1.png"/>
 </view>
 
 <!-- 个人信息部分 -->
-<view wx:if="{{!userInfo.phone_number}}" class="profile2">
+<view wx:if="{{!userInfo.phone_number}}" class="profile2" style="margin-top:{{statusBarHeight}}px;">
     <text class="greeting">小主，快来领取唐合丰会员卡~ 消费得积点，更有好礼相送哦！</text>
     <view class="btn" bindtap="goToRegister">免费注册</view>
 </view>

@@ -1,8 +1,3 @@
-<!-- 标题 -->
-<view class="title">
-	收货地址
-</view>
-
 <!-- 已有地址 -->
 <view wx:for="{{addressList}}" wx:key="key" wx:for-index="index" class="{{index==0?'select':'block_root'}}" bindtap="gotoFood" data-item="{{item}}">
 	<view class="block-left">

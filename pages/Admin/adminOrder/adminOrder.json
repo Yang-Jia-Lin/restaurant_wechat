@@ -1,4 +1,5 @@
 {
-    "usingComponents": {},
-    "enablePullDownRefresh": true
+	"usingComponents": {},
+	"enablePullDownRefresh": true,
+	"navigationBarTitleText": "待制作订单"
 }

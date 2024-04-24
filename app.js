@@ -25,6 +25,7 @@ App({
 		// 全局信息
 		addressInfo: {},
 		serviceType: '到店',
+		toolBarHeight: wx.getSystemInfoSync().statusBarHeight
 	},
 
 	onLaunch() {

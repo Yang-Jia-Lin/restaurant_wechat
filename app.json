@@ -1,68 +1,68 @@
 {
-    "pages": [
-        "pages/Home/home/home",
-        "pages/Home/store/store",
-        "pages/Home/address/address",
-        "pages/Home/addressForm/addressForm",
+	"pages": [
+		"pages/Home/home/home",
+		"pages/Home/store/store",
+		"pages/Home/address/address",
+		"pages/Home/addressForm/addressForm",
 
-        "pages/Food/food/food",
-        "pages/Food/pay/pay",
+		"pages/Food/food/food",
+		"pages/Food/pay/pay",
 
-        "pages/My/myPage/myPage",
-        "pages/My/myOrder/myOrder",
-        "pages/My/register/register",
-        "pages/My/contact/contact",
+		"pages/My/myPage/myPage",
+		"pages/My/myOrder/myOrder",
+		"pages/My/register/register",
+		"pages/My/contact/contact",
 
-        "pages/Admin/adminHome/adminHome",
-        "pages/Admin/adminOrder/adminOrder",
-        "pages/Admin/adminAllOrder/adminAllOrder",
-        "pages/Admin/adminStore/adminStore"
-    ],
+		"pages/Admin/adminHome/adminHome",
+		"pages/Admin/adminOrder/adminOrder",
+		"pages/Admin/adminAllOrder/adminAllOrder",
+		"pages/Admin/adminStore/adminStore"
+	],
 
-    "window": {
-        "backgroundColor": "#f3eeda",
-        "backgroundTextStyle": "light",
-        "navigationBarBackgroundColor": "#EBE0CC",
-        "navigationBarTitleText": "唐合丰粉面馆",
-        "navigationBarTextStyle": "black"
-    },
+	"window": {
+		"backgroundColor": "#f3eeda",
+		"backgroundTextStyle": "light",
+		"navigationBarBackgroundColor": "#f3ede3",
+		"navigationBarTitleText": "唐合丰粉面馆",
+		"navigationBarTextStyle": "black"
+	},
 
-    "tabBar": {
-        "color": "#CDC9A5",
-        "selectedColor": "#8B795E",
-        "borderStyle": "white",
-        "list": [{
-                "selectedIconPath": "image/tab1-ok.png",
-                "iconPath": "image/tab1.png",
-                "pagePath": "pages/Home/home/home",
-                "text": "首页"
-            },
-            {
-                "selectedIconPath": "image/tab2-ok.png",
-                "iconPath": "image/tab2.png",
-                "pagePath": "pages/Food/food/food",
-                "text": "点餐"
-            },
-            {
-                "selectedIconPath": "image/tab3-ok.png",
-                "iconPath": "image/tab3.png",
-                "pagePath": "pages/My/myPage/myPage",
-                "text": "我的"
-            }
-        ]
-    },
-    "sitemapLocation": "sitemap.json",
-    "style": "v2",
-    "lazyCodeLoading": "requiredComponents",
-    "permission": {
-        "scope.userLocation": {
-            "desc": "你的位置信息将用于匹配附近的门店"
-        }
-    },
-    "useExtendedLib": {
-        "weui": true
-    },
-    "requiredPrivateInfos": [
-        "getLocation"
-    ]
+	"tabBar": {
+		"color": "#CDC9A5",
+		"selectedColor": "#8B795E",
+		"borderStyle": "white",
+		"list": [{
+				"selectedIconPath": "image/tab1-ok.png",
+				"iconPath": "image/tab1.png",
+				"pagePath": "pages/Home/home/home",
+				"text": "首页"
+			},
+			{
+				"selectedIconPath": "image/tab2-ok.png",
+				"iconPath": "image/tab2.png",
+				"pagePath": "pages/Food/food/food",
+				"text": "点餐"
+			},
+			{
+				"selectedIconPath": "image/tab3-ok.png",
+				"iconPath": "image/tab3.png",
+				"pagePath": "pages/My/myPage/myPage",
+				"text": "我的"
+			}
+		]
+	},
+	"sitemapLocation": "sitemap.json",
+	"style": "v2",
+	"lazyCodeLoading": "requiredComponents",
+	"permission": {
+		"scope.userLocation": {
+			"desc": "你的位置信息将用于匹配附近的门店"
+		}
+	},
+	"useExtendedLib": {
+		"weui": true
+	},
+	"requiredPrivateInfos": [
+		"getLocation"
+	]
 }

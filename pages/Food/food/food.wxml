@@ -1,5 +1,6 @@
+
 <!-- 外卖或自提选择区域 -->
-<view class="top_info_root">
+<view class="top_info_root" style="padding-top:{{statusBarHeight}}px;">
     <view class="store_root">
         <view class="store_name_root">
             <view class="store_name">{{storeInfo.store_name}}</view>

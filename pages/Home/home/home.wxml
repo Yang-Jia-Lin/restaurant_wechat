@@ -1,7 +1,7 @@
 <!--pages/home/home.wxml-->
 
 <!-- 1.轮播图 -->
-<swiper indicator-dots indicator-color="#8B8878" indicator-active-color="#CDC8B1" autoplay circular interval="6000" style="height: 450rpx;margin-bottom: 30rpx;">
+<swiper indicator-dots indicator-color="#8B8878" indicator-active-color="#CDC8B1" autoplay circular interval="6000" style="height: 450rpx;margin-bottom: 30rpx;margin-top:{{statusBarHeight}}px;">
     <swiper-item wx:for="{{topBanner}}" wx:key="list">
         <image src="{{item.url}}" mode="scaleToFill" style="width:100%;height:100%;" />
     </swiper-item>

@@ -5,6 +5,7 @@ const app = getApp();
 
 Page({
     data: {
+        statusBarHeight: app.globalData.toolBarHeight,
         userInfo: app.globalData.userInfo,
         recentOrder: {},
         haveOrder: false,
