@@ -111,24 +111,9 @@ Page({
     },
     // TODO: 使用API模块化
     getFoodList() {
-        // 显示加载提示
-        wx.showLoading({
-            title: '加载中',
-            mask: true
-        });
-        wx.request({
-            url: baseUrl + 'dishes/store-dishes/',
-            method: 'GET',
-            data: {
-                storeId: app.globalData.storeInfo.store_id,
-                serviceType: app.globalData.serviceType,
-                dish_status: '上架'
-            },
-            success: res => {
-                if (res.data.success) {
-                    let dishes = res.data.storeDishes.map(item => item.dish);
-                    let existingDishIds = new Set(dishes.map(dish => dish.dish_id));
-                    this.cleanUpCart(existingDishIds); // 清理购物车
+        getFoodList().then(dishes => {
+            const existingDishIds = new Set(dishes.map(dish => dish.dish_id));
+            this.cleanUpCart(existingDishIds); // 清理购物车
                     this.processData(dishes); // 清理菜单
                     this.updateDishQuantities(dishes); // 清理菜品数据
                     this.getHeightArr(); // 更新高度数组
