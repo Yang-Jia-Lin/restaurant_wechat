@@ -1,5 +1,7 @@
+import { getCurrentOrder } from '../../../api/orderService'
+import { showError } from '../../../utils/tool';
 const app = getApp();
-const baseUrl = app.globalData.baseUrl
+
 
 Page({
     data: {
@@ -53,30 +55,17 @@ Page({
     },
 
     getRecentOrder(order_id) {
-        wx.request({
-            url: baseUrl + 'orders/user/details/' + order_id,
-            method: 'GET',
-            success: (res) => {
-                console.log(res);
-                if (res.statusCode == 200 && res.data.order_status != '待支付') {
-                    this.setData({
-                        recentOrder: res.data,
-                        haveOrder: true
-                    })
-                } else {
-                    this.setData({
-                        haveOrder: false
-                    })
-                    wx.setStorageSync('orderId', '')
-                }
-            },
-            fail: (err) => {
-                console.error(err)
-                wx.setStorageSync('orderId', '')
-                this.setData({
-                    haveOrder: false
-                })
-            }
+        getCurrentOrder(order_id).then(order => {
+            this.setData({
+                recentOrder: order,
+                haveOrder: true
+            })
+        }).catch(err => {
+            wx.setStorageSync('orderId', '');
+            this.setData({
+                haveOrder: false
+            })
+            showError("加载出现问题", err)
         })
     },
 

@@ -1,5 +1,6 @@
-let app = getApp()
-const baseUrl = app.globalData.baseUrl
+import { getUserAllOrder } from '../../../api/orderService'
+import { showError } from '../../../utils/tool';
+const app = getApp()
 //'待支付', '等待中', '制作中', '配送中', '退款中', '已完成', '已取消', '已退款'
 
 Page({
@@ -41,51 +42,27 @@ Page({
         this.onRefresh();
     },
 
+    // 获取订单
     getMyOrderList() {
-        // 显示加载提示
-        wx.showLoading({
-            title: '加载中...',
-            mask: true
-        });
-        // 获取数据
-        wx.request({
-            url: baseUrl + 'orders/user/' + this.data.userInfo.user_id,
-            method: 'GET',
-            success: (res) => {
-                if (res.statusCode === 200) {
-                    // 分类订单数据
-                    const groupedOrders = res.data.reduce((acc, order) => {
-                        if (!acc[order.order_status]) {
-                            acc[order.order_status] = [];
-                        }
-                        acc[order.order_status].push(order);
-                        return acc;
-                    }, {});
-
-                    this.setData({
-                        list: res.data,
-                        currentList: res.data,
-                        groupedOrders: groupedOrders
-                    });
-                    console.log('获取订单数据成功', res.data, groupedOrders);
-                } else {
-                    console.log('获取订单数据失败:', res.errMsg);
-                }
-            },
-            fail: (err) => {
-                console.error('请求服务器失败:', err);
-            },
-            complete: () => {
-                // 无论请求成功或失败，都关闭加载提示
-                wx.hideLoading();
-            }
-        });
+        getUserAllOrder(this.data.userInfo.user_id).then(({ allOrders, groupOrders }) => {
+            console.log('获取订单数据:', groupOrders);
+            this.setData({
+                list: allOrders,
+                groupedOrders: groupOrders
+            });
+            this.updateCurentOrder(this.data.currentTab);
+        }).catch(err => {
+            showError('获取订单失败', err);
+        })
     },
     navbarTap(e) {
         let index = e.currentTarget.dataset.idx;
         this.setData({
             currentTab: index
         })
+        this.updateCurentOrder(index)
+    },
+    updateCurentOrder(index) {
         if (index == 1) { // 进行中
             const orders1 = this.data.groupedOrders['等待中'] || []
             const orders2 = this.data.groupedOrders['制作中'] || []
