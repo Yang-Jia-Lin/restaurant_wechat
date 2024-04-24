@@ -79,7 +79,7 @@ Page({
     },
     goToMyOrder() {
         wx.navigateTo({
-            url: '../../My/myOrder/myOrder',
+            url: '../../Order/allOrder/allOrder',
         })
     },
     contact_us() {

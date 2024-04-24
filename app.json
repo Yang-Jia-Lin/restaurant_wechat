@@ -12,6 +12,8 @@
 		"pages/My/myOrder/myOrder",
 		"pages/My/register/register",
 		"pages/My/contact/contact",
+		"pages/Order/recentOrder/recentOrder",
+		"pages/Order/allOrder/allOrder",
 
 		"pages/Admin/adminHome/adminHome",
 		"pages/Admin/adminOrder/adminOrder",
@@ -42,6 +44,12 @@
 				"iconPath": "image/tab2.png",
 				"pagePath": "pages/Food/food/food",
 				"text": "点餐"
+			},
+			{
+				"selectedIconPath": "image/order-ok.png",
+				"iconPath": "image/order.png",
+				"pagePath": "pages/Order/recentOrder/recentOrder",
+				"text": "订单"
 			},
 			{
 				"selectedIconPath": "image/tab3-ok.png",
