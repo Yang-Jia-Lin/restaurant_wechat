@@ -1,6 +1,6 @@
-let app = getApp();
-let windowHeight = 0
-let baseUrl = app.globalData.baseUrl
+import { getFoodList } from './../../../api/foodService';
+import { showError } from './../../../utils/tool';
+const app = getApp();
 
 Page({
     data: {
@@ -73,27 +73,7 @@ Page({
     },
 
 
-    // 获取信息
-    confirmStatus() {
-        if (app.globalData.serviceType == '到店' && app.globalData.storeInfo.business_status !== '营业中') {
-            wx.showModal({
-                title: '提示',
-                content: '本店暂未营业，请确认后再下单',
-                showCancel: false,
-                confirmText: '确定',
-            });
-            return;
-        }
-        if (app.globalData.serviceType == '外卖' && app.globalData.storeInfo.takeout_status !== '可配送') {
-            wx.showModal({
-                title: '提示',
-                content: '外卖暂不配送，请确认后再下单',
-                showCancel: false,
-                confirmText: '确定',
-            });
-            return;
-        }
-    },
+    // 1.菜品和购物车数据
     getCartList() {
         var cartList = wx.getStorageSync('cart') || [];
         var totalP = 0;
@@ -109,60 +89,29 @@ Page({
         });
         console.log('当前购物车', cartList)
     },
-    // TODO: 使用API模块化
     getFoodList() {
-        getFoodList().then(dishes => {
-            const existingDishIds = new Set(dishes.map(dish => dish.dish_id));
-            this.cleanUpCart(existingDishIds); // 清理购物车
-                    this.processData(dishes); // 清理菜单
-                    this.updateDishQuantities(dishes); // 清理菜品数据
-                    this.getHeightArr(); // 更新高度数组
-                } else {
-                    console.error("菜品数据请求失败", res);
-                }
-            },
-            fail: error => {
-                console.error("菜品数据请求失败", error);
-            },
-            complete: () => {
-                // 无论请求成功或失败，都关闭加载提示
-                wx.hideLoading();
-            }
+        getFoodList(1, this.data.serviceType, '上架').then(({ dishes, existingDishIds }) => {
+            console.log("菜品数据：", dishes);
+            console.log("菜品数据2：", existingDishIds);
+            console.log("菜品数据3：", dishes[dishes.length - 1].list);
+            this.setData({
+                menuArr: dishes,
+                small_dish_list: dishes[dishes.length - 1].list
+            })
+            this.cleanUpCart(existingDishIds);  // 删除没有的菜品
+            this.updateDishQuantities(dishes);  // 更新购物车
+            this.getHeightArr();                // 更新高度数组
+        }).catch(error => {
+            showError("获取菜品失败", error);
         });
     },
-    cleanUpCart(existingDishIds) { // 清理购物车中不存在的菜品删除
+    cleanUpCart(existingDishIds) {
         let cartList = wx.getStorageSync('cart') || [];
         cartList = cartList.filter(item => existingDishIds.has(item.dish_id));
         wx.setStorageSync('cart', cartList);
+        this.getCartList();
     },
-    processData(dataList) { // 处理菜品数据
-        let categoryMap = new Map();
-        dataList.forEach(food => {
-            let category = categoryMap.get(food.category_id) || {
-                title: food.category.category_name,
-                list: []
-            };
-            category.list.push(food);
-            categoryMap.set(food.category_id, category);
-        });
-
-        // 分类中按照销量排序
-        let endData = Array.from(categoryMap.values()).map(category => {
-            category.list.sort((a, b) => b.sales - a.sales);
-            return category;
-        });
-        // 分类按照分类id排序
-        endData.sort((a, b) => a.list[0].category_id - b.list[0].category_id).forEach((item, index) => {
-            item.id = index;
-        });
-
-        this.setData({
-            menuArr: endData,
-            small_dish_list: endData[endData.length - 1].list
-        });
-        console.log("菜品数据：", dataList, "过滤：", endData);
-    },
-    updateDishQuantities() { // 更新主界面菜品数量
+    updateDishQuantities() {
         let cartList = wx.getStorageSync('cart') || [];
         let dishList = this.data.menuArr
         dishList.forEach(category => {
@@ -179,7 +128,9 @@ Page({
         })
     },
 
-    // 2.选择
+
+
+    // 2.门店服务
     // changeStores() {
     //     wx.navigateTo({
     //         url: '/pages/Home/store/store',
@@ -203,6 +154,30 @@ Page({
         }
         this.confirmStatus()
         this.getFoodList()
+    },
+    confirmStatus() {
+        const serviceType = app.globalData.serviceType
+        const business_status = app.globalData.storeInfo.business_status
+        const takeout_status = app.globalData.storeInfo.takeout_status
+        if (serviceType == '到店' && business_status !== '营业中') {
+            wx.showModal({
+                title: '提示',
+                content: '本店暂未营业，请确认后再下单',
+                showCancel: false,
+                confirmText: '确定',
+            });
+            return false;
+        }
+        if (serviceType == '外卖' && takeout_status !== '可配送') {
+            wx.showModal({
+                title: '提示',
+                content: '外卖暂不配送，请确认后再下单',
+                showCancel: false,
+                confirmText: '确定',
+            });
+            return false;
+        }
+        return true;
     },
 
 
@@ -404,9 +379,11 @@ Page({
     },
 
 
+
     // 5.确认结算
-    gotoOrder: function () {
+    gotoOrder() {
         var arr = wx.getStorageSync('cart') || [];
+        // 确保有菜品
         if (!arr || arr.length == 0) {
             wx.showModal({
                 title: '提示',
@@ -415,35 +392,11 @@ Page({
             })
             return;
         }
-        if (this.data.serviceType == '外卖' && app.globalData.storeInfo.takeout_status !== '可配送') {
-            wx.showModal({
-                title: '提示',
-                content: '外卖暂不配送',
-                success(res) {
-                    if (res.confirm) {
-                        wx.switchTab({
-                            url: '/pages/Home/home/home',
-                        })
-                    } else if (res.cancel) {
-                        return;
-                    }
-                }
-            });
-        } else if (this.data.serviceType == '到店' && app.globalData.storeInfo.business_status !== '营业中') {
-            wx.showModal({
-                title: '提示',
-                content: '门店暂不营业',
-                success(res) {
-                    if (res.confirm) {
-                        wx.switchTab({
-                            url: '/pages/Home/home/home',
-                        })
-                    } else if (res.cancel) {
-                        return;
-                    }
-                }
-            });
-        } else if (this.data.serviceType == '外卖' && !this.data.addressInfo.phone) {
+        // 确保在营业
+        if (!this.confirmStatus())
+            return;
+        // 确保有地址
+        if (this.data.serviceType === '外卖' && !this.data.addressInfo.phone) {
             wx.showModal({
                 title: '提示',
                 content: '请选择配送地址',
@@ -457,11 +410,12 @@ Page({
                     }
                 }
             });
-        } else {
-            wx.navigateTo({
-                url: '/pages/Food/pay/pay'
-            })
+            return;
         }
+
+        wx.navigateTo({
+            url: '/pages/Food/pay/pay'
+        })
     },
 
 
@@ -533,13 +487,6 @@ Page({
     // 6.2 界面滚动
     getHeightArr() {
         let _this = this;
-        wx.getSystemInfo({
-            success: function (res) {
-                //将高度乘以换算后的该设备的rpx与px的比例
-                windowHeight = (res.windowHeight * (750 / res.windowWidth));
-            }
-        })
-        // 获得每个元素据顶部的高度组成数组
         // 通过高度与scrollTop的对比来获取目前滑动到哪个区域
         let heightArr = [];
         let h = 0;
@@ -589,7 +536,7 @@ Page({
     },
 
     // 6.3 详情页
-    goDetailToggle: function (e) {
+    goDetailToggle(e) {
         let that = this;
         let dish = this.data.dataList
         if (that.data.maskVisual2 == "hidden") {
@@ -611,7 +558,7 @@ Page({
         }
 
     },
-    goDetailPopup: function () {
+    goDetailPopup() {
         var that = this;
         // 购物车打开动画
         var animation = wx.createAnimation({
@@ -637,7 +584,7 @@ Page({
             maskFlag2: false,
         });
     },
-    goDetailDismiss: function () {
+    goDetailDismiss() {
         var that = this
         // 购物车关闭动画
         that.animation.translate(0, 285).step();
@@ -658,7 +605,7 @@ Page({
     },
 
     // 6.4 购物车
-    cascadeToggle: function () {
+    cascadeToggle() {
         var that = this;
         var arr = this.data.cartList
         if (arr.length > 0) {
@@ -671,7 +618,7 @@ Page({
             that.cascadeDismiss()
         }
     },
-    cascadePopup: function () {
+    cascadePopup() {
         var that = this;
         // 购物车打开动画
         var animation = wx.createAnimation({
@@ -697,7 +644,7 @@ Page({
             maskFlag: false,
         });
     },
-    cascadeDismiss: function () {
+    cascadeDismiss() {
         var that = this
         // 购物车关闭动画
         that.animation.translate(0, 285).step();
