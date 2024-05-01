@@ -10,7 +10,11 @@
 
 		"pages/My/myPage/myPage",
 		"pages/My/register/register",
+		"pages/My/redeem/redeem",
+		"pages/My/points/points",
+		"pages/My/coupon/coupon",
 		"pages/My/contact/contact",
+		"pages/My/more/more",
 		"pages/Order/recentOrder/recentOrder",
 		"pages/Order/allOrder/allOrder",
 

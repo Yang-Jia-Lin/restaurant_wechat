@@ -1,14 +1,23 @@
-import { getCurrentOrder } from '../../../api/orderService'
-import { showError } from '../../../utils/tool';
 const app = getApp();
-
 
 Page({
     data: {
         statusBarHeight: app.globalData.toolBarHeight,
         userInfo: app.globalData.userInfo,
-        recentOrder: {},
-        haveOrder: false,
+    },
+    onLoad() {
+        app.on('userInfoUpdated', this.updateInfo);
+        this.setData({
+            userInfo: app.globalData.userInfo
+        })
+    },
+    onUnload() {
+        app.off('userInfoUpdated', this.updateInfo);
+    },
+    updateInfo() {
+        this.setData({
+            userInfo: app.globalData.userInfo
+        });
     },
     onShareAppMessage: function () {
         return {
@@ -16,16 +25,7 @@ Page({
             path: '/pages/Home/home/home'
         }
     },
-    onShow() {
-        this.setData({
-            userInfo: app.globalData.userInfo
-        })
-        let order_id = wx.getStorageSync('orderId') || ''
-        if (order_id !== '') {
-            this.getRecentOrder(order_id);
-        }
-    },
-    onRefresh() {
+    onPullDownRefresh() {
         //导航条加载动画
         wx.showNavigationBarLoading()
         //loading 提示框
@@ -38,58 +38,61 @@ Page({
             wx.hideNavigationBarLoading();
             wx.stopPullDownRefresh();
         }, 1000)
-        this.onShow();
-    },
-    onPullDownRefresh() {
-        this.onRefresh();
-    },
-    onLoad() {
-        app.on('userInfoUpdated', this.updateInfo);
-    },
-    onUnload() {
-        app.off('userInfoUpdated', this.updateInfo);
-    },
-    updateInfo() {
         this.setData({
             userInfo: app.globalData.userInfo
-        });
-    },
-
-    getRecentOrder(order_id) {
-        getCurrentOrder(order_id).then(order => {
-            this.setData({
-                recentOrder: order,
-                haveOrder: true
-            })
-        }).catch(err => {
-            wx.setStorageSync('orderId', '');
-            this.setData({
-                haveOrder: false
-            })
-            showError("加载出现问题", err)
         })
     },
 
 
-    // 页面跳转
+    // 会员中心
     goToRegister() {
         wx.navigateTo({
             url: '/pages/My/register/register',
         })
     },
+    goToTopUp() {
+        wx.showModal({
+            title: '提示',
+            content: '抱歉，功能开发中，敬请期待！',
+            showCancel: false,
+        })
+    },
+    goToRedeem() {
+        wx.navigateTo({
+            url: '/pages/My/redeem/redeem',
+        })
+    },
+    goToPoints() {
+        wx.navigateTo({
+            url: '/pages/My/points/points',
+        })
+    },
+    goToCoupon() {
+        wx.navigateTo({
+            url: '/pages/My/coupon/coupon',
+        })
+    },
+
+
+    // 我的服务
     goToMyOrder() {
         wx.navigateTo({
-            url: '../../Order/allOrder/allOrder',
+            url: '/pages/Order/allOrder/allOrder',
         })
     },
     contact_us() {
         wx.navigateTo({
-            url: '../../My/contact/contact',
+            url: '/pages/My/contact/contact',
+        })
+    },
+    goToMore() {
+        wx.navigateTo({
+            url: '/pages/My/more/more',
         })
     },
     goToAdmin() {
         wx.navigateTo({
-            url: '../../Admin/adminHome/adminHome',
+            url: '/pages/Admin/adminHome/adminHome',
         })
     }
 })

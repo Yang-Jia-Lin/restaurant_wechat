@@ -1,211 +1,166 @@
 page {
-    background: #f6f6f6;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+	background: #f6f6f6;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
 }
 
 /* 顶部会员卡 */
-.top_card{
-    height: 150rpx;
-    width: 75%;
-    margin: 30rpx auto;
-    border-radius: 20rpx;
-    background-color: #EBE0CC;
+.top_card {
+	height: 150rpx;
+	width: 75%;
+	margin: 30rpx auto;
+	border-radius: 20rpx;
+	background-color: #EBE0CC;
 }
-.card-img2{
-    width: 50%;
-    height: 190rpx;
-    margin: 0 0 0 45%;
+
+.card-img2 {
+	width: 50%;
+	height: 190rpx;
+	margin: 0 0 0 45%;
 }
 
 /* 用户信息 */
-.user_info_root{
-    background-color: white;
-    border-radius: 50rpx;
-    margin: -40rpx 40rpx 40rpx 40rpx;
-    padding: 40rpx;
+.user_info_root {
+	background-color: white;
+	border-radius: 50rpx;
+	margin: -40rpx 40rpx 40rpx 40rpx;
+	padding: 40rpx;
 }
+
 .profile2 {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 300rpx;
-    background-color: #f3ede3;
-    border-radius: 25px;
-    padding: 20rpx;
-    margin: 60rpx 30rpx 30rpx 30rpx;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 300rpx;
+	background-color: #f3ede3;
+	border-radius: 25px;
+	padding: 20rpx;
+	margin: 60rpx 30rpx 30rpx 30rpx;
 }
+
 .greeting {
-    margin: 1rpx auto;
-    padding: 20rpx;
-    width: 80%;
-    font-size: 18px;
+	margin: 1rpx auto;
+	padding: 20rpx;
+	width: 80%;
+	font-size: 18px;
 }
+
 .btn {
-    background-color: rgb(199, 102, 11);
-    color: white;
-    width: 20%;
-    padding: 10px;
-    margin: 20rpx auto;
-    text-align: center;
-    border: none;
-    border-radius: 5px;
+	background-color: rgb(199, 102, 11);
+	color: white;
+	width: 20%;
+	padding: 10px;
+	margin: 20rpx auto;
+	text-align: center;
+	border: none;
+	border-radius: 5px;
 }
+
 /* 1.基本信息部分 */
-.user_info{
-    display: flex;
-    flex-direction: row;
+.user_info {
+	display: flex;
+	flex-direction: row;
 }
+
 .user_avatar {
-    border: 1px solid bisque;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    margin-right: 50rpx;
+	border: 1px solid bisque;
+	width: 70px;
+	height: 70px;
+	border-radius: 50%;
+	margin-right: 50rpx;
 }
-.user_name{
-    font-size: 22px;
-    font-weight: bold;
-    color: black;
-    padding-top: 8rpx;
+
+.user_name {
+	font-size: 22px;
+	font-weight: bold;
+	color: black;
+	padding-top: 8rpx;
 }
-.user_id{
-    font-size: medium;
-    color: rgb(167, 167, 167);
-    padding-top: 7rpx;
+
+.user_id {
+	font-size: medium;
+	color: rgb(167, 167, 167);
+	padding-top: 7rpx;
 }
+
 /* 用户余额部分 */
-.user_shop{
-    display: flex;
-    flex-direction: row;
-    justify-content:space-around;
-    margin-top: 30rpx;
-    align-items: center;
+.user_shop {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	margin-top: 30rpx;
+	align-items: center;
 }
-.user_shop_block{
-    width: 100rpx;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+
+.user_shop_block {
+	width: 100rpx;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
-.block_number{
-    font-size: 24px;
-    color: rgb(189, 4, 4);
-    margin: 0 auto;
+
+.block_number {
+	font-size: 24px;
+	color: rgb(189, 4, 4);
+	margin: 0 auto;
 }
-.block_text{
-    font-size: 14px;
-    color: rgb(182, 182, 182);
-    margin: 0 auto;
+
+.block_text {
+	font-size: 14px;
+	color: rgb(182, 182, 182);
+	margin: 0 auto;
 }
-.border{
-    height: 50rpx;
-    border: rgb(167, 167, 167) 1.5px solid;
+
+.border {
+	height: 50rpx;
+	border: rgb(167, 167, 167) 1.5px solid;
 }
 
 /* 我的订单和我的服务 */
-.block_title{
-    margin: 10rpx 30rpx;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    font-size: 20px;
-}
-.goto_orders{
-    color: rgb(151, 151, 151);
-    font-size: 16px;
-}
-.order_root{
-    background-color: white;
-    border-radius: 20rpx;
-    margin: 0 40rpx 30rpx 40rpx;
-    padding: 30rpx 20rpx;
-
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-}
-.block{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.block_img{
-    width: 70rpx;
-    height: 70rpx;
-    padding: 10rpx;
-    border-radius: 20rpx;
-}
-.block_name{
-    font-size: 13px;
-    margin-top: 10rpx;
-    color: #423b2f;
-}
-.none{
-    height: 100rpx;
+.block_title {
+	margin: 10rpx 30rpx;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	font-size: 20px;
 }
 
-.admin_login_btn{
-    width: 30%;
-    text-align: center;
-    background-color: white;
-    color: rgb(136, 136, 136);
-    border-radius: 20rpx;
-    padding: 20rpx;
-    margin: 30rpx auto;
+.goto_orders {
+	color: rgb(151, 151, 151);
+	font-size: 16px;
 }
 
+.order_root {
+	background-color: white;
+	border-radius: 20rpx;
+	margin: 0 40rpx 30rpx 40rpx;
+	padding: 30rpx 20rpx;
 
-/* 最近订单 */
-.recent_order_root{
-    background-color: white;
-    border: rgba(212, 207, 192, 0.74) 3px solid;
-    margin: 0 40rpx 30rpx 40rpx;
-    padding: 5rpx 0 10rpx 0;
-}
-.title_root {
-    margin: 20rpx 35rpx 20rpx 25rpx;
-    border-bottom: 11rpx solid #dadada;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
-.pickup-num{
-    color: rgb(98, 41, 0);
-    font-size: 20px;
-    padding: 0 10rpx;
-}
-.order-status{
-    color: rgb(146, 61, 0);
-    font-size: 20px;
-    font-weight: bold;
-    padding: 0 10rpx;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
 }
 
-.dishes_root {
-    margin: 0 50rpx 10rpx 50rpx;
-    display: flex;
-    flex-direction: column;
-}
-.dish_title_root{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+.block {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
-.price-root{
-    margin: 0 55rpx;
-    text-align: end;
-    font-size: 18px;
-    color: rgb(0, 0, 0);
-    font-weight: bold;
+.block_img {
+	width: 70rpx;
+	height: 70rpx;
+	padding: 10rpx;
+	border-radius: 20rpx;
 }
 
-.empty-order{
-    font-size: 16px;
-    text-align: center;
-    margin: 30rpx 0;
-    color: darkgray;
+.block_name {
+	font-size: 13px;
+	margin-top: 10rpx;
+	color: #423b2f;
+}
+
+.none {
+	height: 100rpx;
 }

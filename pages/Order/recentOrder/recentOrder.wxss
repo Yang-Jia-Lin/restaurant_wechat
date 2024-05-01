@@ -4,3 +4,60 @@ page {
 	flex-direction: column;
 	justify-content: flex-start;
 }
+
+/* 最近订单 */
+.recent_order_root {
+	background-color: white;
+	border: rgba(212, 207, 192, 0.74) 3px solid;
+	margin: 30rpx 40rpx;
+	padding: 5rpx 0 10rpx 0;
+}
+
+.title_root {
+	margin: 20rpx 35rpx 20rpx 25rpx;
+	border-bottom: 11rpx solid #dadada;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.pickup-num {
+	color: rgb(98, 41, 0);
+	font-size: 20px;
+	padding: 0 10rpx;
+}
+
+.order-status {
+	color: rgb(146, 61, 0);
+	font-size: 20px;
+	font-weight: bold;
+	padding: 0 10rpx;
+}
+
+.dishes_root {
+	margin: 0 50rpx 10rpx 50rpx;
+	display: flex;
+	flex-direction: column;
+}
+
+.dish_title_root {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.price-root {
+	margin: 0 55rpx;
+	text-align: end;
+	font-size: 18px;
+	color: rgb(0, 0, 0);
+	font-weight: bold;
+}
+
+.empty-order {
+	font-size: 16px;
+	text-align: center;
+	margin: 30rpx 0;
+	color: darkgray;
+}

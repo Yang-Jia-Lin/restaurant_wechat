@@ -1,1 +1,35 @@
+<wxs src="../../../utils/filter.wxs" module="filters" />
 
+<view class="recent_order_root" bindtap="goToMyOrder">
+    <view wx:if="{{haveOrder}}">
+        <!-- 订单title -->
+        <view class="title_root" wx:if="{{recentOrder.order_status=='制作中'||recentOrder.order_status=='配送中'||recentOrder.order_status=='已完成'}}">
+            <view class="pickup-num">取餐号 {{recentOrder.pickup_number}}</view>
+            <view class="order-status">{{recentOrder.order_status}}</view>
+        </view>
+        <view class="title_root" wx:elif="{{recentOrder.order_status=='等待中'}}">
+            <view class="pickup-num">等待中</view>
+            <view class="order-status">
+                {{filters.formatDeliveryTime(recentOrder.delivery_time)}}
+                {{recentOrder.order_type=='外卖'?'送达':'取餐'}}
+            </view>
+        </view>
+        <view class='title_root' wx:else="">
+            <view class="pickup-num">{{recentOrder.order_status}}</view>
+        </view>
+
+        <!-- 订单详情 -->
+        <view class='dishes_root' wx:for="{{recentOrder.orderDetails}}" wx:for-item="arr_item" wx:key="key">
+            <view class="dish_title_root">
+                <view>{{arr_item.dish_name}}</view>
+                <view>x{{arr_item.quantity}}</view>
+            </view>
+        </view>
+
+        <!-- 订单价格 -->
+        <view class="price-root">
+            总价：{{recentOrder.total_price}}元
+        </view>
+    </view>
+    <view wx:else="" class="empty-order"> 近期没有新订单！快去下单吧~ </view>
+</view>
