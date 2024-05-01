@@ -4,7 +4,6 @@ const app = getApp()
 
 Page({
     data: {
-        statusBarHeight: app.globalData.toolBarHeight,
         topBanner: [],
         storeInfo: app.globalData.storeInfo,
         userInfo: app.globalData.userInfo,

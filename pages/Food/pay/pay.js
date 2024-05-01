@@ -389,7 +389,7 @@ Page({
 
         // 4.跳转订单详情
         wx.redirectTo({
-            url: '/pages/My/myOrder/myOrder'
+            url: '../../Order/allOrder/allOrder'
         })
     },
     addSales() {
@@ -525,7 +525,7 @@ Page({
 
         // 3.跳转订单详情
         wx.redirectTo({
-            url: '/pages/My/myOrder/myOrder'
+            url: '../../Order/allOrder/allOrder'
         })
     },
 })

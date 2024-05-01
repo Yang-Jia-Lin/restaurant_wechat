@@ -1,6 +1,7 @@
 import { getUserAllOrder } from '../../../api/orderService'
 import { showError } from '../../../utils/tool';
 const app = getApp()
+const baseUrl = app.globalData.baseUrl;
 //'待支付', '等待中', '制作中', '配送中', '退款中', '已完成', '已取消', '已退款'
 
 Page({
