@@ -29,6 +29,26 @@ function fetchStore(latitude = 37.751915, longitude = 112.712555) {
 		});
 	});
 }
+function fetchStoreTime(storeId) {
+	return new Promise((resolve, reject) => {
+		wx.request({
+			url: `${baseUrl}stores/${storeId}/timeSlots`,
+			method: 'GET',
+			success: (res) => {
+				if (res.data.success) {
+					const { lastUpdated, timeSlots } = res.data;
+					resolve({ lastUpdated, timeSlots });
+				} else {
+					reject(res.data.message || '获取门店时间信息失败，请重试');
+				}
+			},
+			fail: (err) => {
+				console.error('Error making the request:', err);
+				reject('网络请求失败，请检查网络连接');
+			}
+		});
+	});
+}
 
 // 获取所有门店
 function fetchAllStores(latitude = 37.75191, longitude = 112.71255) {
@@ -82,6 +102,7 @@ function fetchTopBanner() {
 
 export {
 	fetchStore,
+	fetchStoreTime,
 	fetchAllStores,
 	fetchTopBanner
 };

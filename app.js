@@ -1,6 +1,7 @@
 import { userLogin } from '/api/userService';
 import { fetchStore } from '/api/storeService';
 import { showError } from '/utils/tool';
+import { solvingTime } from '/utils/timeProc';
 
 App({
 	globalData: {
@@ -124,6 +125,7 @@ App({
 			console.log("门店信息：", store);
 			this.globalData.storeInfo = store;
 			this.trigger('storeInfoUpdated');
+			solvingTime(store.store_id, store.last_updated)
 		}).catch(error => {
 			showError("获取门店信息失败", error);
 		});
