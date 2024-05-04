@@ -4,6 +4,11 @@ import {
     getCurrentHourMinutes,
     isWithinPeriod
 } from '../../../utils/tool'
+
+import {
+    updateTimeFunctions
+} from '../../../utils/timeProc'
+
 const app = getApp();
 const baseUrl = app.globalData.baseUrl;
 
@@ -52,6 +57,10 @@ Page({
         });
         this.getTotalPrice();
         this.data.serviceType === '到店' ? this.generateTakeTimeOptions() : this.generateDeliveryTimeOptions();
+
+        // test
+        const timeslots = wx.getStorageSync('storeTime')
+        updateTimeFunctions(timeslots)
     },
 
     // 1.生成可用时间
