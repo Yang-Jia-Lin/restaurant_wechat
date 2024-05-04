@@ -6,6 +6,7 @@ import {
     scheduleDeliverySlots,
     getDeliveryDate
 } from '../../../utils/timeProc'
+import { toFloat } from '../../../utils/tool';
 
 const app = getApp();
 const baseUrl = app.globalData.baseUrl;
@@ -30,6 +31,7 @@ Page({
         deliverNow: true,
         deliverTimes: [],
         deliverTime: '',
+        refreshTime: '',
 
         // 优惠信息
         pointsRemain: app.globalData.userInfo.points,
@@ -54,13 +56,16 @@ Page({
     getTimesOption: function () {
         const timeslots = wx.getStorageSync('storeTime'); // 门店所有营业时间
         testTimeFunctions(timeslots)
+        const now = new Date()
+
         if (this.data.serviceType === '到店') {
             const canDeliveryNow = canTakeNow(timeslots)
             const deliveryTimes = scheduleTakeSlots(timeslots)
             this.setData({
                 deliverNow: canDeliveryNow,
                 deliverTimes: deliveryTimes,
-                deliverTime: deliveryTimes[0]
+                deliverTime: deliveryTimes[0],
+                refreshTime: now
             })
         } else {
             const canDeliveryNow = canDeliverNow(timeslots)
@@ -68,7 +73,8 @@ Page({
             this.setData({
                 deliverNow: canDeliveryNow,
                 deliverTimes: deliveryTimes,
-                deliverTime: deliveryTimes[0]
+                deliverTime: deliveryTimes[0],
+                refreshTime: now
             })
         }
     },
@@ -77,7 +83,7 @@ Page({
     getTotalPrice() {
         const arr = wx.getStorageSync('cart') || [];
         const pointDis = this.data.pointsDiscount;
-        const pointRem = this.data.userInfo.points - pointDis;
+        const pointRem = toFloat(this.data.userInfo.points - pointDis, 2);
 
         // 计算价格
         let totalP = 0;
@@ -125,24 +131,39 @@ Page({
         });
     },
     onPointClick() {
-        wx.showModal({
-            title: '提示',
-            content: '确定使用积点支付本单吗？',
-            complete: (res) => {
-                if (res.cancel) {
-                    this.setData({
-                        pointsDiscount: 0
-                    })
-                    this.getTotalPrice()
+        if (this.data.pointsDiscount == 0) {
+            wx.showModal({
+                title: '提示',
+                content: '确定使用积点支付本单吗？',
+                complete: (res) => {
+                    if (res.cancel) {
+                        return
+                    }
+                    if (res.confirm) {
+                        this.setData({
+                            pointsDiscount: this.data.totalPrice
+                        })
+                        this.getTotalPrice()
+                    }
                 }
-                if (res.confirm) {
-                    this.setData({
-                        pointsDiscount: this.data.totalPrice
-                    })
-                    this.getTotalPrice()
+            })
+        } else {
+            wx.showModal({
+                title: '提示',
+                content: '确定取消使用吗？',
+                complete: (res) => {
+                    if (res.cancel) {
+                        return
+                    }
+                    if (res.confirm) {
+                        this.setData({
+                            pointsDiscount: 0
+                        })
+                        this.getTotalPrice()
+                    }
                 }
-            }
-        })
+            })
+        }
     },
     selectPaymentMethod: function (e) {
         this.setData({
@@ -165,6 +186,25 @@ Page({
         }
         // this.data.deliveryTime是用户展示的字符串，需要修改为Date()类型
         const deliveryDate = getDeliveryDate(delivery_type, delivery_time)
+
+        // 检查是否需要刷新
+        const now = new Date()
+        const timeDiff = (now - this.data.refreshTime) / (1000 * 60);
+        if (timeDiff > 10) {
+            this.setData({
+                refreshTime: new Date()
+            })
+            wx.showModal({
+                title: '提示',
+                content: '您停留太久啦！需要刷新一下，注意查看您的时间',
+                showCancel: false, // 隐藏取消按钮
+                confirmText: '确定',
+                success: () => {
+                    this.getTimesOption();
+                }
+            });
+            return;
+        }
 
         // 提交订单
         if (this.data.pointsDiscount == 0)
