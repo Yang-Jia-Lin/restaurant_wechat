@@ -64,6 +64,62 @@ function getCurrentOrder(order_id) {
 		})
 	})
 }
+function changeDeliverTime(orderId, deliverTime) {
+	wx.showLoading({
+		title: '加载中',
+		mask: true
+	});
+	return new Promise((resolve, reject) => {
+		wx.request({
+			url: baseUrl + 'orders/user/changeTime/',
+			method: 'POST',
+			data: {
+				orderId,
+				deliverTime
+			},
+			success: (res) => {
+				console.log(res)
+				if (res.data.success) {
+					resolve(res.data.order)
+				} else {
+					reject(res.data.message)
+				}
+			},
+			fail: (error) => {
+				reject(error.message)
+			},
+			complete: () => {
+				wx.hideLoading()
+			}
+		})
+	})
+}
+function getQueueNum(pickup_id) {
+	wx.showLoading({
+		title: '加载中',
+		mask: true
+	});
+	return new Promise((resolve, reject) => {
+		wx.request({
+			url: baseUrl + 'orders/user/queueNum/' + pickup_id,
+			method: 'GET',
+			success: (res) => {
+				console.log(res)
+				if (res.data.success) {
+					resolve(res.data.number)
+				} else {
+					reject(res.data.message)
+				}
+			},
+			fail: (error) => {
+				reject(error.message)
+			},
+			complete: () => {
+				wx.hideLoading()
+			}
+		})
+	})
+}
 
 
 // =========================门店=======================
@@ -227,6 +283,7 @@ function beginMakeOrder(orderId) {
 	})
 }
 
+
 export {
 	getUserAllOrder,
 	getCurrentOrder,
@@ -234,5 +291,7 @@ export {
 	getStoreOrderNumber,
 	getAllOrder,
 	updateOrderStatus,
-	beginMakeOrder
+	beginMakeOrder,
+	changeDeliverTime,
+	getQueueNum
 };

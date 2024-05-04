@@ -1,6 +1,6 @@
 <wxs src="../../../utils/filter.wxs" module="filters" />
 
-<view class="recent_order_root" bindtap="goToMyOrder">
+<view class="recent_order_root">
     <view wx:if="{{haveOrder}}">
         <!-- 订单title -->
         <view class="title_root" wx:if="{{recentOrder.order_status=='制作中'||recentOrder.order_status=='配送中'||recentOrder.order_status=='已完成'}}">
@@ -32,4 +32,19 @@
         </view>
     </view>
     <view wx:else="" class="empty-order"> 近期没有新订单！快去下单吧~ </view>
+
+    <view wx:if="{{recentOrder.order_status=='等待中'}}">
+        <text>修改取餐时间</text>
+        <picker mode="selector" range="{{deliverTimes}}" bindchange="onDeliveryTimeChange">
+            <view class="picker">{{deliverTime}} ></view>
+        </picker>
+        <view bindtap="confirmChange">确定修改</view>
+        <view bindtap="makeClick">
+            提前排号
+        </view>
+    </view>
+    <view wx:if="{{recentOrder.order_status=='制作中'}}">
+        您前方还有{{queueOrdersNum}}单    
+    </view>
+    
 </view>
