@@ -1,23 +1,19 @@
 import {
-    generateOptions,
-    convertToDateTime,
-    getCurrentHourMinutes,
-    isWithinPeriod
-} from '../../../utils/tool'
-
-import {
-    updateTimeFunctions
+    testTimeFunctions,
+    canTakeNow,
+    canDeliverNow,
+    scheduleTakeSlots,
+    scheduleDeliverySlots,
+    getDeliveryDate
 } from '../../../utils/timeProc'
 
 const app = getApp();
 const baseUrl = app.globalData.baseUrl;
 
-
 Page({
     data: {
-        // 基本信息
+        // 基本信息(全局)
         userInfo: app.globalData.userInfo,
-
         storeInfo: app.globalData.storeInfo,
         serviceType: app.globalData.serviceType,
         distance: app.globalData.storeInfo.distance.toFixed(2),
@@ -27,198 +23,98 @@ Page({
         paymentMethod: '微信支付',
         totalPrice: 0.0,
         totalNum: 0,
-        note: "",
+        note: '',
 
-        // 配送时间相关
-        deliveryNowClock: false, //当前不能立即送餐or取餐
-        deliveryReserveClock: false, //当前不能预约送餐or取餐
-        deliveryTimeType: '立即',
-        deliveryTimeOptions: [],
-        deliveryTime: '',
+        // 时间相关
+        deliverType: '立即',
+        deliverNow: true,
+        deliverTimes: [],
+        deliverTime: '',
 
         // 优惠信息
-        pointsNum: 0,
-        points: 0,
-        couponsNum: 0,
-        currentCouponsId: null,
-        curentCouponsPrice: 0
+        pointsRemain: app.globalData.userInfo.points,
+        pointsDiscount: 0.0,
     },
+
     onShow() {
-        let points = this.data.userInfo.points - this.data.pointsNum;
-        points = +points.toFixed(1);
-        this.setData({
+        this.setData({  // 数据更新
             userInfo: app.globalData.userInfo,
-            serviceType: app.globalData.serviceType,
             storeInfo: app.globalData.storeInfo,
+            serviceType: app.globalData.serviceType,
             addressInfo: app.globalData.addressInfo,
-            deliveryNowClock: false,
-            deliveryReserveClock: false,
-            points: points
+            pointsRemain: app.globalData.userInfo.points,
+            pointsDiscount: 0,
+            cartList: wx.getStorageSync('cart') || [],
         });
-        this.getTotalPrice();
-        this.data.serviceType === '到店' ? this.generateTakeTimeOptions() : this.generateDeliveryTimeOptions();
-
-        // test
-        const timeslots = wx.getStorageSync('storeTime')
-        updateTimeFunctions(timeslots)
+        this.getTotalPrice();   // 重新计算价格
+        this.getTimesOption();  // 重新计算时间
     },
 
-    // 1.生成可用时间
-    generateTakeTimeOptions: function () {
-        const currentHourMinutes = getCurrentHourMinutes();
-        const businessHours = this.data.storeInfo.business_hours.split(" ");
-        let timeOptions = [];
-
-        // 1.计算可用预约堂食时间
-        businessHours.forEach(period => {
-            let [periodStart, periodEnd] = period.split("-");
-            let startTime = currentHourMinutes > periodStart ? currentHourMinutes : periodStart;
-            let options = generateOptions(startTime, periodEnd);
-            timeOptions.push(...options);
-        });
-        timeOptions = [...new Set(timeOptions)];
-        this.setData({
-            deliveryTimeOptions: timeOptions,
-            deliveryTime: timeOptions[0] || "暂无可用时间",
-        });
-
-        // 2.计算当前是否可以立即取餐
-        const isOutOfBusinessHours = !businessHours.some(period => {
-            let [periodStart, periodEnd] = period.split("-");
-            return isWithinPeriod(periodStart, periodEnd, currentHourMinutes);
-        });
-        if (isOutOfBusinessHours) {
+    // 1.计算时间
+    getTimesOption: function () {
+        const timeslots = wx.getStorageSync('storeTime'); // 门店所有营业时间
+        testTimeFunctions(timeslots)
+        if (this.data.serviceType === '到店') {
+            const canDeliveryNow = canTakeNow(timeslots)
+            const deliveryTimes = scheduleTakeSlots(timeslots)
             this.setData({
-                deliveryNowClock: true,
-                deliveryTimeType: '预约'
-            });
-            console.log('现在不能送！');
-        } else if (this.data.deliveryTime === "暂无可用时间") {
+                deliverNow: canDeliveryNow,
+                deliverTimes: deliveryTimes,
+                deliverTime: deliveryTimes[0]
+            })
+        } else {
+            const canDeliveryNow = canDeliverNow(timeslots)
+            const deliveryTimes = scheduleDeliverySlots(timeslots)
             this.setData({
-                deliveryReserveClock: true,
-                deliveryNowClock: true,
-                deliveryTimeType: ''
-            });
-            console.log('本店打烊了！现在不能点！');
-        }
-    },
-    generateDeliveryTimeOptions: function () {
-        const currentHourMinutes = getCurrentHourMinutes();
-        const businessHours = this.data.storeInfo.business_hours.split(" ");
-        let timeOptions = [];
-        const peakTimes = [{
-            start: this.data.storeInfo.takeout_stop_begin1,
-            end: this.data.storeInfo.takeout_stop_end1
-        },
-        {
-            start: this.data.storeInfo.takeout_stop_begin2,
-            end: this.data.storeInfo.takeout_stop_end2
-        }
-        ];
-
-        // 获取当前日期并判断是否为周末
-        const today = new Date();
-        const isWeekend = today.getDay() === 6 || today.getDay() === 0; // 6 = Saturday, 0 = Sunday
-
-        // 1.计算当前可用预约外卖时间
-        businessHours.forEach(period => {
-            let [periodStart, periodEnd] = period.split("-");
-            let startTime = currentHourMinutes > periodStart ? currentHourMinutes : periodStart;
-            let options = generateOptions(startTime, periodEnd);
-            if (!isWeekend) { // 如果不是周末，则过滤掉高峰时段
-                options = options.filter(time =>
-                    !peakTimes.some(peakTime => isWithinPeriod(peakTime.start, peakTime.end, time))
-                );
-            }
-            timeOptions.push(...options);
-        });
-        if (timeOptions.length > 0) {
-            const now = new Date(`1970/01/01 ${currentHourMinutes}`);
-            const nearestTimeOption = new Date(`1970/01/01 ${timeOptions[0]}`);
-            const diffInMinutes = (nearestTimeOption - now) / (1000 * 60);
-            if (diffInMinutes < 25) {
-                timeOptions.shift(); // 移除第一个元素
-            }
-        }
-        timeOptions = [...new Set(timeOptions)]; // 去重
-        this.setData({
-            deliveryTimeOptions: timeOptions,
-            deliveryTime: timeOptions[0] || "暂无可用时间",
-        });
-
-        // 2.判断当前能否立即配送
-        const isOutOfBusinessHours = !businessHours.some(period => {
-            let [periodStart, periodEnd] = period.split("-");
-            return isWithinPeriod(periodStart, periodEnd, currentHourMinutes);
-        });
-        const isInPeakTime = peakTimes.some(peakTime => isWithinPeriod(peakTime.start, peakTime.end, currentHourMinutes));
-
-        if (isInPeakTime || isOutOfBusinessHours) {
-            this.setData({
-                deliveryNowClock: true,
-                deliveryTimeType: '预约'
-            });
-            console.log('现在不能送！');
-        } else if (this.data.deliveryTime === "暂无可用时间") {
-            this.setData({
-                deliveryReserveClock: true,
-                deliveryNowClock: true,
-                deliveryTimeType: ''
-            });
-            console.log('本店打烊了！今天不能送！');
+                deliverNow: canDeliveryNow,
+                deliverTimes: deliveryTimes,
+                deliverTime: deliveryTimes[0]
+            })
         }
     },
 
-    // 2.计算价格
+    // 2.计算价格和积点优惠
     getTotalPrice() {
-        let arr = wx.getStorageSync('cart') || [];
-        let totalP = 0
-        let totalN = 0
-        let couponsPrice = this.data.curentCouponsPrice
+        const arr = wx.getStorageSync('cart') || [];
+        const pointDis = this.data.pointsDiscount;
+        const pointRem = this.data.userInfo.points - pointDis;
+
+        // 计算价格
+        let totalP = 0;
+        let totalN = 0;
         for (var i in arr) {
             totalP += arr[i].quantity * arr[i].price;
             totalN += arr[i].quantity
         }
-        totalP -= couponsPrice;
-        totalP -= this.data.pointsNum;
-        let points = this.data.userInfo.points - this.data.pointsNum;
-        points = +points.toFixed(1);
+        totalP -= pointDis;
+
+        // 更新信息
         this.setData({
-            cartList: arr,
             totalPrice: totalP,
             totalNum: totalN,
-            points: points
+            pointsRemain: pointRem
         })
     },
 
     // 3.处理点击事件
     selectDeliveryType(e) {
-        if (this.data.serviceType == '到店') {
-            this.generateTakeTimeOptions();
-        } else {
-            this.generateDeliveryTimeOptions();
-        }
         this.setData({
-            deliveryTimeType: e.currentTarget.dataset.type
+            deliverType: e.currentTarget.dataset.type
         })
+        this.getTimesOption()
     },
     onDeliveryTimeChange: function (e) {
-        if (this.data.serviceType == '到店') {
-            this.generateTakeTimeOptions();
-        } else {
-            this.generateDeliveryTimeOptions();
-        }
+        this.getTimesOption()
         this.setData({
-            deliveryTime: this.data.deliveryTimeOptions[e.detail.value]
+            deliverTime: this.data.deliverTimes[e.detail.value]
         });
     },
     onNoteClick() {
         const that = this;
         wx.showModal({
             title: '订单备注',
-            content: '', // 弹窗内容
             editable: true,
-            placeholderText: '请输入备注', // 输入框提示文字
+            placeholderText: '请输入备注',
             success(res) {
                 if (res.confirm && res.content) {
                     that.setData({
@@ -228,23 +124,20 @@ Page({
             }
         });
     },
-    onCouponsClick() {
-
-    },
     onPointClick() {
         wx.showModal({
             title: '提示',
-            content: '使用积点后当餐免单，确定使用吗？',
+            content: '确定使用积点支付本单吗？',
             complete: (res) => {
                 if (res.cancel) {
                     this.setData({
-                        pointsNum: 0
+                        pointsDiscount: 0
                     })
                     this.getTotalPrice()
                 }
                 if (res.confirm) {
                     this.setData({
-                        pointsNum: this.data.totalPrice
+                        pointsDiscount: this.data.totalPrice
                     })
                     this.getTotalPrice()
                 }
@@ -252,48 +145,42 @@ Page({
         })
     },
     selectPaymentMethod: function (e) {
-        // 更新支付方式
         this.setData({
             paymentMethod: e.currentTarget.dataset.method,
         });
     },
     onPayButtonClick() {
-        if (this.data.deliveryTime == "暂无可用时间") {
+        // 处理deliveryTime
+        const delivery_time = this.data.deliverTime
+        const delivery_type = this.data.deliverType
+        if (delivery_type == '预约' && delivery_time == '暂无可用时间' ||
+            delivery_type == '立即' && !this.data.deliverNow) {
             wx.showModal({
                 title: '提示',
                 content: '非常抱歉，本店打烊啦！明天再来吧',
                 showCancel: false, // 隐藏取消按钮
                 confirmText: '确定',
             });
-            return; // 退出支付逻辑
+            return;
         }
+        // this.data.deliveryTime是用户展示的字符串，需要修改为Date()类型
+        const deliveryDate = getDeliveryDate(delivery_type, delivery_time)
 
-        // 订单准备
-        let deliveryTime = null
-        if (this.data.delivery_type == '立即') {
-            deliveryTime = new Date()
-        } else {
-            deliveryTime = convertToDateTime(this.data.deliveryTime)
-        }
-
-        // 创建订单
-        if (this.data.pointsNum == 0) {
-            this.createPayment(deliveryTime)
-        } else {
-            this.createPointsPay(deliveryTime)
-        }
-
+        // 提交订单
+        if (this.data.pointsDiscount == 0)
+            this.createPayment(deliveryDate)
+        else
+            this.createPointsPay(deliveryDate)
     },
 
     // 微信支付
     // 步骤1：创建订单并获取支付码
     createPayment(deliveryTime) {
-        // 显示加载提示
         wx.showLoading({
             title: '加载中...',
             mask: true
         });
-        // 订单数据
+        // 准备订单数据
         let orderData = {
             user_id: app.globalData.userInfo.user_id,
             openid: app.globalData.userInfo.openid,
@@ -302,7 +189,7 @@ Page({
             pickup_number: 0,
             order_status: '待支付',
             order_time: new Date(),
-            delivery_type: this.data.deliveryTimeType,
+            delivery_type: this.data.deliverType,
             delivery_time: deliveryTime,
             total_price: this.data.totalPrice,
             payment_method: this.data.paymentMethod,
@@ -412,14 +299,14 @@ Page({
         });
     },
     addPoints() {
-        let point = this.data.totalPrice >= 8 ? 0.5 : 0.1;
-        if (this.data.totalPrice >= 10) point = 1;
+        let addPoint = this.data.totalPrice >= 8 ? 0.5 : 0.1;
+        if (this.data.totalPrice >= 10) addPoint = 1;
 
         wx.request({
             url: baseUrl + 'users/addPoints/' + this.data.userInfo.user_id,
             method: 'PUT',
             data: {
-                pointsToAdd: point
+                pointsToAdd: addPoint
             },
             success: (res) => {
                 console.log('积点增加ing', res);
@@ -448,10 +335,8 @@ Page({
 
 
     // 积点支付
-    // TODO: 使用模块化API
     // 步骤1：创建订单并获取支付码
     createPointsPay(deliveryTime) {
-        // 显示加载提示
         wx.showLoading({
             title: '加载中...',
             mask: true
@@ -465,7 +350,7 @@ Page({
             pickup_number: 0,
             order_status: '待支付',
             order_time: new Date(),
-            delivery_type: this.data.deliveryTimeType,
+            delivery_type: this.data.deliverType,
             delivery_time: deliveryTime,
             total_price: this.data.totalPrice,
             payment_method: this.data.paymentMethod,
@@ -489,7 +374,7 @@ Page({
             data: {
                 orderData: orderData,
                 orderDetails: orderDetails,
-                pointsToDeduct: this.data.pointsNum,
+                pointsToDeduct: this.data.pointsDiscount,
             },
             success: (res) => {
                 console.log('创建订单中', res)
@@ -518,7 +403,6 @@ Page({
                 reject('订单创建失败');
             },
             complete: () => {
-                // 无论请求成功或失败，都关闭加载提示
                 wx.hideLoading();
             }
         });

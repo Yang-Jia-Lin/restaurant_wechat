@@ -35,7 +35,7 @@ function parseTime(time) {
 }
 function getNow() {
 	const now = new Date();
-	//now.setHours(13, 40, 0, 0);
+	now.setHours(13, 40, 0, 0);
 	return now;
 }
 
@@ -53,9 +53,10 @@ function canTakeNow(timeSlots) {
 // 预约取餐时间数组 [now, ∞)
 function scheduleTakeSlots(timeSlots) {
 	const now = getNow();
-	return timeSlots
+	const filteredSlots = timeSlots
 		.filter(slot => parseTime(slot.time_slot) > now)
-		.map(slot => slot.time_slot.slice(0, 5));  // 提取时间字符串并格式化为 "hh:mm"
+		.map(slot => slot.time_slot.slice(0, 5));
+	return filteredSlots.length === 0 ? ['暂无可用时间'] : filteredSlots;
 }
 
 // 立即送餐 [now+20, now+40] && aviliable
@@ -75,20 +76,38 @@ function canDeliverNow(timeSlots) {
 function scheduleDeliverySlots(timeSlots) {
 	const now = getNow();
 	now.setMinutes(now.getMinutes() + 30);
-	return timeSlots
+	const filteredSlots = timeSlots
 		.filter(slot => parseTime(slot.time_slot) >= now && slot.time_status === 'available')
-		.map(slot => slot.time_slot.slice(0, 5));  // 提取并返回时间字符串数组
+		.map(slot => slot.time_slot.slice(0, 5));
+	return filteredSlots.length === 0 ? ['暂无可用时间'] : filteredSlots;
 }
 
-// 更新各功能的时间判断
-function updateTimeFunctions(timeSlots) {
+// 测试时间判断
+function testTimeFunctions(timeSlots) {
 	console.log("是否可以立即取餐：", canTakeNow(timeSlots));
 	console.log("预约取餐时间：", scheduleTakeSlots(timeSlots));
 	console.log("是否可以立即送餐：", canDeliverNow(timeSlots));
 	console.log("预约送餐时间：", scheduleDeliverySlots(timeSlots));
 }
 
+// 转换字符串时间为Date
+function getDeliveryDate(type, time) {
+	if (type == '立即')
+		return new Date()
+	else {
+		const currentDate = new Date();
+		const [hours, minutes] = time.split(':').map(Number);
+		currentDate.setHours(hours, minutes, 0, 0);
+		return currentDate;
+	}
+}
+
 export {
 	solvingTime,
-	updateTimeFunctions
+	testTimeFunctions,
+	canTakeNow,
+	scheduleTakeSlots,
+	canDeliverNow,
+	scheduleDeliverySlots,
+	getDeliveryDate
 };

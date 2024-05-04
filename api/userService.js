@@ -13,8 +13,8 @@ function userLogin(code) {
 			success: (res) => {
 				if (res.data.success) {
 					let user = res.data.user;
-					user.points = toFloat(user.points, 1);
-					user.balance = toFloat(user.balance, 1);
+					user.points = toFloat(user.points, 2);
+					user.balance = toFloat(user.balance, 2);
 					resolve(user);
 				} else {
 					reject('获取用户失败');

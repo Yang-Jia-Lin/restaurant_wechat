@@ -20,37 +20,35 @@
         <view class="block_title2" wx:if="{{serviceType=='到店'}}">
             <view class="block_name">取餐时间</view>
             <view class="block_select">
-                <view wx:if="{{deliveryNowClock}}" class="cannot-select">立即取餐</view>
-                <view wx:else="" class="{{deliveryTimeType==='立即'?'select':'not-select'}}" bindtap="selectDeliveryType" data-type="立即">
+                <view wx:if="{{!deliverNow}}" class="cannot-select">立即取餐</view>
+                <view wx:else="" class="{{deliverType==='立即'?'select':'not-select'}}" bindtap="selectDeliveryType" data-type="立即">
                     <text>立即取餐</text>
                 </view>
-                <view wx:if="{{deliveryReserveClock}}" class="cannot-select">预约取餐</view>
-                <view wx:else="" class="{{deliveryTimeType==='预约'?'select':'not-select'}}" bindtap="selectDeliveryType" data-type="预约">
+                <view class="{{deliverType==='预约'?'select':'not-select'}}" bindtap="selectDeliveryType" data-type="预约">
                     <text>预约排单</text>
-                    <picker mode="selector" range="{{deliveryTimeOptions}}" bindchange="onDeliveryTimeChange">
-                        <view class="picker">{{deliveryTime}} ></view>
+                    <picker mode="selector" range="{{deliverTimes}}" bindchange="onDeliveryTimeChange">
+                        <view class="picker">{{deliverTime}} ></view>
                     </picker>
                 </view>
             </view>
-            <view class="block_content2" wx:if="{{deliveryTimeType==='立即'}}">下单后菜品将立即排队制作，请您注意叫号</view>
+            <view class="block_content2" wx:if="{{deliverType==='立即'}}">下单后菜品将立即排队制作，请您注意叫号</view>
             <view class="block_content2" wx:else="">预约单将在预定时间前5分钟开始排队煮面，不能插队，建议选择到店后立即取餐</view>
         </view>
         <view class="block_title2" wx:else="">
             <view class="block_name">送餐时间</view>
             <view class="block_select">
-                <view wx:if="{{deliveryNowClock}}" class="cannot-select">立即送餐</view>
-                <view wx:else="" class="{{deliveryTimeType==='立即'?'select':'not-select'}}" bindtap="selectDeliveryType" data-type="立即">
+                <view wx:if="{{!deliverNow}}" class="cannot-select">立即送餐</view>
+                <view wx:else="" class="{{deliverType==='立即'?'select':'not-select'}}" bindtap="selectDeliveryType" data-type="立即">
                     <text>立即送餐</text>
                 </view>
-                <view wx:if="{{deliveryReserveClock}}" class="cannot-select">预约送餐</view>
-                <view wx:else="" class="{{deliveryTimeType==='预约'?'select':'not-select'}}" bindtap="selectDeliveryType" data-type="预约">
+                <view class="{{deliverType==='预约'?'select':'not-select'}}" bindtap="selectDeliveryType" data-type="预约">
                     <text>预约送餐</text>
-                    <picker mode="selector" range="{{deliveryTimeOptions}}" bindchange="onDeliveryTimeChange">
-                        <view class="picker">{{deliveryTime}} ></view>
+                    <picker mode="selector" range="{{deliverTimes}}" bindchange="onDeliveryTimeChange">
+                        <view class="picker">{{deliverTime}} ></view>
                     </picker>
                 </view>
             </view>
-            <view class="block_content2" wx:if="{{deliveryTimeType==='立即'}}">下单后菜品将立即排队制作并送出，请您留意电话</view>
+            <view class="block_content2" wx:if="{{deliverType==='立即'}}">下单后菜品将立即排队制作并送出，请您留意电话</view>
             <view class="block_content2" wx:else="">预约单将在预定时间前20分钟开始排队制作送餐，饭点繁忙建议您提早预订</view>
         </view>
     </view>
@@ -92,14 +90,13 @@
     <!-- 1.优惠券 -->
     <view class="coupons_block">
         <text class="coupons_title">优惠券</text>
-        <text class="coupons_detail" wx:if="{{couponsNum>0}}">有{{couponsNum}}张优惠券可用</text>
-        <text class="coupons_detail_none" wx:else="">功能开发中，尽情期待！</text>
+        <text class="coupons_detail_none">功能开发中，尽情期待！</text>
     </view>
     <!-- 2.积点 -->
     <view class="coupons_block">
-        <text class="coupons_title">积点（{{points}}个）</text>
-        <text class="coupons_detail" wx:if="{{totalPrice<=userInfo.points&&pointsNum==0}}" bindtap="onPointClick">立即使用 ></text>
-        <text class="coupons_detail" wx:if="{{pointsNum!=0}}" bindtap="onPointClick">使用{{pointsNum}}个 ></text>
+        <text class="coupons_title">积点（{{pointsRemain}}个）</text>
+        <text class="coupons_detail" wx:if="{{totalPrice<=userInfo.points&&pointsDiscount==0}}" bindtap="onPointClick">立即使用 ></text>
+        <text class="coupons_detail" wx:if="{{pointsDiscount!=0}}" bindtap="onPointClick">使用{{pointsDiscount}}个 ></text>
         <text class="coupons_detail_none" wx:if="{{totalPrice>userInfo.points}}">积点不足，再去攒攒吧！</text>
     </view>
     <!-- 3.结算信息 -->
@@ -127,7 +124,11 @@
 
 
 <!-- 立即支付 -->
-<view class="footer_box">
+<view class="footer_box" wx:if="{{pointsDiscount==0}}">
     <button class="all_money" type="primary" size="{{primarySize}}" style="width:60vw" disabled="{{disabled}}" bindtap="onPayButtonClick">
         立即支付：{{totalPrice}}元</button>
+</view>
+<view class="footer_box" wx:else="">
+    <button class="all_money" type="primary" size="{{primarySize}}" style="width:60vw" disabled="{{disabled}}" bindtap="onPayButtonClick">
+        立即支付：{{pointsDiscount}}积点</button>
 </view>
