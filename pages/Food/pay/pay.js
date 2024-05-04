@@ -419,14 +419,14 @@ Page({
             success: (res) => {
                 console.log('创建订单中', res)
                 if (res.statusCode === 201 && res.data.success) {
-                    this.endPaymentPoint();
                     wx.setStorageSync('orderId', res.data.order.order_id)
                     let user = res.data.user;
-                    user.points = +parseFloat(res.data.user.points).toFixed(1);
-                    user.balance = +parseFloat(res.data.user.balance).toFixed(1);
+                    user.points = toFloat(user.points, 2)
+                    user.balance = toFloat(user.balance, 2)
                     app.globalData.userInfo = user
                     app.trigger('userInfoUpdated');
                     wx.setStorageSync('userInfo', user);
+                    this.endPaymentPoint();
                 } else {
                     wx.showToast({
                         title: '支付创建失败，请退出重试',
