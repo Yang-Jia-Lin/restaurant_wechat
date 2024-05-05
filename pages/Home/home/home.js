@@ -7,6 +7,7 @@ Page({
         topBanner: [],
         storeInfo: app.globalData.storeInfo,
         userInfo: app.globalData.userInfo,
+        dialogVisible: false
     },
     onShareAppMessage: function () {
         return {
@@ -15,22 +16,36 @@ Page({
         }
     },
     onShow() {
-        this.updateInfo()
+        this.updateUser()
     },
     onLoad() {
         this.getTopBanner();
-        app.on('storeInfoUpdated', this.updateInfo);
-        app.on('userInfoUpdated', this.updateInfo);
+        app.on('storeInfoUpdated', this.updateStore);
+        app.on('userInfoUpdated', this.updateUser);
     },
     onUnload() {
-        app.off('storeInfoUpdated', this.updateStoreInfo);
-        app.off('userInfoUpdated', this.updateInfo);
+        app.off('storeInfoUpdated', this.updateStore);
+        app.off('userInfoUpdated', this.updateUser);
     },
-    updateInfo() {
+    updateStore() {
         this.setData({
-            storeInfo: app.globalData.storeInfo,
-            userInfo: app.globalData.userInfo
+            storeInfo: app.globalData.storeInfo
         });
+    },
+    updateUser() {
+        const user = app.globalData.userInfo
+        this.setData({
+            userInfo: user
+        });
+        if (!user.phone_number) {
+            this.setData({
+                dialogVisible: true
+            })
+        } else {
+            this.setData({
+                dialogVisible: false
+            })
+        }
     },
 
     // 获取轮播图数据
@@ -67,5 +82,11 @@ Page({
         wx.navigateTo({
             url: '/pages/My/register/register',
         })
+    },
+
+    toggleDialog: function () {
+        this.setData({
+            dialogVisible: !this.data.dialogVisible
+        });
     }
 })

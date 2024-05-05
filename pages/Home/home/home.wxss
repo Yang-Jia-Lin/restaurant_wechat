@@ -3,6 +3,72 @@ page {
 	background: #fcf9f7;
 }
 
+
+/* 广告弹窗 */
+/* 页面和弹窗的基础样式 */
+.ad {
+	position: relative;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.dialog {
+	position: fixed;
+	z-index: 1000;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(0, 0, 0, 0.5);
+	/* 半透明背景 */
+}
+
+.dialog-content {
+	padding: 20px;
+	margin: 20rpx;
+	background-color: white;
+	border-radius: 10px;
+	text-align: center;
+}
+
+.important {
+	font-size: 19px;
+	font-weight: bold;
+	color: darkred;
+}
+
+.dialog-img {
+	width: 100px;
+	height: 100px;
+}
+
+.close-btn {
+	margin-top: 10px;
+	font-size: 20px;
+	color: black;
+	cursor: pointer;
+	background-color: white;
+	width: 40px;
+	height: 40px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50%;
+}
+
+
+
+
+
+
+
+
 /* 门店选择 */
 .store_root {
 	width: 80%;

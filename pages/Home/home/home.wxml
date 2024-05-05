@@ -1,4 +1,18 @@
-<!--pages/home/home.wxml-->
+<view class="ad" wx:if="{{!userInfo.phone}}">
+    <view class="dialog" hidden="{{!dialogVisible}}">
+        <view class="dialog-content">
+            <image src="/image/avatar.png" class="dialog-img"></image>
+            <view>你好新伙伴！来干饭吗？</view>
+            <view>哦！别急，不妨注册个会员薅羊毛~</view>
+            <view class="important">注册会员立享2个积点</view>
+            <view class="important">1积点相当于1元</view>
+            <view class="important">顿顿吃，顿顿省！</view>
+            <view>现在注册下单，3元 get√</view>
+            <view>快来看看吧~</view>
+        </view>
+        <view class="close-btn" bindtap="toggleDialog">×</view>
+    </view>
+</view>
 
 <!-- 1.轮播图 -->
 <swiper indicator-dots indicator-color="#8B8878" indicator-active-color="#CDC8B1" autoplay circular interval="6000" style="height: 450rpx;margin-bottom: 30rpx;">
