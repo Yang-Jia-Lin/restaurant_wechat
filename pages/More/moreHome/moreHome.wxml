@@ -1,0 +1,6 @@
+<view class="menu-list">
+    <view class="menu-item" wx:for="{{menuItems}}" wx:key="index" bindtap="onMenuItemTap" data-item="{{item}}" data-index="{{index}}">
+      <text>{{item}}</text>
+      <image class="arrow" src="/image/rightArrow.png"></image>
+    </view>
+</view>

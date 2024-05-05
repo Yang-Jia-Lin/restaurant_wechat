@@ -1,0 +1,17 @@
+Page {
+	background-color: white;
+}
+
+.root {
+	margin: 0 35rpx 35rpx 35rpx;
+}
+
+.textTitle {
+	font-weight: bold;
+	padding: 50rpx 0 10rpx 0;
+	text-align: center;
+}
+
+.text {
+	font-size: 14px;
+}

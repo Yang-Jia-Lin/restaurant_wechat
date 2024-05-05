@@ -14,14 +14,21 @@
 		"pages/My/points/points",
 		"pages/My/coupon/coupon",
 		"pages/My/contact/contact",
-		"pages/My/more/more",
+
 		"pages/Order/recentOrder/recentOrder",
 		"pages/Order/allOrder/allOrder",
 
 		"pages/Admin/adminHome/adminHome",
 		"pages/Admin/adminOrder/adminOrder",
 		"pages/Admin/adminAllOrder/adminAllOrder",
-		"pages/Admin/adminStore/adminStore"
+		"pages/Admin/adminStore/adminStore",
+
+		"pages/More/moreHome/moreHome",
+		"pages/More/more1/more1",
+		"pages/More/more2/more2",
+		"pages/More/more3/more3",
+		"pages/More/more4/more4",
+		"pages/More/more5/more5"
 	],
 
 	"window": {

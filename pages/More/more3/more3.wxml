@@ -1,0 +1,38 @@
+<view class="root">
+		<view class="textTitle">一、积点累计</view>
+	<text class="text">1.积点获取方式
+		2.积点记录
+	</text>
+	
+	<view class="textTitle">二、积点有效期</view>
+	<text class="text">1.积分的有效期限
+		2.如何通知用户积分即将过期。
+	</text>
+	
+	<view class="textTitle">三、积点使用条件</view>
+	<text class="text">1.最低积分使用限额（如：积分使用至少需要累积多少积分）。
+		2.特定商品或服务是否限制使用积分。
+		3.积分与现金的可兑换比例。
+	</text>
+
+	<view class="textTitle">四、积点兑换</view>
+	<text class="text">1.如何使用积分兑换餐品或其他服务。
+		2.是否可以将积分转赠给其他用户或兑换为礼品卡。
+		3.积分兑换过程中的任何限制或条件。
+	</text>
+
+	<view class="textTitle">五、变更和通知</view>
+	<text class="text">1.本积点政策如有更改，将通过本程序通知用户。
+		2.如何处理政策变更对已有积分的影响。
+	</text>
+
+	<view class="textTitle">六、争议处理</view>
+	<text class="text">1.如何处理积分计算错误。
+		2.用户对积分余额有异议的解决方式。
+	</text>
+
+	<view class="textTitle">七、其他事项</view>
+	<text class="text">1.积分是否可以在关联的其他商家使用。
+		2.积分使用时是否受到特定促销活动的影响。
+	</text>
+</view>

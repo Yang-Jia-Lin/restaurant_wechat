@@ -324,8 +324,8 @@ Page({
         wx.setStorageSync('cart', []);
 
         // 4.跳转订单详情
-        wx.redirectTo({
-            url: '../../Order/allOrder/allOrder'
+        wx.switchTab({
+            url: '/pages/Order/recentOrder/recentOrder',
         })
     },
     addSales() {
@@ -457,8 +457,8 @@ Page({
         wx.setStorageSync('cart', []);
 
         // 3.跳转订单详情
-        wx.redirectTo({
-            url: '../../Order/allOrder/allOrder'
+        wx.switchTab({
+            url: '/pages/Order/recentOrder/recentOrder',
         })
     },
 })

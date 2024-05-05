@@ -123,11 +123,6 @@ function getQueueNum(pickup_id) {
 // =========================门店=======================
 // 门店订单获取
 function getStoreOrder(storeId, status) {
-	// 显示加载提示
-	wx.showLoading({
-		title: '加载中',
-		mask: true
-	});
 	return new Promise((resolve, reject) => {
 		wx.request({
 			url: `${baseUrl}orders/admin/store/${storeId}/status/${status}`,
@@ -150,17 +145,10 @@ function getStoreOrder(storeId, status) {
 			fail: (error) => {
 				reject(error)
 			},
-			complete: () => {
-				wx.hideLoading()
-			}
 		});
 	})
 }
 function getStoreOrderNumber(storeId) {
-	wx.showLoading({
-		title: '加载中',
-		mask: true
-	});
 	return new Promise((resolve, reject) => {
 		wx.request({
 			url: baseUrl + 'orders/admin/store/' + storeId + '/statuses/',
@@ -183,9 +171,6 @@ function getStoreOrderNumber(storeId) {
 			fail: (error) => {
 				reject(error)
 			},
-			complete: () => {
-				wx.hideLoading()
-			}
 		});
 	})
 }

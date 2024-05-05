@@ -103,7 +103,7 @@ Page({
     },
     goToMore() {
         wx.navigateTo({
-            url: '/pages/My/more/more',
+            url: '/pages/More/moreHome/moreHome',
         })
     },
     goToAdmin() {

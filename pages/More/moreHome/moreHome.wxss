@@ -1,0 +1,30 @@
+.menu-list {
+	display: flex;
+	flex-direction: column;
+	margin: 30rpx;
+	background-color: #FFFFFF;
+	border-radius: 20rpx;
+}
+
+.menu-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 16px;
+	border-bottom: 1px solid #cac8c8;
+	margin: 0 30rpx;
+}
+
+.menu-item:last-child {
+	border-bottom: none;
+}
+
+.arrow {
+	width: 30rpx;
+	height: 30rpx;
+}
+
+.menu-item text {
+	font-size: 16px;
+	color: #000000;
+}

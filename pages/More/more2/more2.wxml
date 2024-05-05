@@ -1,0 +1,25 @@
+<view class="root">
+	<view class="textTitle">一、信息收集</view>
+	<text class="text">1.我们将在用户注册会员、使用会员服务或参与促销活动时收集个人信息，如姓名、联系电话等。
+		2.信息将用于提供服务、改进用户体验、内部统计分析及营销活动。
+	</text>
+	
+	<view class="textTitle">二、信息使用</view>
+	<text class="text">1.用户信息将严格用于完成服务提供及提升服务质量的目的。
+		2.未经用户同意，我们不会将用户信息用于其他商业用途。
+	</text>
+	
+	<view class="textTitle">三、信息安全</view>
+	<text class="text">1.我们采用行业标准的安全措施保护用户信息，防止信息泄露、不当使用或未经授权的访问。
+		2.仅授权的员工才可访问个人信息，且必须遵守公司的保密协议。
+	</text>
+
+	<view class="textTitle">四、用户权利</view>
+	<text class="text">1.用户可随时查看、更正自己的个人信息。
+		2.用户可要求删除或限制处理其个人信息。
+	</text>
+
+	<view class="textTitle">五、政策变更</view>
+	<text class="text">本隐私政策如有更改，将通过本程序通知用户。
+	</text>
+</view>
