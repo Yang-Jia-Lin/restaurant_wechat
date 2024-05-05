@@ -77,7 +77,7 @@ page {
 }
 
 .user_avatar {
-	border: 1px solid bisque;
+	border: 2px solid rgb(205, 205, 205);
 	width: 70px;
 	height: 70px;
 	border-radius: 50%;

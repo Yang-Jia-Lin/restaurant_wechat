@@ -1,19 +1,24 @@
 <view data-weui-theme="{{theme}}">
-	<button class="avatar-wrapper" open-type="chooseAvatar-delete" bindchooseavatar="onChooseAvatar">
+	<view class="avatar-wrapper">
 		<image class="avatar" src="{{avatarUrl}}" />
+	</view>
+	<button class="avatar-btn" open-type="chooseAvatar" bindtap="onAvatarChoose" bind:chooseavatar="getAvatar">
+		点我更换
 	</button>
 	<mp-form>
 		<mp-cells>
 			<mp-cell title="昵称">
-				<input type="nickname" class="weui-input" placeholder="请输入昵称（默认微信用户）" bindinput="onInput" />
+				<input type="nickname" class="weui-input" placeholder="请输入昵称（默认微信用户）" bindinput="onNameInput" />
 			</mp-cell>
-			<button class="btn_phone" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber"></button>
+			
 			<mp-cell title="联系方式">
-				<view class="weui-input">{{phone}}</view>
+				<view class="phone">
+					<button class="btn2" open-type="getPhoneNumber" bindtap="onPhoneClick" bindgetphonenumber="getPhoneNumber">{{phone}}</button>
+				</view>	
 			</mp-cell>
 		</mp-cells>
 	</mp-form>
 </view>
 
 
-<button class="btn" type="primary" bindtap="getRegister">立即注册</button>
+<button class="btn" type="primary" bindtap="onRegisterClick">立即注册</button>

@@ -6,7 +6,12 @@ page {
 	padding: 0;
 	width: 56px !important;
 	border-radius: 8px;
+	margin: 0 auto;
 	margin-top: 40px;
+}
+
+.avatar-btn {
+	margin: 0 auto;
 	margin-bottom: 40px;
 }
 
@@ -20,19 +25,18 @@ page {
 	display: flex;
 }
 
-.btn_phone{
-	height: 80rpx;
-	position: fixed;
-	top: 350rpx;
-	left: 180rpx;
-	z-index: 100;
-	background-color: transparent;
+.phone {
+	width: 75%;
 }
 
-.btn{
+.btn2 {
+	padding: 10rpx;
+}
+
+.btn {
 	position: fixed;
-  	left: 0;
-  	right: 0;
-  	bottom: 100rpx;
-  	margin: 0 auto;
+	left: 0;
+	right: 0;
+	bottom: 100rpx;
+	margin: 0 auto;
 }

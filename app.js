@@ -8,7 +8,7 @@ App({
 		baseUrl: "https://forestlamb.online/restaurant/",
 		// 等待获取的信息
 		userInfo: wx.getStorageSync('userInfo') || {
-			avatar_url: "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0",
+			avatar_url: "https://forestlamb.online/public/restaurant/icon/avatar.png",
 			balance: 0,
 			nickname: "临时用户",
 			points: 0,

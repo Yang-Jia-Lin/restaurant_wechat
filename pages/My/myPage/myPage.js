@@ -5,11 +5,11 @@ Page({
         statusBarHeight: app.globalData.toolBarHeight,
         userInfo: app.globalData.userInfo,
     },
+    onShow() {
+        this.updateInfo()
+    },
     onLoad() {
         app.on('userInfoUpdated', this.updateInfo);
-        this.setData({
-            userInfo: app.globalData.userInfo
-        })
     },
     onUnload() {
         app.off('userInfoUpdated', this.updateInfo);

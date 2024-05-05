@@ -3,6 +3,9 @@ const baseUrl = "https://forestlamb.online/restaurant/";
 
 // 登录
 function userLogin(code) {
+	wx.showLoading({
+		title: '登录中',
+	})
 	return new Promise((resolve, reject) => {
 		wx.request({
 			url: `${baseUrl}users/login`,
@@ -22,9 +25,78 @@ function userLogin(code) {
 			},
 			fail: () => {
 				reject('获取用户失败');
+			},
+			complete: () => {
+				wx.hideLoading()
 			}
 		});
 	});
+}
+
+// 解密手机号
+function encryptPhone(code, encryptedData, iv) {
+	wx.showLoading({
+		title: '加载中',
+	})
+	return new Promise((resolve, reject) => {
+		wx.request({
+			url: baseUrl + 'users/phone',
+			method: 'POST',
+			data: {
+				code: code,
+				encryptedData: encryptedData,
+				iv: iv
+			},
+			success: (res) => {
+				if (res.data.success) {
+					resolve(res.data.data.phoneNumber)
+				} else {
+					reject(res.data.message)
+				}
+			},
+			fail: (error) => {
+				reject(error)
+			},
+			complete: () => {
+				wx.hideLoading()
+			}
+		});
+	})
+}
+
+// 注册
+function userSignUp(user_id, phone, nickname, avatar) {
+	wx.showLoading({
+		title: '加载中',
+	})
+	return new Promise((resolve, reject) => {
+		wx.request({
+			url: baseUrl + 'users/' + user_id,
+			method: 'PUT',
+			data: {
+				phone_number: phone,
+				nickname: nickname,
+				avatar_url: avatar,
+				points: 2
+			},
+			success: (res) => {
+				if (res.statusCode === 200) {
+					let user = res.data.updatedUser;
+					user.points = toFloat(user.points, 2);
+					user.balance = toFloat(user.balance, 2);
+					resolve(user);
+				} else {
+					reject(res.errMsg)
+				}
+			},
+			fail: (err) => {
+				reject(err)
+			},
+			complete: () => {
+				wx.hideLoading()
+			}
+		});
+	})
 }
 
 // 获取可用外送地址
@@ -49,5 +121,7 @@ function getAddress() {
 
 export {
 	userLogin,
+	encryptPhone,
+	userSignUp,
 	getAddress
 };

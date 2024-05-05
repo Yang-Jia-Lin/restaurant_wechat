@@ -54,7 +54,7 @@
             <view class="balance_number">× {{userInfo.points}}</view>
         </view>
         <view class="balance_describe">
-            消费得积点，1个积点抵扣1元。快来下单一碗牛肉面，立即获得1个积点儿吧！
+            1个积点抵扣1元。快来下单一碗牛肉面，立即获得1个积点吧！
         </view>
     </view>
 </view>
