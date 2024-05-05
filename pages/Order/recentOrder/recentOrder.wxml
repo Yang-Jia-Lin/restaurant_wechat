@@ -36,10 +36,9 @@
     <view wx:if="{{recentOrder.order_status=='等待中'}}">
         <text>修改取餐时间</text>
         <picker mode="selector" range="{{deliverTimes}}" bindchange="onDeliveryTimeChange">
-            <view class="picker">{{deliverTime}} ></view>
+            <view class="picker">{{filters.formatDeliveryTime(recentOrder.delivery_time)}} ></view>
         </picker>
-        <view bindtap="confirmChange">确定修改</view>
-        <view bindtap="makeClick">
+        <view bindtap="onPreMakeClick">
             提前排号
         </view>
     </view>

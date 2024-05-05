@@ -58,9 +58,17 @@ Page({
         })
     },
     goToRedeem() {
-        wx.navigateTo({
-            url: '/pages/My/redeem/redeem',
+        wx.showModal({
+            title: '提示',
+            content: '抱歉，功能开发中，敬请期待！',
+            showCancel: false,
+            success: () => {
+                return
+            }
         })
+        // wx.navigateTo({
+        //     url: '/pages/My/redeem/redeem',
+        // })
     },
     goToPoints() {
         wx.navigateTo({
@@ -68,9 +76,17 @@ Page({
         })
     },
     goToCoupon() {
-        wx.navigateTo({
-            url: '/pages/My/coupon/coupon',
+        wx.showModal({
+            title: '提示',
+            content: '抱歉，功能开发中，敬请期待！',
+            showCancel: false,
+            success: () => {
+                return
+            }
         })
+        // wx.navigateTo({
+        //     url: '/pages/My/coupon/coupon',
+        // })
     },
 
 

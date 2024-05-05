@@ -1,8 +1,10 @@
-import { getUserAllOrder } from '../../../api/orderService'
+import {
+    getUserAllOrder,
+    beginMakeOrder,
+} from '../../../api/orderService'
 import { showError } from '../../../utils/tool';
-const app = getApp()
-const baseUrl = app.globalData.baseUrl;
 //'待支付', '等待中', '制作中', '配送中', '退款中', '已完成', '已取消', '已退款'
+const app = getApp()
 
 Page({
     data: {
@@ -89,14 +91,14 @@ Page({
     },
 
     // 点击事件
-    cancleOrder() {
+    onCancleOrder() {
         wx.showModal({
             title: '确认取消订单',
             content: '确定要取消订单并退款吗？',
             success: (res) => {
                 if (res.confirm) {
                     wx.showToast({
-                        title: '十分抱歉，功能更新中，退款失败，请去收银台联系店员进行取消',
+                        title: '十分抱歉，功能更新中',
                         icon: 'none',
                         duration: 4000
                     });
@@ -104,7 +106,8 @@ Page({
             }
         });
     },
-    makeClick(e) {
+    onPreMakeClick(e) {
+        console.log(e)
         wx.showModal({
             title: '提示',
             content: '提前排号后将立即开始制作，请确认您能否立即到店取餐',
@@ -119,30 +122,13 @@ Page({
         })
     },
     preMake(order_id) {
-        wx.request({
-            url: baseUrl + 'orders/' + order_id + '/begin-make',
-            method: 'PATCH',
-            success: (res) => {
-                console.log(res)
-                if (res.statusCode === 200) {
-                    console.log(res)
-                    wx.showToast({
-                        title: '排号成功',
-                    });
-                    this.getMyOrderList();
-                } else {
-                    wx.showToast({
-                        icon: 'none',
-                        title: '排号失败，请重试',
-                    });
-                }
-            },
-            fail: () => {
-                wx.showToast({
-                    icon: 'none',
-                    title: '排号失败，请重试',
-                });
-            }
+        beginMakeOrder(order_id).then(() => {
+            wx.showToast({
+                title: '排号成功',
+            });
+            this.getMyOrderList()
+        }).catch(error => {
+            showError('排号失败', error)
         })
     }
 

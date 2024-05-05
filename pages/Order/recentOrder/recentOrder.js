@@ -1,6 +1,7 @@
 import {
     getCurrentOrder,
     changeDeliverTime,
+    beginMakeOrder,
     getQueueNum
 } from '../../../api/orderService'
 import {
@@ -9,9 +10,6 @@ import {
     getDeliveryDate
 } from '../../../utils/timeProc'
 import { showError } from '../../../utils/tool';
-
-const app = getApp()
-const baseUrl = app.globalData.baseUrl;
 
 Page({
     data: {
@@ -43,12 +41,13 @@ Page({
         this.onShow();
     },
 
-    // 获取信息
+    // 获取订单信息
     getRecentOrder(order_id) {
         getCurrentOrder(order_id).then(order => {
             this.setData({
                 recentOrder: order,
-                haveOrder: true
+                haveOrder: true,
+                deliverTime: order.delivery_time.slice(0, 5)
             })
             if (order.order_status == '等待中')
                 this.getTimesOption()
@@ -81,26 +80,38 @@ Page({
         })
     },
 
-    // 点击事件
-    onDeliveryTimeChange(e) {   // 点击picker选择
+    // 修改时间
+    onDeliveryTimeChange(e) {
         this.getTimesOption()
-        this.setData({
-            deliverTime: this.data.deliverTimes[e.detail.value]
-        });
+        const time = this.data.deliverTimes[e.detail.value]
+        wx.showModal({
+            title: '提示',
+            content: '确定' + time + '取餐吗？',
+            complete: (res) => {
+                if (res.cancel) {
+                    return;
+                }
+                if (res.confirm) {
+                    this.changeTime(time)
+                }
+            }
+        })
     },
-    confirmChange() {   // 点击确定修改
-        const newTime = getDeliveryDate('', this.data.deliverTime)
+    changeTime(time) {
+        const newTime = getDeliveryDate('', time)
         const orderId = this.data.recentOrder.order_id
-        changeDeliverTime(orderId, newTime).then(order => {
-            console.log("更新后的订单：", order);
-            this.setData({
-                recentOrder: order
-            })
+        changeDeliverTime(orderId, newTime).then(() => {
+            this.onShow()
+            wx.showToast({
+                title: '修改成功',
+            });
         }).catch(error => {
             showError("更新订单失败", error);
         });
     },
-    makeClick() {
+
+    // 提前排单
+    onPreMakeClick() {
         wx.showModal({
             title: '提示',
             content: '提前排号后将立即开始制作，请确认您能否立即到店取餐',
@@ -115,30 +126,13 @@ Page({
         })
     },
     preMake(order_id) {
-        wx.request({
-            url: baseUrl + 'orders/' + order_id + '/begin-make',
-            method: 'PATCH',
-            success: (res) => {
-                console.log(res)
-                if (res.statusCode === 200) {
-                    console.log(res)
-                    wx.showToast({
-                        title: '排号成功',
-                    });
-                    this.onShow();
-                } else {
-                    wx.showToast({
-                        icon: 'none',
-                        title: '排号失败，请重试',
-                    });
-                }
-            },
-            fail: () => {
-                wx.showToast({
-                    icon: 'none',
-                    title: '排号失败，请重试',
-                });
-            }
+        beginMakeOrder(order_id).then(() => {
+            wx.showToast({
+                title: '排号成功',
+            });
+            this.onShow()
+        }).catch(error => {
+            showError('排号失败', error)
         })
     }
 })

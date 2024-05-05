@@ -78,7 +78,6 @@ function changeDeliverTime(orderId, deliverTime) {
 				deliverTime
 			},
 			success: (res) => {
-				console.log(res)
 				if (res.data.success) {
 					resolve(res.data.order)
 				} else {
@@ -104,7 +103,6 @@ function getQueueNum(pickup_id) {
 			url: baseUrl + 'orders/user/queueNum/' + pickup_id,
 			method: 'GET',
 			success: (res) => {
-				console.log(res)
 				if (res.data.success) {
 					resolve(res.data.number)
 				} else {
@@ -267,6 +265,7 @@ function beginMakeOrder(orderId) {
 			url: baseUrl + 'orders/' + orderId + '/begin-make',
 			method: 'PATCH',
 			success: (res) => {
+				console.log('premake', res)
 				if (res.statusCode === 200) {
 					resolve()
 				} else {
