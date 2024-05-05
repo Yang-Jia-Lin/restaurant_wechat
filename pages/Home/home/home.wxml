@@ -28,16 +28,19 @@
 </view>
 
 <!-- 4.如果用户没有注册，显示注册按钮  -->
-<view wx:if="{{userInfo.openid && !userInfo.phone_number}}" class="container">
-    <view class="profile">
+<view wx:if="{{!userInfo.phone_number}}" class="container">
+    <view class="profile">  
         <image class="avatar" src="{{userInfo.avatar_url}}" />
-        <text class="username">您好！欢迎光临唐合丰拌面馆~</text>
+        <text class="username">欢迎光临唐合丰拌面馆！</text>
     </view>
+    <view class="btn" bindtap="goToRegister">免费注册会员</view>
     <view class="profile2">
-        <text class="greeting">小主，快来注册唐合丰会员卡\n 注册即送积点儿，一个积分抵1元哦！</text>
-        <view class="btn" bindtap="goToRegister">免费注册</view>
+        <text>快来领取会员卡，即刻奉上2个积点！
+        积点可以免费吃面哦！
+        还有更多惊喜优惠等着你~</text>
     </view>
 </view>
+
 
 <!-- 5.如果用户注册，显示用户账户信息 -->
 <view wx:elif="{{userInfo.openid}}" class="container">

@@ -4,10 +4,13 @@
 </view>
 
 <!-- 个人信息部分 -->
-<view wx:if="{{!userInfo.phone_number}}" class="profile2" style="margin-top:{{statusBarHeight}}px;">
-    <text class="greeting">小主，快来领取会员卡~ 消费得积点，免费吃面哦！</text>
-    <view class="btn" bindtap="goToRegister">免费注册</view>
+<view wx:if="{{!userInfo.phone_number}}" style="margin-top:{{statusBarHeight}}px;">
+    <view class="profile2">
+        <text class="greeting">小主，快来领取唐合丰会员卡~ \n消费得积点，可以免费吃面哦！\n更多惊喜优惠等着你~</text>
+        <view class="btn" bindtap="goToRegister">免费注册</view>
+    </view>
 </view>
+
 <view wx:else="" class="user_info_root">
     <view class="user_info">
         <image class="user_avatar" src="{{userInfo.avatar_url}}" />
@@ -37,7 +40,7 @@
 
 <!-- 会员中心 -->
 <view class="block_title">会员中心</view>
-<view class="order_root">
+<view class="order_root" wx:if="{{userInfo.phone_number}}">
     <view class="block" bindtap="goToTopUp">
         <image class="block_img" src="/image/balance.png" />
         <view class="block_name">充值</view>
@@ -54,6 +57,10 @@
         <image class="block_img" src="/image/card.png" />
         <view class="block_name">优惠券</view>
     </view>
+</view>
+
+<view class="order_root" wx:else="">
+    <view class="btn2" bindtap="goToRegister">注册会员后立享优惠</view>
 </view>
 
 
