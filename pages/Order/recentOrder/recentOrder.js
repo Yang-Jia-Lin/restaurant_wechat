@@ -7,7 +7,8 @@ import {
 import {
     scheduleTakeSlots,
     scheduleDeliverySlots,
-    getDeliveryDate
+    getDeliveryDate,
+    areSameDay
 } from '../../../utils/timeProc'
 import { showError } from '../../../utils/tool';
 
@@ -15,20 +16,14 @@ Page({
     data: {
         recentOrder: {},
         haveOrder: false,
-        deliverTimes: [],
-        deliverTime: '',
-        queueOrdersNum: 0
+        queueOrdersNum: 0,  // 前方人数（制作中）
+        deliverTimes: [],   // 修改时间（等待中）
     },
     onShow() {
-        let order_id = wx.getStorageSync('orderId') || ''
-        if (order_id !== '') {
-            this.getRecentOrder(order_id);
-        }
+        this.getRecentOrder();
     },
     onPullDownRefresh() {
-        //导航条加载动画
         wx.showNavigationBarLoading()
-        //loading 提示框
         wx.showLoading({
             title: '加载中...',
             mask: true
@@ -38,36 +33,49 @@ Page({
             wx.hideNavigationBarLoading();
             wx.stopPullDownRefresh();
         }, 1000)
-        this.onShow();
+        this.getRecentOrder();
     },
 
-    // 获取订单信息
-    getRecentOrder(order_id) {
-        getCurrentOrder(order_id).then(order => {
-            this.setData({
-                recentOrder: order,
-                haveOrder: true,
-                deliverTime: order.delivery_time.slice(0, 5)
+    // 获取订单
+    getRecentOrder() {
+        const order_id = wx.getStorageSync('orderId') || ''
+        if (order_id !== '')
+            getCurrentOrder(order_id).then(order => {
+                console.log('最近订单', order)
+                if (order.order_status == '等待中')
+                    this.getTimesOption()
+                else if (order.order_status == '制作中')
+                    this.getQueueNum()
+
+                if (order.order_status == '已完成' && !areSameDay(order.order_time)) {// 昨天的订单不算
+                    this.clearRecentOrder()
+                } else {
+                    this.setData({
+                        recentOrder: order,
+                        haveOrder: true,
+                    })
+                }
+            }).catch(err => {
+                showError("获取订单失败", err)
             })
-            if (order.order_status == '等待中')
-                this.getTimesOption()
-            else if (order.order_status == '制作中')
-                this.getQueueNum()
-        }).catch(err => {
-            wx.setStorageSync('orderId', '');
-            this.setData({
-                haveOrder: false
-            })
-            showError("加载出现问题", err)
+        else
+            this.clearRecentOrder()
+    },
+    clearRecentOrder() {
+        wx.setStorageSync('orderId', '');
+        this.setData({
+            recentOrder: {},
+            haveOrder: false
         })
     },
+
+    // 准备数据
     getTimesOption() {
-        const timeslots = wx.getStorageSync('storeTime'); // 门店所有营业时间
+        const timeslots = wx.getStorageSync('storeTime');
         const deliveryTimes = this.data.recentOrder.order_type == '到店' ?
             scheduleTakeSlots(timeslots) : scheduleDeliverySlots(timeslots)
         this.setData({
-            deliverTimes: deliveryTimes,
-            deliverTime: deliveryTimes[0]
+            deliverTimes: deliveryTimes
         })
     },
     getQueueNum() {
@@ -86,7 +94,7 @@ Page({
         const time = this.data.deliverTimes[e.detail.value]
         wx.showModal({
             title: '提示',
-            content: '确定' + time + '取餐吗？',
+            content: '确定修改为' + time + '吗？',
             complete: (res) => {
                 if (res.cancel) {
                     return;

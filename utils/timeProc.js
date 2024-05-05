@@ -35,7 +35,7 @@ function parseTime(time) {
 }
 function getNow() {
 	const now = new Date();
-	//now.setHours(13, 40, 0, 0);
+	now.setHours(13, 40, 0, 0);
 	return now;
 }
 
@@ -102,6 +102,16 @@ function getDeliveryDate(type, time) {
 	}
 }
 
+// 比较是否是今天
+function areSameDay(date) {
+	const today = new Date()
+	const orderDay = new Date(date)
+	const sameYear = orderDay.getFullYear() === today.getFullYear();
+	const sameMonth = orderDay.getMonth() === today.getMonth();
+	const sameDay = orderDay.getDate() === today.getDate();
+	return sameYear && sameMonth && sameDay;
+}
+
 export {
 	solvingTime,
 	testTimeFunctions,
@@ -109,5 +119,6 @@ export {
 	scheduleTakeSlots,
 	canDeliverNow,
 	scheduleDeliverySlots,
-	getDeliveryDate
+	getDeliveryDate,
+	areSameDay
 };

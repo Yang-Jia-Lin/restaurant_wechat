@@ -60,15 +60,14 @@
 <view wx:elif="{{userInfo.openid}}" class="container">
     <view class="profile">
         <image class="avatar" src="{{userInfo.avatar_url}}" />
-        <text class="username">您好！欢迎光临唐合丰拌面馆~</text>
+        <text class="username">{{userInfo.nickname=='微信用户'?'':userInfo.nickname}}您好！欢迎光临唐合丰拌面馆~</text>
     </view>
     <view class="profile3">
         <view class="balance_root">
             <view class="balance_name">我的积点</view>
             <view class="balance_number">× {{userInfo.points}}</view>
         </view>
-        <view class="balance_describe">
-            1个积点抵扣1元。快来下单一碗牛肉面，立即获得1个积点吧！
-        </view>
+        <view class="balance_describe">快来下单一碗牛肉面~</view>
+        <view class="balance_describe">再获得1积(yuan)点(qian)吧！</view>
     </view>
 </view>

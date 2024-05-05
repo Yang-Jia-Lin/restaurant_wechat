@@ -79,6 +79,8 @@ Page({
         var cartList = wx.getStorageSync('cart') || [];
         var totalP = 0;
         var totalN = 0
+
+        cartList = cartList.filter(item => item.quantity > 0);
         for (var i in cartList) { // 循环列表得到每个数据
             totalP += cartList[i].quantity * cartList[i].price;
             totalN += cartList[i].quantity
@@ -89,6 +91,7 @@ Page({
             totalPrice: totalP.toFixed(2)
         });
         console.log('当前购物车', cartList)
+        wx.setStorageSync('cart', cartList);
     },
     getFoodList() {
         getFoodList(1, this.data.serviceType, '上架').then(({ dishes, existingDishIds }) => {

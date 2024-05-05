@@ -184,7 +184,7 @@ page {
 }
 
 .balance_name {
-	padding: 10rpx 90rpx 10rpx 20rpx;
+	padding: 10rpx 90rpx 10rpx 50rpx;
 }
 
 .balance_number {
@@ -195,6 +195,7 @@ page {
 .balance_describe {
 	color: rgb(167, 167, 167);
 	padding: 0 5rpx 0 20rpx;
+	text-align: center;
 }
 
 .btn {
