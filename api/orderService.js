@@ -14,19 +14,8 @@ function getUserAllOrder(userId) {
 			method: 'GET',
 			success: (res) => {
 				if (res.statusCode === 200) {
-					const groupedOrders = res.data.reduce((acc, order) => {
-						if (!acc[order.order_status]) {
-							acc[order.order_status] = [];
-						}
-						acc[order.order_status].push(order);
-						return acc;
-					}, {});
-
-					const result = {
-						allOrders: res.data,
-						groupOrders: groupedOrders
-					}
-					resolve(result)
+					console.log('全部订单:', res.data);
+					resolve(res.data)
 				} else {
 					reject('获取订单失败')
 				}

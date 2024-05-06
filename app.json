@@ -17,6 +17,7 @@
 
 		"pages/Order/recentOrder/recentOrder",
 		"pages/Order/allOrder/allOrder",
+		"pages/Order/detailOrder/detailOrder",
 
 		"pages/Admin/adminHome/adminHome",
 		"pages/Admin/adminOrder/adminOrder",

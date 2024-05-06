@@ -92,6 +92,7 @@ Page({
             totalP += arr[i].quantity * arr[i].price;
             totalN += arr[i].quantity
         }
+        totalP = toFloat(totalP, 2)
         totalP -= pointDis;
 
         // 更新信息

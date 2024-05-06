@@ -1,51 +1,7 @@
-/* 顶部菜单切换 */
 page {
-	background-color: #eee6d7;
+	background-color: f3ede3;
 }
 
-/* 导航条 */
-.navbar {
-	display: flex;
-	background: #fff;
-	margin-bottom: 25rpx;
-}
-
-.none_tab {
-	position: relative;
-	top: 20rpx;
-	color: #999;
-	font-size: 40rpx;
-}
-
-.navbar .item {
-	position: relative;
-	flex: auto;
-	font-size: 30rpx;
-	width: 100rpx;
-	text-align: center;
-	line-height: 80rpx;
-	color: #333;
-	border-bottom: 6rpx solid #ddd;
-}
-
-.navbar .item.active {
-	color: #333;
-	border-bottom: 8rpx solid #ad8500b0;
-}
-
-.navbar .item.active:after {
-	content: "";
-	display: block;
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	height: 4rpx;
-}
-
-
-/* 订单详情 */
-/* 订单块整体 */
 .order_list_root {
 	background-color: white;
 	margin: 20rpx 30rpx 25rpx 30rpx;
@@ -53,6 +9,7 @@ page {
 	border-radius: 25rpx;
 }
 
+/* 标题栏 */
 .title_root {
 	margin: 30rpx 35rpx 20rpx 35rpx;
 	border-bottom: 13rpx solid #dadada;
@@ -80,58 +37,29 @@ page {
 	padding: 0 10rpx;
 }
 
-/* 中间内容区域 */
+/* 菜品详情 */
 .dishes_root {
 	margin: 0 50rpx 10rpx 50rpx;
 	display: flex;
 	flex-direction: column;
 }
 
-.dish_title_root {
+.dish_title {
+	color: rgb(0, 0, 0);
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 }
 
-.dish_name {
-	font-size: 21px;
-	font-weight: 550;
+.dish_detail {
 	display: flex;
 	flex-direction: row;
-	align-items: center;
+	justify-content: space-between;
+	color: grey;
 }
 
-.dish_type {
-	color: rgb(185, 48, 48);
-	font-weight: 550;
-	font-size: 20px;
-}
 
-.dish_quantity {
-	font-size: 18px;
-}
-
-.big {
-	font-size: 22px;
-	color: red;
-	font-weight: bold;
-}
-
-.dish_detail_root {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: start;
-	margin-bottom: 17rpx;
-}
-
-.detail {
-	margin: 0 10rpx 0 0;
-	font-size: 18px;
-	color: rgb(102, 51, 0);
-}
-
-/* 价格区域 */
+/* 底部 */
 .price-root {
 	margin: 0 55rpx;
 	text-align: end;
@@ -140,54 +68,59 @@ page {
 	font-weight: bold;
 }
 
-/* 点击操作 */
-.button_root {
-	margin: 10rpx 70rpx;
-	padding: 20rpx 0;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-around;
-	align-items: center;
-}
-
-.button {
-	background-color: rgb(253, 243, 225);
-	border: 1px solid rgb(189, 143, 58);
-	box-shadow: 0 0 5rpx rgb(189, 143, 58);
-	font-size: 18px;
-	font-weight: bold;
-	text-align: center;
-	line-height: 80rpx;
-	width: 40%;
-	height: 80rpx;
-}
-
-
-/* 备注 */
-.order_note {
-	padding: 10rpx 50rpx;
-	font-size: 30rpx;
-	font-weight: bold;
-	color: rgb(146, 61, 0);
-}
-
-/* 底部 */
-.order-id {
-	margin: 0 10rpx;
-	padding: 10rpx 0 0 0;
-	font-size: 13px;
-	color: rgb(128, 128, 128);
-}
-
 .order_time {
 	margin: 10rpx 45rpx;
 	padding: 10rpx 0 0 0;
 	text-align: center;
-	font-size: 30rpx;
+	font-size: 13px;
 	border-top: 1px solid rgb(133, 80, 11);
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
 }
 
+.go-detail {
+	color: darkgray;
+	font-size: 14px;
+}
+
+.order_note {
+	padding: 10rpx 50rpx;
+	font-size: 30rpx;
+	font-weight: bold;
+	color: rgb(91, 91, 91);
+}
+
+/* 没有订单 */
 .no-order {
-	margin-top: 16rpx;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin: auto 0;
+}
+
+.img-logo {
+	width: 90px;
+	height: 90px;
+	margin: 0 auto;
+	margin-top: 200rpx;
+	margin-bottom: 10rpx;
+}
+
+.hint {
+	color: rgb(138, 138, 138);
 	text-align: center;
+	margin-bottom: 40rpx;
+}
+
+.order-btn {
+	background-color: rgb(197, 172, 116);
+	box-shadow: 0 0 10rpx rgba(117, 96, 82, 0.15);
+	color: white;
+	font-size: 19px;
+	text-align: center;
+	width: 35%;
+	border-radius: 10rpx;
+	margin: 40rpx auto;
+	padding: 20rpx;
 }

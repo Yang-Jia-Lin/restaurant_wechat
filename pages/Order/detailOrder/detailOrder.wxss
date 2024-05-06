@@ -1,0 +1,174 @@
+page {
+	background: #f8f8f8;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+}
+
+/* 订单进度 */
+.block-shadow {
+	background-color: white;
+	border-radius: 20rpx;
+	box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.15);
+	margin: 30rpx 40rpx;
+	padding: 30rpx 20rpx;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+
+/* 取餐号 */
+.pick-number {
+	font-size: 19px;
+	font-weight: bold;
+	text-align: center;
+	height: 90px;
+	width: 90px;
+	margin: 0 auto;
+	border-radius: 50%;
+	background-color: rgb(167, 146, 99);
+	box-shadow: 0 0 10rpx rgba(117, 96, 82, 0.15);
+	color: white;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+/* 预约时间信息 */
+.reserve-root {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+
+.reserve-time {
+	background-color: #ededed;
+	color: rgb(94, 94, 94);
+	text-align: center;
+	width: 50%;
+	margin: 30rpx 10rpx 0 0;
+	padding: 10rpx;
+}
+
+.reserve-change {
+	color: rgb(116, 116, 116);
+	margin-top: 30rpx;
+	padding: 10rpx;
+	border-radius: 10rpx;
+}
+
+/* 订单状态可视化 */
+.status-root {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	margin: 30rpx 0;
+	font-size: 14px;
+}
+
+.statu-root {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.status-img {
+	width: 30px;
+	height: 30px;
+	margin: 0 auto;
+}
+
+.line {
+	width: 30px;
+	height: 30px;
+}
+
+.status-text {
+	color: rgb(183, 183, 183);
+}
+
+.status-text-ok {
+	color: #615442;
+}
+
+/* 提前开始 */
+.pre-make {
+	width: 35%;
+	text-align: center;
+	color: rgb(79, 62, 45);
+	background-color: #e8e1c5;
+	border-radius: 15rpx;
+	border: #615442 1px solid;
+	padding: 10rpx;
+	margin: 0 auto;
+}
+
+/* 排队信息 */
+.queue-num {
+	margin: 0 auto;
+	padding-top: 10rpx;
+	font-size: 16px;
+	color: darkgray;
+}
+
+/* 订单详情 */
+.block-title {
+	margin: 10rpx 0 0 40rpx;
+	color: darkgray;
+}
+
+.block {
+	background-color: white;
+	border-radius: 20rpx;
+	margin: 0 40rpx 40rpx 40rpx;
+	padding: 30rpx 30rpx 10rpx 30rpx;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	font-size: small;
+	color: rgb(70, 70, 70);
+}
+
+.dish-root {
+	margin-bottom: 20rpx;
+	padding: 20rpx;
+	background-color: #f6f6f6;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dish_title {
+	font-size: larger;
+	color: rgb(48, 33, 0);
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.dish_detail {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	color: grey;
+}
+
+.block-other {
+	background-color: white;
+	border-radius: 20rpx;
+	margin: 0 40rpx 40rpx 40rpx;
+	padding: 30rpx 40rpx;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	font-size: small;
+	color: rgb(70, 70, 70);
+}
+
+.other-item {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}

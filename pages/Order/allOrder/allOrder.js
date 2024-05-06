@@ -3,33 +3,25 @@ import {
     beginMakeOrder,
 } from '../../../api/orderService'
 import { showError } from '../../../utils/tool';
-//'待支付', '等待中', '制作中', '配送中', '退款中', '已完成', '已取消', '已退款'
 const app = getApp()
 
 Page({
     data: {
         userInfo: app.globalData.userInfo || wx.getStorageSync('userInfo'),
-        navbar: ["全部订单", "进行中", "已完成"],
-        currentTab: 0,
-
-        list: [],
-        groupedOrders: [],
-        currentList: []
+        orderList: [],
     },
 
     onLoad() {
         this.getMyOrderList();
     },
-    onShareAppMessage: function () {
+    onShareAppMessage() {
         return {
             title: '唐合丰面馆，一家独特的重庆拌面馆，快来尝尝吧！',
             path: '/pages/Home/home/home'
         }
     },
-    onRefresh() {
-        //导航条加载动画
+    onPullDownRefresh() {
         wx.showNavigationBarLoading()
-        //loading 提示框
         wx.showLoading({
             title: '加载中...',
             mask: true
@@ -41,67 +33,32 @@ Page({
         }, 1000)
         this.getMyOrderList();
     },
-    onPullDownRefresh() {
-        this.onRefresh();
-    },
 
     // 获取订单
     getMyOrderList() {
-        getUserAllOrder(this.data.userInfo.user_id).then(({ allOrders, groupOrders }) => {
-            console.log('获取订单数据:', groupOrders);
+        getUserAllOrder(this.data.userInfo.user_id).then(allOrders => {
             this.setData({
-                list: allOrders,
-                groupedOrders: groupOrders
+                orderList: allOrders
             });
-            this.updateCurentOrder(this.data.currentTab);
         }).catch(err => {
             showError('获取订单失败', err);
         })
     },
-    navbarTap(e) {
-        let index = e.currentTarget.dataset.idx;
-        this.setData({
-            currentTab: index
-        })
-        this.updateCurentOrder(index)
-    },
-    updateCurentOrder(index) {
-        if (index == 1) { // 进行中
-            const orders1 = this.data.groupedOrders['等待中'] || []
-            const orders2 = this.data.groupedOrders['制作中'] || []
-            const orders3 = this.data.groupedOrders['配送中'] || []
-            const orders4 = this.data.groupedOrders['退款中'] || []
-            let currentOrders = [...orders1, ...orders2, ...orders3, ...orders4]
-            this.setData({
-                currentList: currentOrders
-            })
-        } else if (index == 2) { // 已完成
-            const orders1 = this.data.groupedOrders['已完成'] || []
-            const orders2 = this.data.groupedOrders['已取消'] || []
-            const orders3 = this.data.groupedOrders['已退款'] || []
-            let currentOrders = [...orders1, ...orders2, ...orders3]
-            this.setData({
-                currentList: currentOrders
-            })
-        } else {
-            this.setData({
-                currentList: this.data.list
-            })
-        }
-    },
 
     // 点击事件
     onCancleOrder() {
+        wx.showToast({
+            title: '十分抱歉，功能更新中',
+            icon: 'none',
+            duration: 4000
+        });
+        return;
         wx.showModal({
             title: '确认取消订单',
             content: '确定要取消订单并退款吗？',
             success: (res) => {
                 if (res.confirm) {
-                    wx.showToast({
-                        title: '十分抱歉，功能更新中',
-                        icon: 'none',
-                        duration: 4000
-                    });
+                    return
                 }
             }
         });
@@ -130,6 +87,18 @@ Page({
         }).catch(error => {
             showError('排号失败', error)
         })
-    }
+    },
 
+    // 页面跳转
+    goOrder() {
+        wx.switchTab({
+            url: '/pages/Food/food/food',
+        })
+    },
+    goOrderDetail(e) {
+        wx.setStorageSync('detailOrder', e.currentTarget.dataset.order.order_id)
+        wx.navigateTo({
+            url: '/pages/Order/detailOrder/detailOrder',
+        })
+    }
 })

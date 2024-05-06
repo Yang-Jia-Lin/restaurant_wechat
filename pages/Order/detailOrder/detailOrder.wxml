@@ -1,0 +1,131 @@
+<wxs src="../../../utils/filter.wxs" module="filters" />
+
+<!-- 1.订单进度 -->
+<view class="block-shadow">
+	<!-- 1.1 取餐号 -->
+	<view wx:if="{{orderStatus==1}}" class="pick-number">
+		<view>等待</view>
+		<view>排号</view>
+	</view>
+	<view wx:elif="{{orderStatus==2}}" class="pick-number">
+		<view>{{recentOrder.pickup_number}} 号</view>
+	</view>
+	<view wx:else="" class="pick-number">
+		<view>{{recentOrder.pickup_number}} 号</view>
+		<view>{{recentOrder.order_status}}</view>
+	</view>
+
+	<!-- 1.2 订单状态 -->
+	<view wx:if="{{recentOrder.delivery_type=='预约'&&orderStatus!=4}}" class="reserve-root">
+		<view class="reserve-time" >
+			预约 {{filters.formatDeliveryTime(recentOrder.delivery_time)}} {{recentOrder.order_type=='外卖'?'送达':'取餐'}}
+		</view>
+		<view class="reserve-change" wx:if="{{orderStatus==1}}">
+			<picker mode="selector" range="{{deliverTimes}}" bindchange="onDeliveryTimeChange">修改</picker>
+		</view>
+	</view>
+	<view class="status-root">
+		<view class="statu-root">
+			<image class="status-img" src="/image/wait_ok.png"/>
+			<view class="status-text-ok">已下单</view>
+		</view>
+		<image class="line" src="/image/line.png"/>
+		<view class="statu-root" wx:if="{{orderStatus>1}}">
+			<image class="status-img" src="/image/make_ok.png"/>
+			<view class="status-text-ok">制作中</view>
+		</view>
+		<view class="statu-root" wx:else="">
+			<image class="status-img" src="/image/make.png"/>
+			<view class="status-text">等待制作</view>
+		</view>
+		<image class="line" src="/image/line.png" wx:if="{{recentOrder.order_type=='外卖'}}"/>
+		<view class="statu-root" wx:if="{{recentOrder.order_type=='外卖' && orderStatus>2}}">
+			<image class="status-img" src="/image/delivery_ok.png"/>
+			<view class="status-text-ok">配送中</view>
+		</view>
+		<view class="statu-root" wx:elif="{{recentOrder.order_type=='外卖'}}">
+			<image class="status-img" src="/image/delivery.png"/>
+			<view class="status-text">等待配送</view>
+		</view>
+		<image class="line" src="/image/line.png"/>
+		<view class="statu-root" wx:if="{{orderStatus>3}}">
+			<image class="status-img" src="/image/all_ok.png"/>
+			<view class="status-text-ok">干饭!</view>
+		</view>
+		<view class="statu-root" wx:else="">
+			<image class="status-img" src="/image/all.png"/>
+			<view class="status-text">等待干饭</view>
+		</view>
+	</view>
+	
+	<!-- 1.3 选项 -->
+	<view wx:if="{{orderStatus==1}}" class="pre-make" bindtap="onPreMakeClick">
+		提前排号
+	</view>
+	<view wx:if="{{orderStatus==1}}" class="queue-num">
+		当前有{{queueOrdersNum}}个订单正在制作
+	</view>
+	<view wx:if="{{orderStatus==2}}" class="queue-num">
+		{{queueOrdersNum>0?'您前方还有'+queueOrdersNum+'单':'当前订单前方没有排队'}}
+	</view>
+	<view wx:if="{{orderStatus==3}}" class="queue-num">
+		骑手正在加急配送中！
+	</view>
+	<view wx:if="{{orderStatus==4}}" class="queue-num">
+		祝您用餐愉快！期待您的反馈~
+	</view>
+</view>
+
+<!-- 2.订单明细 -->
+<view class="block-title">订单详情</view>
+<view class="block">
+	<view class='dish-root' wx:for="{{recentOrder.orderDetails}}" wx:for-item="dish" wx:key="key">
+		<view class="dish_title">
+			<text>{{dish.dish_name}}{{dish.eatType=='打包'?'（打包）':''}}</text>
+			<text>￥{{dish.price}}</text>
+		</view>
+		<view class="dish_detail">
+			<view class="options">
+				<text wx:for="{{dish.mandatory_values}}" wx:key="index">{{item}}/</text>
+				<text wx:for="{{dish.optional_options}}" wx:key="index">{{item}}/</text>
+				<text wx:if="{{dish.note!==''}}">{{dish.note}}</text>
+			</view>
+			<text>X{{dish.quantity}}</text>
+		</view>
+	</view>
+</view>
+
+<!-- 3.订单详情 -->
+<view class="block-title">其他信息</view>
+<view class="block-other">
+	<view wx:if="{{recentOrder.note!=''}}" class="other-item">
+		<text>备注：</text>
+		<text>{{recentOrder.note}}</text>
+	</view>
+	<view class="other-item">
+		<text>总价：</text>
+		<text>{{recentOrder.total_price}}元</text>
+	</view>
+	<view class="other-item">
+		<text>获得积点：</text>
+		<text wx:if="{{recentOrder.total_price==0}}">0个</text>
+		<text wx:else="">{{recentOrder.total_price>=10?1:0.5}}个</text>
+	</view>
+	<view class="other-item">
+		<text>支付方式：</text>
+		<text wx:if="{{recentOrder.total_price==0}}">积点支付</text>
+		<text wx:else="">{{recentOrder.payment_method}}</text>
+	</view>
+	<view class="other-item">
+		<text>联系方式：</text>
+		<text>{{recentOrder.phone}}</text>
+	</view>
+	<view class="other-item">
+		<text>下单时间：</text>
+		<text>{{filters.formatDate(recentOrder.order_time)}}</text>
+	</view>
+	<view class="other-item">
+		<text>订单编号：</text>
+		<text>{{recentOrder.order_id}}</text>
+	</view>
+</view>
