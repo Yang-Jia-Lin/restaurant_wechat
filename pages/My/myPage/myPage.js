@@ -71,9 +71,17 @@ Page({
         // })
     },
     goToPoints() {
-        wx.navigateTo({
-            url: '/pages/My/points/points',
+        wx.showModal({
+            title: '提示',
+            content: '功能开发中，敬请期待！',
+            showCancel: false,
+            success: () => {
+                return
+            }
         })
+        // wx.navigateTo({
+        //     url: '/pages/My/points/points',
+        // })
     },
     goToCoupon() {
         wx.showModal({
