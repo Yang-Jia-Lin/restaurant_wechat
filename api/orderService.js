@@ -1,3 +1,4 @@
+import { toFloat } from '../utils/tool';
 const baseUrl = "https://forestlamb.online/restaurant/";
 
 // =========================用户======================
@@ -50,7 +51,10 @@ function getCurrentOrder(order_id) {
 			method: 'GET',
 			success: (res) => {
 				if (res.statusCode == 200 && res.data.order_status != '待支付') {
-					resolve(res.data);
+					let order = res.data;
+					order.total_price = toFloat(order.total_price, 2);
+					console.log('最近订单', order)
+					resolve(order);
 				} else {
 					reject('订单不存在')
 				}

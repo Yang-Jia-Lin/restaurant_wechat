@@ -1,5 +1,5 @@
 {
 	"usingComponents": {},
 	"enablePullDownRefresh": true,
-	"navigationBarTitleText": "最近订单"
+	"navigationBarTitleText": "当前订单"
 }

@@ -18,6 +18,7 @@ Page({
         haveOrder: false,
         queueOrdersNum: 0,  // 前方人数（制作中）
         deliverTimes: [],   // 修改时间（等待中）
+        orderStatus: 1
     },
     onShow() {
         this.getRecentOrder();
@@ -41,20 +42,20 @@ Page({
         const order_id = wx.getStorageSync('orderId') || ''
         if (order_id !== '')
             getCurrentOrder(order_id).then(order => {
-                console.log('最近订单', order)
-                if (order.order_status == '等待中')
-                    this.getTimesOption()
-                else if (order.order_status == '制作中')
-                    this.getQueueNum()
-
-                if (order.order_status == '已完成' && !areSameDay(order.order_time)) {// 昨天的订单不算
+                const status = order.order_status
+                if (status == '已完成' && !areSameDay(order.order_time))
                     this.clearRecentOrder()
-                } else {
+                else {
+                    const statusNum = this.getStatusNum(status)
                     this.setData({
                         recentOrder: order,
                         haveOrder: true,
+                        orderStatus: statusNum
                     })
                 }
+
+                if (status == '等待中') this.getTimesOption()
+                this.getQueueNum()
             }).catch(err => {
                 showError("获取订单失败", err)
             })
@@ -67,6 +68,12 @@ Page({
             recentOrder: {},
             haveOrder: false
         })
+    },
+    getStatusNum(status) {
+        if (status == '等待中') return 1;
+        else if (status == '制作中') return 2;
+        else if (status == '配送中') return 3;
+        else return 4;
     },
 
     // 准备数据
@@ -141,6 +148,18 @@ Page({
             this.onShow()
         }).catch(error => {
             showError('排号失败', error)
+        })
+    },
+
+    // 页面跳转
+    goAllOrder() {
+        wx.navigateTo({
+            url: '/pages/Order/allOrder/allOrder',
+        })
+    },
+    goOrder() {
+        wx.switchTab({
+            url: '/pages/Food/food/food',
         })
     }
 })
