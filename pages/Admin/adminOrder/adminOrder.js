@@ -1,5 +1,13 @@
-import { getStoreOrder, getStoreOrderNumber, updateOrderStatus, beginMakeOrder } from './../../../api/orderService';
+import {
+    getStoreOrder,
+    getStoreOrderNumber,
+    updateOrderStatus,
+    beginMakeOrder
+} from './../../../api/orderService';
 import { showError } from './../../../utils/tool';
+
+const app = getApp();
+const baseUrl = app.globalData.baseUrl;
 
 Page({
     data: {

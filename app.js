@@ -30,7 +30,6 @@ App({
 	},
 
 	onLaunch() {
-		this.getSetting()
 		this.getUserInfo()
 	},
 
@@ -57,6 +56,31 @@ App({
 			}
 		}
 	},
+
+	// 获取用户信息
+	getUserInfo() {
+		wx.login({
+			success: res => {
+				if (res.code) {
+					userLogin(res.code).then(user => {
+						console.log("用户信息：", user);
+						this.globalData.userInfo = user;
+						this.trigger('userInfoUpdated');
+						wx.setStorageSync('userInfo', user);
+						this.getSetting()
+					}).catch(error => {
+						showError("获取用户失败", error);
+					});
+				} else {
+					showError("获取code失败", res.errMsg);
+				}
+			},
+			fail: () => {
+				showError("微信登录失败");
+			}
+		});
+	},
+
 
 	// 准备：获取位置授权和位置
 	getSetting() {
@@ -96,29 +120,7 @@ App({
 		});
 	},
 
-	// 获取用户信息
-	getUserInfo() {
-		wx.login({
-			success: res => {
-				if (res.code) {
-					userLogin(res.code).then(user => {
-						console.log("用户信息：", user);
-						this.globalData.userInfo = user;
-						this.trigger('userInfoUpdated');
-						wx.setStorageSync('userInfo', user);
-					}).catch(error => {
-						showError("获取用户失败", error);
-					});
-				} else {
-					showError("获取code失败", res.errMsg);
-				}
-			},
-			fail: () => {
-				showError("微信登录失败");
-			}
-		});
-	},
-
+	
 	// 获取默认门店信息
 	getStores(latitude, longitude) {
 		fetchStore(latitude, longitude).then(store => {

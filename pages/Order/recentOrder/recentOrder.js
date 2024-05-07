@@ -127,9 +127,13 @@ Page({
 
     // 提前排单
     onPreMakeClick() {
+        let hint = '将立即开始制作并忽略预约时间，请确认您能否立即到店取餐'
+        if (this.data.recentOrder.order_type == '外卖') {
+            hint = '将立即开始制作并忽略预约时间，请确认您是否需要立即送餐'
+        }
         wx.showModal({
             title: '提示',
-            content: '提前排号后将立即开始制作，请确认您能否立即到店取餐',
+            content: hint,
             complete: (res) => {
                 if (res.cancel) {
                     return;

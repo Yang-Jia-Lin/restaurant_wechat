@@ -14,7 +14,7 @@ import { showError } from '../../../utils/tool';
 
 Page({
     data: {
-        recentOrder: {},
+        detailOrder: {},
         haveOrder: false,
         queueOrdersNum: 0,  // 前方人数（制作中）
         deliverTimes: [],   // 修改时间（等待中）
@@ -40,53 +40,47 @@ Page({
     // 获取订单
     getOrder() {
         const order_id = wx.getStorageSync('detailOrder') || ''
-        if (order_id !== '')
+        if (order_id !== '') {
             getCurrentOrder(order_id).then(order => {
                 const status = order.order_status
-                if (status == '已完成' && !areSameDay(order.order_time))
-                    this.clearRecentOrder()
-                else {
-                    const statusNum = this.getStatusNum(status)
-                    this.setData({
-                        recentOrder: order,
-                        haveOrder: true,
-                        orderStatus: statusNum
-                    })
-                }
-
-                if (status == '等待中') this.getTimesOption()
+                const statusNum = this.getStatusNum(status)
+                this.setData({
+                    detailOrder: order,
+                    haveOrder: true,
+                    orderStatus: statusNum
+                })
                 this.getQueueNum()
+                if (status == '等待中')
+                    this.getTimesOption()
             }).catch(err => {
                 showError("获取订单失败", err)
             })
-        else
-            this.clearRecentOrder()
+        } else {
+            wx.setStorageSync('detailOrder', '');
+            this.setData({
+                detailOrder: {},
+                haveOrder: false
+            })
+        }
     },
-    clearRecentOrder() {
-        wx.setStorageSync('orderId', '');
-        this.setData({
-            recentOrder: {},
-            haveOrder: false
-        })
-    },
+
+    // 准备数据
     getStatusNum(status) {
         if (status == '等待中') return 1;
         else if (status == '制作中') return 2;
         else if (status == '配送中') return 3;
         else return 4;
     },
-
-    // 准备数据
     getTimesOption() {
         const timeslots = wx.getStorageSync('storeTime');
-        const deliveryTimes = this.data.recentOrder.order_type == '到店' ?
+        const deliveryTimes = this.data.detailOrder.order_type == '到店' ?
             scheduleTakeSlots(timeslots) : scheduleDeliverySlots(timeslots)
         this.setData({
             deliverTimes: deliveryTimes
         })
     },
     getQueueNum() {
-        getQueueNum(this.data.recentOrder.pickup_id).then(number => {
+        getQueueNum(this.data.detailOrder.pickup_id).then(number => {
             this.setData({
                 queueOrdersNum: number
             })
@@ -114,7 +108,7 @@ Page({
     },
     changeTime(time) {
         const newTime = getDeliveryDate('', time)
-        const orderId = this.data.recentOrder.order_id
+        const orderId = this.data.detailOrder.order_id
         changeDeliverTime(orderId, newTime).then(() => {
             this.onShow()
             wx.showToast({
@@ -127,15 +121,19 @@ Page({
 
     // 提前排单
     onPreMakeClick() {
+        let hint = '提前排号后将立即开始制作，请确认您能否立即到店取餐'
+        if (this.data.detailOrder.order_type == '外卖') {
+            hint = '提前排号后将立即开始制作，请确认您能否需要立即送餐'
+        }
         wx.showModal({
             title: '提示',
-            content: '提前排号后将立即开始制作，请确认您能否立即到店取餐',
+            content: hint,
             complete: (res) => {
                 if (res.cancel) {
                     return;
                 }
                 if (res.confirm) {
-                    this.preMake(this.data.recentOrder.order_id)
+                    this.preMake(this.data.detailOrder.order_id)
                 }
             }
         })

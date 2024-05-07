@@ -3,7 +3,7 @@ const baseUrl = "https://forestlamb.online/restaurant/";
 // 获取默认门店
 function fetchStore(latitude = 37.751915, longitude = 112.712555) {
 	wx.showLoading({
-		title: '获取门店信息中',
+		title: '获取信息中',
 		mask: true
 	});
 	return new Promise((resolve, reject) => {
