@@ -22,8 +22,8 @@ Page({
             辣度: "微辣",
             麻度: "微麻",
             份量: "标准"
-        }, // 一组必选
-        currentOptional: [], // 一组多选
+        }, // 必选
+        currentOptional: [], // 多选
         currentEatType: '堂食',
         small_dish_list: [], // 小菜
 
@@ -310,7 +310,9 @@ Page({
         let currentOptional = this.data.currentOptional;
         let currentEatType = this.data.currentEatType;
         let values = Object.values(this.data.currentMandatory);
-        wx.setStorageSync('mandatory', currentMandatory);
+        if (Object.keys(currentMandatory).length != 0) {
+            wx.setStorageSync('mandatory', currentMandatory);
+        }
 
         // 准备数据
         let item = {};
@@ -554,6 +556,20 @@ Page({
                 currentOptional: current.optional_options,
                 small_dish_list: small_dish
             })
+            if (current.mandatory_options.length == 0) {
+                that.setData({
+                    currentMandatory: {},
+                })
+            } else {
+                that.setData({
+                    currentMandatory: wx.getStorageSync('mandatory') || {
+                        种类: "面",
+                        辣度: "微辣",
+                        麻度: "微麻",
+                        份量: "标准"
+                    },
+                })
+            }
             console.log('当前菜品', current)
             that.goDetailPopup()
         } else {
