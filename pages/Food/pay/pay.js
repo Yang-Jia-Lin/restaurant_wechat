@@ -6,8 +6,11 @@ import {
     scheduleDeliverySlots,
     getDeliveryDate
 } from '../../../utils/timeProc'
-import { toFloat } from '../../../utils/tool';
-
+import { showError, toFloat } from '../../../utils/tool';
+import {
+    addSales,
+    addPoints
+} from '../../../api/orderService';
 const app = getApp();
 const baseUrl = app.globalData.baseUrl;
 
@@ -75,6 +78,11 @@ Page({
                 deliverTimes: deliveryTimes,
                 deliverTime: deliveryTimes[0],
                 refreshTime: now
+            })
+        }
+        if (!this.data.deliverNow) {
+            this.setData({
+                deliverType: '预约'
             })
         }
     },
@@ -215,7 +223,6 @@ Page({
     },
 
     // 微信支付
-    // 步骤1：创建订单并获取支付码
     createPayment(deliveryTime) {
         wx.showLoading({
             title: '加载中...',
@@ -282,8 +289,6 @@ Page({
             }
         });
     },
-
-    // 步骤2：发起支付
     startPayment(paySignInfo) {
         wx.requestPayment({
             timeStamp: paySignInfo.timestamp,
@@ -309,16 +314,23 @@ Page({
             }
         });
     },
-
-    // 步骤3：支付完成后处理
-    // TODO: 使用模块化API
     endPayment() {
         // 1.增加销量
-        this.addSales()
+        addSales(this.data.cartList.map(item => item.dish_id))
 
         // 2.赠送积点
         if (app.globalData.userInfo.phone_number) {
-            this.addPoints()
+            let addPoint = this.data.totalPrice >= 8 ? 0.5 : 0.1;
+            if (this.data.totalPrice >= 10) addPoint = 1;
+
+            addPoints(this.data.userInfo.user_id, addPoint, '消费赠送')
+                .then(user => {
+                    app.globalData.userInfo = user
+                    app.trigger('userInfoUpdated');
+                    wx.setStorageSync('userInfo', user);
+                }).catch(err => {
+                    showError('积点增加失败', err)
+                })
         }
 
         // 3.清空购物车
@@ -329,54 +341,8 @@ Page({
             url: '/pages/Order/recentOrder/recentOrder',
         })
     },
-    addSales() {
-        const dishIds = this.data.cartList.map(item => item.dish_id);
-        wx.request({
-            url: baseUrl + 'dishes/sales/increment',
-            method: 'PUT',
-            data: {
-                dishIds: dishIds
-            }
-        });
-    },
-    addPoints() {
-        let addPoint = this.data.totalPrice >= 8 ? 0.5 : 0.1;
-        if (this.data.totalPrice >= 10) addPoint = 1;
-
-        wx.request({
-            url: baseUrl + 'users/addPoints/' + this.data.userInfo.user_id,
-            method: 'PUT',
-            data: {
-                pointsToAdd: addPoint
-            },
-            success: (res) => {
-                console.log('积点增加ing', res);
-                if (res.data.success) {
-                    app.globalData.userInfo = res.data.updatedUser
-                    app.trigger('userInfoUpdated');
-                    wx.setStorageSync('userInfo', res.data.updatedUser);
-                } else {
-                    console.log('积点增加失败:', res.errMsg);
-                    wx.showToast({
-                        title: '积点增加失败，请重试或联系工作人员！',
-                        icon: 'none'
-                    });
-                }
-            },
-            fail: (err) => {
-                console.log('积点增加失败:', err);
-                wx.showToast({
-                    title: '积点增加失败，请重试或联系工作人员！',
-                    icon: 'none'
-                });
-            },
-
-        });
-    },
-
 
     // 积点支付
-    // 步骤1：创建订单并获取支付码
     createPointsPay(deliveryTime) {
         wx.showLoading({
             title: '加载中...',
@@ -448,11 +414,9 @@ Page({
             }
         });
     },
-
-    // 步骤2：支付完成后处理
     endPaymentPoint() {
         // 1.增加销量
-        this.addSales()
+        addSales(this.data.cartList.map(item => item.dish_id))
 
         // 2.清空购物车
         wx.setStorageSync('cart', []);

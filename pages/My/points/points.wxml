@@ -1,2 +1,11 @@
-<!--pages/My/points/points.wxml-->
-<text>pages/My/points/points.wxml</text>
+<wxs src="../../../utils/filter.wxs" module="filters" />
+
+<view class="list-root" wx:for="{{pointsList}}" wx:key="key">
+	<view class="detail-root">
+		<image class="img-logo" src="/image/avatar.png" />
+		<view class="point-title">{{item.issue_type}}</view>
+		<view class="point-amount">{{item.amount>0?'+':''}}{{item.amount}}</view>
+	</view>
+    
+    <view class='time-root'>{{filters.formatDate(item.issued_at)}}</view>
+</view>

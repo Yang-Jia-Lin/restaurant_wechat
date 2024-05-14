@@ -1,1 +1,50 @@
-/* pages/My/points/points.wxss */
+page {
+	background-color: f3ede3;
+}
+
+.list-root {
+	background-color: white;
+	margin: 20rpx 30rpx 25rpx 30rpx;
+	width: 92%;
+	border-radius: 25rpx;
+	box-shadow: 0 0 10rpx rgba(117, 96, 82, 0.15);
+}
+
+.detail-root {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	margin: 20rpx 45rpx 10rpx 45rpx;
+}
+
+.img-logo {
+	width: 40px;
+	height: 40px;
+
+}
+
+.point-title {
+	width: 60%;
+	height: 40px;
+	line-height: 40px;
+	font-size: 18px;
+	color: rgb(19, 14, 10);
+}
+
+.point-amount {
+	width: 20%;
+	height: 40px;
+	line-height: 40px;
+	font-size: 22px;
+	text-align: center;
+	color: rgb(103, 75, 55);
+}
+
+.time-root {
+	margin: 0 45rpx 10rpx 45rpx;
+	padding: 5rpx 0 0 0;
+	font-size: 13px;
+	border-top: 1px solid rgb(133, 80, 11);
+	text-align: center;
+	color: darkgray;
+}

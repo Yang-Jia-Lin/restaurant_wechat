@@ -66,9 +66,6 @@ function encryptPhone(code, encryptedData, iv) {
 
 // 注册
 function userSignUp(user_id, phone, nickname, avatar) {
-	wx.showLoading({
-		title: '加载中',
-	})
 	return new Promise((resolve, reject) => {
 		wx.request({
 			url: baseUrl + 'users/' + user_id,
@@ -77,7 +74,6 @@ function userSignUp(user_id, phone, nickname, avatar) {
 				phone_number: phone,
 				nickname: nickname,
 				avatar_url: avatar,
-				points: 2
 			},
 			success: (res) => {
 				if (res.statusCode === 200) {
@@ -91,9 +87,6 @@ function userSignUp(user_id, phone, nickname, avatar) {
 			},
 			fail: (err) => {
 				reject(err)
-			},
-			complete: () => {
-				wx.hideLoading()
 			}
 		});
 	})
@@ -119,9 +112,41 @@ function getAddress() {
 	})
 }
 
+// 查询积点明细
+function getPointDetail(userId) {
+	wx.showLoading({
+		title: '加载中',
+		mask: true
+	})
+	return new Promise((resolve, reject) => {
+		wx.request({
+			url: baseUrl + 'points/details/' + userId,
+			method: 'GET',
+			success: (res) => {
+				if (res.data.success) {
+					let points = res.data.points
+					points.forEach(point => {
+						point.amount = toFloat(point.amount, 2);
+					});
+					console.log('积点明细：', points);
+					resolve(points)
+				} else {
+					reject(res.errMsg)
+				}
+			},
+			fail: (err) => {
+				reject(err)
+			},
+			complete: () => {
+				wx.hideLoading()
+			}
+		});
+	})
+}
 export {
 	userLogin,
 	encryptPhone,
 	userSignUp,
-	getAddress
+	getAddress,
+	getPointDetail
 };

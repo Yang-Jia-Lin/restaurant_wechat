@@ -259,7 +259,53 @@ function beginMakeOrder(orderId) {
 		})
 	})
 }
-
+function addSales(dishIds) {
+	return new Promise((resolve, reject) => {
+		wx.request({
+			url: baseUrl + 'dishes/sales/increment',
+			method: 'PUT',
+			data: {
+				dishIds: dishIds
+			},
+			complete: () => {
+				resolve();  // 确保调用 resolve 以完成 Promise
+			},
+			fail: (error) => {
+				reject(error);  // 如果请求失败，调用 reject
+			}
+		})
+	});
+}
+function addPoints(user_id, pointsNum, issue) {
+	wx.showLoading({
+		title: '加载中',
+		mask: true
+	})
+	return new Promise((resolve, reject) => {
+		wx.request({
+			url: baseUrl + 'points/add/' + user_id,
+			method: 'PUT',
+			data: {
+				pointsToAdd: pointsNum,
+				issueType: issue
+			},
+			success: (res) => {
+				if (res.data.success) {
+					console.log('积点增加后：', res.data.updatedUser);
+					resolve(res.data.updatedUser)
+				} else {
+					reject(res.errMsg)
+				}
+			},
+			fail: (err) => {
+				reject(err)
+			},
+			complete: () => {
+				wx.hideLoading()
+			}
+		});
+	})
+}
 
 export {
 	getUserAllOrder,
@@ -270,5 +316,7 @@ export {
 	updateOrderStatus,
 	beginMakeOrder,
 	changeDeliverTime,
-	getQueueNum
+	getQueueNum,
+	addSales,
+	addPoints
 };

@@ -3,6 +3,7 @@ import {
     userSignUp,
     encryptPhone
 } from "../../../api/userService"
+import { addPoints } from '../../../api/orderService';
 const app = getApp()
 
 Page({
@@ -96,6 +97,9 @@ Page({
         const name = this.data.nickname
         const avatar = this.data.avatarUrl
 
+        wx.showLoading({
+            title: '加载中',
+        })
         userSignUp(userId, phone, name, avatar).then(user => {
             this.setData({
                 userInfo: user
@@ -103,17 +107,31 @@ Page({
             app.trigger('userInfoUpdated');
             app.globalData.userInfo = user;
             wx.setStorageSync('userInfo', user);
-            wx.showModal({
-                title: '注册成功',
-                content: '两个积点已经发放至您的账户！',
-                showCancel: false,
-                success: function () {
-                    wx.navigateBack()
-                }
-            })
+            this.addRegisterPoints()
         }).catch(err => {
+            wx.hideLoading()
             showError('注册失败', err)
         })
+    },
+    addRegisterPoints() {
+        addPoints(app.globalData.userInfo.user_id, 2, '注册赠送')
+            .then(user => {
+                app.globalData.userInfo = user
+                app.trigger('userInfoUpdated');
+                wx.setStorageSync('userInfo', user);
+                wx.showModal({
+                    title: '注册成功',
+                    content: '两个积点已经发放至您的账户！',
+                    showCancel: false,
+                    success: function () {
+                        wx.navigateBack()
+                    }
+                })
+                wx.hideLoading()
+            }).catch(err => {
+                showError('积点赠送失败', err)
+                wx.hideLoading()
+            })
     }
 
 })
