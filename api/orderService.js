@@ -292,7 +292,10 @@ function addPoints(user_id, pointsNum, issue) {
 			success: (res) => {
 				if (res.data.success) {
 					console.log('积点增加后：', res.data.updatedUser);
-					resolve(res.data.updatedUser)
+					let user = res.data.updatedUser;
+					user.points = toFloat(user.points, 2);
+					user.balance = toFloat(user.balance, 2);
+					resolve(user)
 				} else {
 					reject(res.errMsg)
 				}

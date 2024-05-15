@@ -43,6 +43,12 @@ page {
 	color: darkred;
 }
 
+.unimportant {
+	margin-top: 20rpx;
+	font-size: 14px;
+	color: rgb(123, 123, 123);
+}
+
 .dialog-img {
 	width: 100px;
 	height: 100px;

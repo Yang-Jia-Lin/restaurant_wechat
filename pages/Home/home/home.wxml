@@ -1,5 +1,6 @@
-<view class="ad" wx:if="{{!userInfo.phone}}">
-    <view class="dialog" hidden="{{!dialogVisible}}">
+<!-- 没有注册的广告 -->
+<view class="ad">
+    <view class="dialog" hidden="{{!dialogVisible1}}">
         <view class="dialog-content">
             <image src="/image/avatar.png" class="dialog-img"></image>
             <view>你好新伙伴！来干饭吗？</view>
@@ -10,7 +11,23 @@
             <view>现在注册下单，3元 get√</view>
             <view>快来看看吧~</view>
         </view>
-        <view class="close-btn" bindtap="toggleDialog">×</view>
+        <view class="close-btn" bindtap="toggleDialog" data-id="1">×</view>
+    </view>
+</view>
+<!-- 注册了的广告 -->
+<view class="ad">
+    <view class="dialog" hidden="{{!dialogVisible2}}">
+        <view class="dialog-content">
+            <image src="/image/avatar.png" class="dialog-img"></image>
+            <view>你好又见面了! 觉得我们好吃吗？</view>
+            <view>不妨分享一下薅羊毛~</view>
+            <view class="important">分享成功后立得2积点</view>
+            <view class="important">1积点相当于1元</view>
+            <view>只要右上角点击分享，2元 get√</view>
+            <view>记得告诉ta先注册个会员再下单哦!</view>
+            <view class="unimportant" bindtap="onShareButtonClick">积点到帐速速通知我~(点我订阅)</view>
+        </view>
+        <view class="close-btn" bindtap="toggleDialog" data-id="2">×</view>
     </view>
 </view>
 

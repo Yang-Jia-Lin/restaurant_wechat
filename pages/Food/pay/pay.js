@@ -7,6 +7,7 @@ import {
     getDeliveryDate
 } from '../../../utils/timeProc'
 import { showError, toFloat } from '../../../utils/tool';
+import { payInvite } from '../../../api/inviteService';
 import {
     addSales,
     addPoints
@@ -336,7 +337,22 @@ Page({
         // 3.清空购物车
         wx.setStorageSync('cart', []);
 
-        // 4.跳转订单详情
+        // 4.更新邀请信息
+        if (wx.getStorageSync('inviter')) {
+            payInvite(this.data.userInfo.user_id)
+                .then(isInvite => {
+                    if (isInvite)
+                        console.log('完成邀请成功')
+                    else
+                        console.log('还没有注册')
+                    wx.setStorageSync('inviter', null)
+                })
+                .catch(err => {
+                    showError('更新邀请失败', err)
+                })
+        }
+
+        // 5.跳转订单详情
         wx.switchTab({
             url: '/pages/Order/recentOrder/recentOrder',
         })

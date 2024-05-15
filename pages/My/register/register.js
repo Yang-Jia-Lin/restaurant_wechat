@@ -4,6 +4,7 @@ import {
     encryptPhone
 } from "../../../api/userService"
 import { addPoints } from '../../../api/orderService';
+import { newInvite, registerInvite } from '../../../api/inviteService';
 const app = getApp()
 
 Page({
@@ -15,6 +16,7 @@ Page({
     },
     onLoad() {
         app.on('userInfoUpdated', this.updateInfo);
+        this.getInviter()
     },
     onUnload() {
         app.off('userInfoUpdated', this.updateInfo);
@@ -25,6 +27,20 @@ Page({
         });
     },
 
+    // 确定分享者
+    getInviter() {
+        const inviter = wx.getStorageSync('inviter')
+        if (inviter) {
+            newInvite(inviter, this.data.userInfo.user_id)
+                .then(isInvite => {
+                    if (isInvite) console.log('aha，新邀请记录创建了')
+                    else console.log('hai，你已经在邀请表里了')
+                })
+                .catch(err => {
+                    showError('查看邀请失败', err)
+                })
+        }
+    },
 
     // 点击事件
     onAvatarChoose() {
@@ -83,6 +99,8 @@ Page({
             showError('获取失败')
         }
     },
+
+    // 注册相关
     onRegisterClick() {
         const phone = this.data.phone
         if (phone == "点击获取" || phone.length != 11)
@@ -108,6 +126,7 @@ Page({
             app.globalData.userInfo = user;
             wx.setStorageSync('userInfo', user);
             this.addRegisterPoints()
+            this.updateInviteInfo()
         }).catch(err => {
             wx.hideLoading()
             showError('注册失败', err)
@@ -132,6 +151,20 @@ Page({
                 showError('积点赠送失败', err)
                 wx.hideLoading()
             })
+    },
+    updateInviteInfo() {
+        if (wx.getStorageSync('inviter')) {
+            registerInvite(this.data.userInfo.user_id)
+                .then(isInvite => {
+                    if (isInvite)
+                        console.log('更新邀请成功')
+                    else
+                        console.log('没有邀请信息')
+                })
+                .catch(err => {
+                    showError('更新邀请失败', err)
+                })
+        }
     }
 
 })
