@@ -11,7 +11,9 @@ Page({
         dialogVisible2: false
     },
     onShow() {
-        this.updateUser()
+        this.setData({
+            userInfo: app.globalData.userInfo
+        });
     },
     onLoad(options) {
         const inviter = wx.getStorageSync('inviter');
