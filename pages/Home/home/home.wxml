@@ -25,7 +25,7 @@
             <view class="important">1积点相当于1元</view>
             <view>只要右上角点击分享，2元 get√</view>
             <view>记得告诉ta先注册个会员再下单哦!</view>
-            <view class="unimportant" bindtap="onShareButtonClick">积点到帐速速通知我~(点我订阅)</view>
+            <view class="unimportant" bindtap="onShareButtonClick">邀请结果速速通知我~(点我订阅)</view>
         </view>
         <view class="close-btn" bindtap="toggleDialog" data-id="2">×</view>
     </view>

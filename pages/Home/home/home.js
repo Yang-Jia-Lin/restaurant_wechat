@@ -56,7 +56,7 @@ Page({
 
     // 分享
     onShareButtonClick: function () {
-        const tmplIds = ['shRFentLzPN-2o1F3Om1mkYJkbCZXCQUSiZyrf0isns'];
+        const tmplIds = ['oSA8CXtPkmkXZ0kz_cbkPBlBHiAYMaTFTACyddPvM0I'];
         wx.requestSubscribeMessage({
             tmplIds: tmplIds,
             success: res => {

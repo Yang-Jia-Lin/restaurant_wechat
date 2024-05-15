@@ -44,9 +44,11 @@ page {
 }
 
 .unimportant {
-	margin-top: 20rpx;
+	margin: 20rpx auto;
+	width: fit-content;
 	font-size: 14px;
-	color: rgb(123, 123, 123);
+	color: rgb(69, 45, 45);
+	border-bottom: 1px solid rgb(69, 45, 45);
 }
 
 .dialog-img {
