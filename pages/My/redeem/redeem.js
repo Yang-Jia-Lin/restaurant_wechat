@@ -61,6 +61,9 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage() {
-
+        return {
+            title: '唐合丰面馆，一家独特的重庆拌面馆，快来尝尝吧！',
+            path: '/pages/Home/home/home?referrer=' + this.data.userInfo.user_id
+        };
     }
 })

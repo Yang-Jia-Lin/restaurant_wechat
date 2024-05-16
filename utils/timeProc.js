@@ -35,7 +35,7 @@ function parseTime(time) {
 }
 function getNow() {
 	const now = new Date();
-	//now.setHours(13, 40, 0, 0);
+	//now.setHours(13, 41, 0, 0);
 	return now;
 }
 

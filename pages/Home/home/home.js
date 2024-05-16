@@ -72,13 +72,7 @@ Page({
     onShareAppMessage: function () {
         return {
             title: '唐合丰面馆，一家独特的重庆拌面馆，快来尝尝吧！',
-            path: '/pages/Home/home/home?referrer=' + this.data.userInfo.user_id,
-            success: shareRes => {
-                console.log('分享成功', shareRes);
-            },
-            fail: shareErr => {
-                console.log('分享失败', shareErr);
-            }
+            path: '/pages/Home/home/home?referrer=' + this.data.userInfo.user_id
         };
     },
 
