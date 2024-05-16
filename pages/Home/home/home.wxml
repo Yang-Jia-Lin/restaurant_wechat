@@ -41,7 +41,10 @@
 <!-- 2.选择门店 -->
 <view class="store_root">
     <view>{{storeInfo.store_name}}</view>
-    <view>全部门店 ></view>
+    <!-- <view>全部门店 ></view> -->
+    <view>
+        <button class="share-btn" open-type="share">点我分享 得2元</button>
+    </view>
 </view>
 
 <!-- 3.主选择按钮 -->

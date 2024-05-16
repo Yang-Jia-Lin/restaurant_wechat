@@ -79,7 +79,7 @@ page {
 
 /* 门店选择 */
 .store_root {
-	width: 80%;
+	width: 85%;
 	font-size: 32rpx;
 
 	display: flex;
@@ -88,6 +88,15 @@ page {
 	align-items: center;
 	margin-top: 20rpx;
 	margin: 25rpx auto;
+}
+
+.share-btn {
+	padding: 8rpx 20rpx;
+	font-size: 18px;
+	color: rgb(139, 60, 0);
+	background-color: white;
+	box-shadow: 0 0 20rpx rgba(0, 0, 0, 0.15);
+	border-radius: 10px;
 }
 
 /* 主选择区域 */

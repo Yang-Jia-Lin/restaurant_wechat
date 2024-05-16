@@ -24,7 +24,10 @@ Page({
         //console.log('当前邀请者', wx.getStorageSync('inviter'))
         // wx.setStorageSync('inviter', 16);
         // console.log('假的邀请者', wx.getStorageSync('inviter'))
-
+        wx.showShareMenu({
+            withShareTicket: true,
+            menus: ['shareAppMessage', 'shareTimeline']
+        })
         this.getTopBanner();
         app.on('storeInfoUpdated', this.updateStore);
         app.on('userInfoUpdated', this.updateUser);
@@ -63,13 +66,12 @@ Page({
             tmplIds: tmplIds,
             success: res => {
                 console.log('订阅消息授权结果:', res);
-            },
-            complete: () => {
-                this.onShareAppMessage();
+                wx.setStorageSync('haveInvite', false);
             }
         });
     },
     onShareAppMessage: function () {
+        wx.setStorageSync('haveInvite', true);
         return {
             title: '唐合丰面馆，一家独特的重庆拌面馆，快来尝尝吧！',
             path: '/pages/Home/home/home?referrer=' + this.data.userInfo.user_id

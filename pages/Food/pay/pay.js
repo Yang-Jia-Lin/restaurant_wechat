@@ -181,6 +181,25 @@ Page({
         });
     },
     onPayButtonClick() {
+        // 处理邀请消息订阅
+        console.log('abab', wx.getStorageSync('haveInvite'))
+        if (wx.getStorageSync('haveInvite')) {
+            const tmplIds = ['oSA8CXtPkmkXZ0kz_cbkPBlBHiAYMaTFTACyddPvM0I'];
+            wx.requestSubscribeMessage({
+                tmplIds: tmplIds,
+                success: res => {
+                    console.log('订阅消息授权结果:', res);
+                    wx.setStorageSync('haveInvite', false);
+                },
+                complete: () => {
+                    this.onPayButtonClickEnd()
+                }
+            });
+        } else {
+            this.onPayButtonClickEnd()
+        }
+    },
+    onPayButtonClickEnd() {
         // 处理deliveryTime
         const delivery_time = this.data.deliverTime
         const delivery_type = this.data.deliverType
