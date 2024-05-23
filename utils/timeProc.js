@@ -35,7 +35,7 @@ function parseTime(time) {
 }
 function getNow() {
 	const now = new Date();
-	//now.setHours(13, 41, 0, 0);
+	//now.setHours(12, 29, 0, 0);
 	return now;
 }
 
@@ -59,13 +59,13 @@ function scheduleTakeSlots(timeSlots) {
 	return filteredSlots.length === 0 ? ['暂无可用时间'] : filteredSlots;
 }
 
-// 立即送餐 [now+20, now+40] && aviliable
+// 立即送餐 [now, now+20] && aviliable
 function canDeliverNow(timeSlots) {
 	const now = getNow();
 	const beginTime = new Date(now.getTime());
 	const endTime = new Date(now.getTime());
-	beginTime.setMinutes(now.getMinutes() + 20);
-	endTime.setMinutes(now.getMinutes() + 40);
+	beginTime.setMinutes(now.getMinutes());
+	endTime.setMinutes(now.getMinutes() + 20);
 	return timeSlots.some(slot => {
 		const slotTime = parseTime(slot.time_slot);
 		return slotTime >= beginTime && slotTime <= endTime && slot.time_status === 'available';

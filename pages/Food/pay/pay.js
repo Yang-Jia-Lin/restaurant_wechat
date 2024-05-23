@@ -43,6 +43,10 @@ Page({
     },
 
     onShow() {
+        let arr = wx.getStorageSync('cart') || []
+        arr.forEach(item => {
+            item.price = toFloat(item.price, 2)
+        })
         this.setData({  // 数据更新
             userInfo: app.globalData.userInfo,
             storeInfo: app.globalData.storeInfo,
@@ -50,8 +54,9 @@ Page({
             addressInfo: app.globalData.addressInfo,
             pointsRemain: app.globalData.userInfo.points,
             pointsDiscount: 0,
-            cartList: wx.getStorageSync('cart') || [],
+            cartList: arr,
         });
+        console.log('支付页面的购物车：', this.data.cartList)
         this.getTotalPrice();   // 重新计算价格
         this.getTimesOption();  // 重新计算时间
     },
@@ -182,7 +187,6 @@ Page({
     },
     onPayButtonClick() {
         // 处理邀请消息订阅
-        console.log('abab', wx.getStorageSync('haveInvite'))
         if (wx.getStorageSync('haveInvite')) {
             const tmplIds = ['oSA8CXtPkmkXZ0kz_cbkPBlBHiAYMaTFTACyddPvM0I'];
             wx.requestSubscribeMessage({
@@ -340,9 +344,18 @@ Page({
 
         // 2.赠送积点
         if (app.globalData.userInfo.phone_number) {
-            let addPoint = this.data.totalPrice >= 8 ? 0.5 : 0.1;
-            if (this.data.totalPrice >= 10) addPoint = 1;
-
+            let addPoint = 0; // 初始化
+            this.data.cartList.forEach(item => {
+                let pointsPerItem = 0; // 单个菜品的积点
+                if (item.price >= 10)
+                    pointsPerItem = 1;
+                else if (item.price >= 8)
+                    pointsPerItem = 0.5;
+                else if (item.price > 0)
+                    pointsPerItem = 0.1;
+                addPoint += pointsPerItem * item.quantity;
+            });
+            console.log('积点赠送:', addPoint)
             addPoints(this.data.userInfo.user_id, addPoint, '消费赠送')
                 .then(user => {
                     app.globalData.userInfo = user

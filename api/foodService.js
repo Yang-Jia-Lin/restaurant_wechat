@@ -1,3 +1,5 @@
+import { toFloat } from "../utils/tool";
+
 const baseUrl = "https://forestlamb.online/restaurant/";
 
 // 获取食品列表
@@ -19,7 +21,10 @@ function getFoodList(storeId, serviceType, dish_status) {
 			success: res => {
 				if (res.data.success) {
 					// 数据
-					const dish_raw = res.data.storeDishes.map(item => item.dish);
+					let dish_raw = res.data.storeDishes.map(item => item.dish);
+					dish_raw.forEach(item => {
+						item.price = toFloat(item.price, 2)
+					})
 					const existingDishIds = new Set(dish_raw.map(item => item.dish_id));
 
 					// 清理

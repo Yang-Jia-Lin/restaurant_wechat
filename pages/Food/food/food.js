@@ -1,5 +1,5 @@
 import { getFoodList } from './../../../api/foodService';
-import { showError } from './../../../utils/tool';
+import { showError, toFloat } from './../../../utils/tool';
 const app = getApp();
 
 Page({
@@ -86,10 +86,11 @@ Page({
             totalP += cartList[i].quantity * cartList[i].price;
             totalN += cartList[i].quantity
         }
+        totalP = toFloat(totalP, 2)
         this.setData({
             cartList: cartList,
             totalNum: totalN,
-            totalPrice: totalP.toFixed(2)
+            totalPrice: totalP
         });
         console.log('当前购物车', cartList)
         wx.setStorageSync('cart', cartList);
