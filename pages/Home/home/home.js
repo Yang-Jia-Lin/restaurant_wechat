@@ -121,6 +121,14 @@ Page({
             url: '/pages/My/register/register',
         })
     },
+    goToMore() {
+        this.setData({
+            dialogVisible2: !this.data.dialogVisible2
+        });
+        wx.navigateTo({
+            url: '/pages/More/more3/more3',
+        })
+    },
 
     // 广告
     toggleDialog(e) {

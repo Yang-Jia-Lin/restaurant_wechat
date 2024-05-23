@@ -15,3 +15,8 @@ Page {
 .text {
 	font-size: 14px;
 }
+
+.text-bold {
+	font-size: 15px;
+	font-weight: bold;
+}
