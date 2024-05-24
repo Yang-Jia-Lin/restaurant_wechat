@@ -42,6 +42,7 @@ function getCurrentOrder(order_id) {
 				if (res.statusCode == 200 && res.data.order_status != '待支付') {
 					let order = res.data;
 					order.total_price = toFloat(order.total_price, 2);
+					order.points = toFloat(order.points, 2)
 					console.log('最近订单', order)
 					resolve(order);
 				} else {

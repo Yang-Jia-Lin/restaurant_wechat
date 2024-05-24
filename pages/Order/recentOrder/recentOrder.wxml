@@ -116,18 +116,21 @@
             <text>{{recentOrder.note}}</text>
         </view>
         <view class="other-item">
-            <text>总价：</text>
-            <text>{{recentOrder.total_price}}元</text>
-        </view>
-        <view class="other-item">
-            <text>获得积点：</text>
-            <text wx:if="{{recentOrder.total_price==0}}">0个</text>
-            <text wx:else="">{{recentOrder.total_price>=10?1:0.5}}个</text>
-        </view>
+		    <text>实际支付：</text>
+		    <text>{{recentOrder.total_price}}元</text>
+	    </view>
         <view class="other-item">
             <text>支付方式：</text>
             <text wx:if="{{recentOrder.total_price==0}}">积点支付</text>
             <text wx:else="">{{recentOrder.payment_method}}</text>
+        </view>
+        <view class="other-item" wx:if="{{recentOrder.points>0}}">
+		    <text>获得积点：</text>
+		    <text>{{recentOrder.points}}个</text>
+	    </view>
+	    <view class="other-item" wx:if="{{recentOrder.points<0}}">
+		    <text>使用积点：</text>
+		    <text>{{recentOrder.points}}个</text>
         </view>
         <view class="other-item">
             <text>联系方式：</text>

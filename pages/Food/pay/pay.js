@@ -253,6 +253,18 @@ Page({
             mask: true
         });
         // 准备订单数据
+        let addPoint = 0;
+        this.data.cartList.forEach(item => {
+            let pointsPerItem = 0; // 单个菜品的积点
+            if (item.price >= 10)
+                pointsPerItem = 1;
+            else if (item.price >= 8)
+                pointsPerItem = 0.5;
+            else if (item.price > 0)
+                pointsPerItem = 0.1;
+            addPoint += pointsPerItem * item.quantity;
+        });
+        console.log('积点赠送:', addPoint)
         let orderData = {
             user_id: app.globalData.userInfo.user_id,
             openid: app.globalData.userInfo.openid,
@@ -270,6 +282,7 @@ Page({
             address: "",
             call_name: "",
             phone: app.globalData.userInfo.phone_number,
+            points: addPoint
         };
         if (this.data.serviceType == '外卖') {
             orderData.address = this.data.addressInfo.address_detail
@@ -342,7 +355,22 @@ Page({
         // 1.增加销量
         addSales(this.data.cartList.map(item => item.dish_id))
 
-        // 2.赠送积点
+        // 2.更新邀请信息
+        if (wx.getStorageSync('inviter')) {
+            payInvite(this.data.userInfo.user_id)
+                .then(isInvite => {
+                    if (isInvite)
+                        console.log('完成邀请成功')
+                    else
+                        console.log('还没有注册')
+                    wx.setStorageSync('inviter', null)
+                })
+                .catch(err => {
+                    showError('更新邀请失败', err)
+                })
+        }
+
+        // 3.赠送积点
         if (app.globalData.userInfo.phone_number) {
             let addPoint = 0; // 初始化
             this.data.cartList.forEach(item => {
@@ -361,33 +389,23 @@ Page({
                     app.globalData.userInfo = user
                     app.trigger('userInfoUpdated');
                     wx.setStorageSync('userInfo', user);
+                    wx.showModal({
+                        title: '恭喜',
+                        content: addPoint + '个积点已下发至您的账户',
+                        cancelText: false,
+                        complete: () => {
+                            // 4.清空购物车
+                            wx.setStorageSync('cart', []);
+                            // 5.跳转订单详情
+                            wx.switchTab({
+                                url: '/pages/Order/recentOrder/recentOrder',
+                            })
+                        }
+                    });
                 }).catch(err => {
                     showError('积点增加失败', err)
                 })
         }
-
-        // 3.清空购物车
-        wx.setStorageSync('cart', []);
-
-        // 4.更新邀请信息
-        if (wx.getStorageSync('inviter')) {
-            payInvite(this.data.userInfo.user_id)
-                .then(isInvite => {
-                    if (isInvite)
-                        console.log('完成邀请成功')
-                    else
-                        console.log('还没有注册')
-                    wx.setStorageSync('inviter', null)
-                })
-                .catch(err => {
-                    showError('更新邀请失败', err)
-                })
-        }
-
-        // 5.跳转订单详情
-        wx.switchTab({
-            url: '/pages/Order/recentOrder/recentOrder',
-        })
     },
 
     // 积点支付
@@ -414,6 +432,7 @@ Page({
             address: "",
             call_name: "",
             phone: app.globalData.userInfo.phone_number,
+            points: -this.data.pointsDiscount
         };
         if (this.data.serviceType == '外卖') {
             orderData.address = this.data.addressInfo.address_detail
